@@ -8,18 +8,30 @@
 body {
     margin: 0;
     padding: 0;
+    background: #CCC;
 }
 .all {
     width: 320px;
     overflow: hidden;
+    background: #FFF;
+    margin: 0 auto;
 }
 h1 {
     margin: 0;
     padding: 10px;
+    text-align: center;
+    font-size: 30px;
+}
+h2 {
+    padding: 10px;
+    margin: 20px 0 5px;
+    background: #EFEFEF;
+    font-size: 20px;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
 }
 .flipsnap {
     display: -webkit-box;
-    padding-left: 40px;
     margin: 10px 0;
 }
 .item {
@@ -27,45 +39,147 @@ h1 {
     height: 200px;
     border: 5px solid #000;
     margin: 0 10px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 100px;
+    color: #999;
+    line-height: 200px;
 }
-.flipsnap2 {
-    padding-left: 20px;
+.flipsnap1 {
+    padding: 0;
 }
-.flipsnap2 .item {
-    width: 100px;
+.flipsnap2,
+.flipsnap4,
+.flipsnap5 {
+    padding-left: 40px;
+}
+.flipsnap1 .item {
+    width: 310px;
+    margin: 0;
+}
+.flipsnap3 .item {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 20px;
+}
+.btns {
+    text-align: center;
+}
+
+.pointer {
+    text-align: center;
+}
+
+.pointer span {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 5px;
+    border: 1px solid #000;
+}
+.pointer span.current {
+    background: #FC0;
 }
 </style>
+<script src="jquery-1.5.js"></script>
 <script src="../flipsnap.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    Flipsnap({
-        element: ".flipsnap1",
-        distance: 230,
+$(function() {
+    // simple
+    var f1 = Flipsnap(".flipsnap1");
+
+    // set distance
+    var f2 = Flipsnap(".flipsnap2", { distance: 230 });
+
+    // set distance and point
+    var f3 = Flipsnap(".flipsnap3", {
+        distance: 160,
+        point: 3
+        // or 
+        // maxX: 480
     });
 
-    Flipsnap({
-        element: ".flipsnap2",
-        distance: 130,
+    // add and remove, refresh
+    var f4 = Flipsnap(".flipsnap4", { distance: 230 });
+    var $f4 = $(".flipsnap4");
+    $(".btn1").click(function() {
+        var $item = $("<div>").addClass("item").text( $f4.find(".item").size() + 1 );
+        $f4.append( $item );
+        f4.refresh();
     });
-}, false);
+    $(".btn2").click(function() {
+        $f4.find(".item").last().remove();
+        f4.refresh();
+    });
+
+    // stop callback
+    var $pointer = $(".pointer span");
+    var f5 = Flipsnap(".flipsnap5", {
+        distance: 230,
+        ontouchend: function() {
+            $pointer.filter(".current").removeClass("current");
+            $pointer.eq( this.currentPoint ).addClass("current");
+        }
+    });
+});
 </script>
 </head>
 <body>
 <div class="all">
 <h1>flipsnap.js</h1>
 
+<h2>example1</h2>
 <div class="flipsnap flipsnap1">
     <div class="item">1</div>
     <div class="item">2</div>
     <div class="item">3</div>
 </div>
 
+<h2>example2</h2>
 <div class="flipsnap flipsnap2">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+</div>
+
+<h2>example3</h2>
+<div class="flipsnap flipsnap3">
     <div class="item">1</div>
     <div class="item">2</div>
     <div class="item">3</div>
     <div class="item">4</div>
     <div class="item">5</div>
+    <div class="item">6</div>
+    <div class="item">7</div>
+    <div class="item">8</div>
+    <div class="item">9</div>
+    <div class="item">10</div>
+</div>
+
+<h2>example4</h2>
+<div class="flipsnap flipsnap4">
+    <div class="item">1</div>
+</div>
+<p class="btns">
+<button class="btn1">add</button>
+<button class="btn2">remove</button>
+</p>
+
+<h2>example5</h2>
+<div class="flipsnap flipsnap5">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+    <div class="item">4</div>
+    <div class="item">5</div>
+</div>
+<div class="pointer">
+    <span class="current"></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
 </div>
 
 </div>

@@ -1,3 +1,10 @@
+/*
+ * flipsnap.js
+ *
+ * @version  0.1.0
+ *
+ */
+
 (function(window) {
 
 var d = window.document,
@@ -9,27 +16,30 @@ var d = window.document,
 	touchMoveEvent =  support.touch ? 'touchmove' : 'mousemove',
 	touchEndEvent =  support.touch ? 'touchend' : 'mouseup';
 
-var Flipsnap = function(conf) {
-	return (this instanceof Flipsnap) ? this.init(conf) : new Flipsnap(conf);
+var Flipsnap = function(element, conf) {
+	return (this instanceof Flipsnap)
+		? this.init(element, conf)
+		: new Flipsnap(element, conf);
 };
 
 Flipsnap.prototype = {
-	init: function(conf) {
+	init: function(element, conf) {
 		var self = this;
 
-		self.element = conf.element;
-		if (typeof conf.element === 'string') {
-			self.element = d.querySelector(conf.element);
+		self.element = element;
+		if (typeof element === 'string') {
+			self.element = d.querySelector(element);
 		}
 		self.element.style.webkitTransitionProperty = '-webkit-transform';
 		self.element.style.webkitTransitionTimingFunction = 'cubic-bezier(0,0,0.25,1)';
 		self.element.style.webkitTransitionDuration = '0';
 		self.element.style.webkitTransform = getTranslate(0);
 
-		self.distance = conf.distance;
+		self.conf = conf || {};
+		self.ontouchend = self.conf.ontouchend || function() {};
 		self.enabled = true;
-		self.position = 0;
-		self.x = 0;
+		self.currentPoint = 0;
+		self.currentX = 0;
 
 		self.refresh();
 
@@ -57,22 +67,46 @@ Flipsnap.prototype = {
 	refresh: function() {
 		var self = this;
 
-		var childNodes = self.element.childNodes;
-		var itemLength = 0;
-		for(var i = 0, len = childNodes.length; i < len; i++) {
-			var node = childNodes[i];
-			if (node.nodeType === 1) {
-				itemLength++;
+		var conf = self.conf;
+
+		// setting max point
+		self.maxPoint = conf.point ? conf.point : (function() {
+			var childNodes = self.element.childNodes,
+				itemLength = 0,
+				i = 0,
+				len = childNodes.length,
+				node;
+			for(; i < len; i++) {
+				node = childNodes[i];
+				if (node.nodeType === 1) {
+					itemLength++;
+				}
 			}
+
+			return itemLength - 1;
+		})();
+		if (self.maxPoint < 0) {
+			self.maxPoint = 0;
 		}
 
-		self.maxPosition = itemLength - 1;
-		self.maxX = - self.distance * self.maxPosition;
+		// setting distance
+		self.distance = conf.distance ? conf.distance : (function() {
+			return self.element.scrollWidth / (self.maxPoint + 1);
+		})();
+
+		// setting
+		self.maxX = conf.maxX ? - conf.maxX : (function() {
+			return - self.distance * self.maxPoint;
+		})();
+
+		if (self.currentX < self.maxX) {
+			self._setX(self.maxX);
+		}
 	},
 	_setX: function(x) {
 		var self = this;
 
-		self.x = x;
+		self.currentX = x;
 		self.element.style.webkitTransform = getTranslate(x);
 	},
 	_touchStart: function(event) {
@@ -80,6 +114,10 @@ Flipsnap.prototype = {
 
 		if (!self.enabled) {
 			return;
+		}
+
+		if (!support.touch) {
+			event.preventDefault();
 		}
 
 		self.element.style.webkitTransitionDuration = '0';
@@ -109,9 +147,9 @@ Flipsnap.prototype = {
 			event.stopPropagation();
 
 			distX = pageX - self.basePageX;
-			newX = self.x + distX;
+			newX = self.currentX + distX;
 			if (newX >= 0 || newX < self.maxX) {
-				newX = Math.round(self.x + distX / 3);
+				newX = Math.round(self.currentX + distX / 3);
 			}
 			self._setX(newX);
 
@@ -139,26 +177,29 @@ Flipsnap.prototype = {
 
 		self.scrolling = false;
 
-		var newPosition,
-			x = self.x / self.distance;
+		var newPoint = -self.currentX / self.distance,
+			newX;
 
-		x =
-			(self.directionX > 0) ? Math.floor(x) :
-			(self.directionX < 0) ? Math.ceil(x) :
-			Math.round(x);
+		// to int
+		newPoint =
+			(self.directionX > 0) ? Math.ceil(newPoint) :
+			(self.directionX < 0) ? Math.floor(newPoint) :
+			Math.round(newPoint);
 
-		self.position = -x;
-		x = x * self.distance;
+		self.currentPoint = -newPoint;
+		newX = -newPoint * self.distance;
 
-		if (x > 0) {
-			x = self.position = 0;
-		} else if (x < self.maxX) {
-			self.position = self.maxPosition;
-			x = self.maxX;
+		if (newX > 0) {
+			newX = self.currentPoint = 0;
+		} else if (newX < self.maxX) {
+			self.currentPoint = self.maxPoint;
+			newX = self.maxX;
 		}
 
 		self.element.style.webkitTransitionDuration = '350ms';
-		self._setX(x);
+		self._setX(newX);
+
+		self.ontouchend();
 	},
 	destroy: function() {
 		var self = this;
