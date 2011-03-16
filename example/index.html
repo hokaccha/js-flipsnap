@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>flipsnap.js example</title>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+}
+.all {
+    width: 320px;
+    overflow: hidden;
+}
+h1 {
+    margin: 0;
+    padding: 10px;
+}
+.flipsnap {
+    display: -webkit-box;
+    padding-left: 40px;
+    margin: 10px 0;
+}
+.item {
+    width: 200px;
+    height: 200px;
+    border: 5px solid #000;
+    margin: 0 10px;
+}
+.flipsnap2 {
+    padding-left: 20px;
+}
+.flipsnap2 .item {
+    width: 100px;
+}
+</style>
+<script src="../flipsnap.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    Flipsnap({
+        element: ".flipsnap1",
+        distance: 230,
+    });
+
+    Flipsnap({
+        element: ".flipsnap2",
+        distance: 130,
+    });
+}, false);
+</script>
+</head>
+<body>
+<div class="all">
+<h1>flipsnap.js</h1>
+
+<div class="flipsnap flipsnap1">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+</div>
+
+<div class="flipsnap flipsnap2">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+    <div class="item">4</div>
+    <div class="item">5</div>
+</div>
+
+</div>
+</body>
+</html>
