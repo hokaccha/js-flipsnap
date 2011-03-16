@@ -1,7 +1,7 @@
 /*
  * flipsnap.js
  *
- * @version  0.1.1
+ * @version  0.1.2
  *
  */
 
@@ -76,7 +76,7 @@ Flipsnap.prototype = {
 		var conf = self.conf;
 
 		// setting max point
-		self.maxPoint = conf.point ? conf.point : (function() {
+		self.maxPoint = conf.point || (function() {
 			var childNodes = self.element.childNodes,
 				itemLength = 0,
 				i = 0,
@@ -88,22 +88,18 @@ Flipsnap.prototype = {
 					itemLength++;
 				}
 			}
+			if (itemLength > 0) {
+				itemLength--;
+			}
 
-			return itemLength - 1;
+			return itemLength;
 		})();
-		if (self.maxPoint < 0) {
-			self.maxPoint = 0;
-		}
 
 		// setting distance
-		self.distance = conf.distance ? conf.distance : (function() {
-			return self.element.scrollWidth / (self.maxPoint + 1);
-		})();
+		self.distance = conf.distance || self.element.scrollWidth / (self.maxPoint + 1);
 
 		// setting
-		self.maxX = conf.maxX ? - conf.maxX : (function() {
-			return - self.distance * self.maxPoint;
-		})();
+		self.maxX = conf.maxX ? - conf.maxX : - self.distance * self.maxPoint;
 
 		if (self.currentX < self.maxX) {
 			self._setX(self.maxX);
