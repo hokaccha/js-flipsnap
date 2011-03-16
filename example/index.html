@@ -53,7 +53,8 @@ h2 {
 .flipsnap5 {
     padding-left: 40px;
 }
-.flipsnap1 .item {
+.flipsnap1 .item ,
+.flipsnap6 .item {
     width: 310px;
     margin: 0;
 }
@@ -80,6 +81,11 @@ h2 {
 }
 .pointer span.current {
     background: #FC0;
+}
+.item a {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 </style>
 <script src="jquery-1.5.js"></script>
@@ -122,6 +128,13 @@ $(function() {
             $pointer.eq( this.currentPoint ).addClass("current");
         }
     });
+
+    // link
+    var f6 = Flipsnap(".flipsnap6");
+    $(".flipsnap6 a").click(function(e) {
+        e.preventDefault();
+        alert("clicked1");
+    });
 });
 </script>
 </head>
@@ -129,21 +142,21 @@ $(function() {
 <div class="all">
 <h1>flipsnap.js</h1>
 
-<h2>example1</h2>
+<h2 id="ex1">example1</h2>
 <div class="flipsnap flipsnap1">
     <div class="item">1</div>
     <div class="item">2</div>
     <div class="item">3</div>
 </div>
 
-<h2>example2</h2>
+<h2 id="ex2">example2</h2>
 <div class="flipsnap flipsnap2">
     <div class="item">1</div>
     <div class="item">2</div>
     <div class="item">3</div>
 </div>
 
-<h2>example3</h2>
+<h2 id="ex3">example3</h2>
 <div class="flipsnap flipsnap3">
     <div class="item">1</div>
     <div class="item">2</div>
@@ -157,7 +170,7 @@ $(function() {
     <div class="item">10</div>
 </div>
 
-<h2>example4</h2>
+<h2 id="ex4">example4</h2>
 <div class="flipsnap flipsnap4">
     <div class="item">1</div>
 </div>
@@ -166,7 +179,7 @@ $(function() {
 <button class="btn2">remove</button>
 </p>
 
-<h2>example5</h2>
+<h2 id="ex5">example5</h2>
 <div class="flipsnap flipsnap5">
     <div class="item">1</div>
     <div class="item">2</div>
@@ -180,6 +193,13 @@ $(function() {
     <span></span>
     <span></span>
     <span></span>
+</div>
+
+<h2 id="ex6">example6</h2>
+<div class="flipsnap flipsnap6">
+    <div class="item"><a href="dummy">1</a></div>
+    <div class="item"><a href="dummy">2</a></div>
+    <div class="item"><a href="dummy">3</a></div>
 </div>
 
 </div>

@@ -1,7 +1,7 @@
 /*
  * flipsnap.js
  *
- * @version  0.1.0
+ * @version  0.1.1
  *
  */
 
@@ -46,6 +46,9 @@ Flipsnap.prototype = {
 		self.element.addEventListener(touchStartEvent, self, false);
 		self.element.addEventListener(touchMoveEvent, self, false);
 		self.element.addEventListener(touchEndEvent, self, false);
+		self.element.addEventListener('webkitTransitionEnd', function() {
+			self.element.removeEventListener('click', self, true);
+		}, false);
 
 		return self;
 	},
@@ -61,6 +64,9 @@ Flipsnap.prototype = {
 				break;
 			case touchEndEvent:
 				self._touchEnd(event);
+				break;
+			case 'click':
+				self._click(event);
 				break;
 		}
 	},
@@ -127,6 +133,7 @@ Flipsnap.prototype = {
 		self.startPageY = getPage(event, 'pageY');
 		self.basePageX = self.startPageX;
 		self.directionX = 0;
+		self.startTime = event.timeStamp;
 	},
 	_touchMove: function(event) {
 		var self = this;
@@ -163,6 +170,7 @@ Flipsnap.prototype = {
 			}
 			else if (deltaX > 5) {
 				self.moveReady = true;
+				self.element.addEventListener('click', self, true);
 			}
 		}
 
@@ -171,7 +179,7 @@ Flipsnap.prototype = {
 	_touchEnd: function(event) {
 		var self = this;
 
-		if (!this.scrolling) {
+		if (!self.scrolling) {
 			return;
 		}
 
@@ -196,10 +204,24 @@ Flipsnap.prototype = {
 			newX = self.maxX;
 		}
 
-		self.element.style.webkitTransitionDuration = '350ms';
-		self._setX(newX);
+		if (newX === self.currentX) {
+			// not fire webkitTransition
+			setTimeout(function() {
+				self.element.removeEventListener('click', self, true);
+			}, 100);
+		}
+		else {
+			self.element.style.webkitTransitionDuration = '350ms';
+			self._setX(newX);
+		}
 
 		self.ontouchend();
+	},
+	_click: function(event) {
+		var self = this;
+
+		event.stopPropagation();
+		event.preventDefault();
 	},
 	destroy: function() {
 		var self = this;
