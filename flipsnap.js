@@ -186,7 +186,7 @@ Flipsnap.prototype = {
 			(self.directionX < 0) ? Math.floor(newPoint) :
 			Math.round(newPoint);
 
-		self.currentPoint = -newPoint;
+		self.currentPoint = newPoint;
 		newX = -newPoint * self.distance;
 
 		if (newX > 0) {
