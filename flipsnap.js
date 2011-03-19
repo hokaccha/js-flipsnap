@@ -161,12 +161,14 @@ Flipsnap.prototype = {
 		else {
 			deltaX = Math.abs(pageX - self.startPageX);
 			deltaY = Math.abs(pageY - self.startPageY);
-			if (deltaY > 5) {
-				self.scrolling = false;
-			}
-			else if (deltaX > 5) {
+			if (deltaX > 5) {
+				event.preventDefault();
+				event.stopPropagation();
 				self.moveReady = true;
 				self.element.addEventListener('click', self, true);
+			}
+			else if (deltaY > 5) {
+				self.scrolling = false;
 			}
 		}
 
