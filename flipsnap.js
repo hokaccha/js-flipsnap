@@ -1,6 +1,10 @@
 /*
  * flipsnap.js
  *
+ * Copyright 2011 PixelGrid, Inc.
+ * Licensed under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ *
  * @version  0.1.3
  *
  */
