@@ -5,16 +5,16 @@
  *
  */
 
-(function(window) {
+(function(window, undefined) {
 
-var d = window.document,
+var document = window.document,
 	support = {
-		transform3d: ('WebKitCSSMatrix' in window && 'm11' in new WebKitCSSMatrix()),
-		touch: ('ontouchstart' in window)
-	},
-	touchStartEvent =  support.touch ? 'touchstart' : 'mousedown',
-	touchMoveEvent =  support.touch ? 'touchmove' : 'mousemove',
-	touchEndEvent =  support.touch ? 'touchend' : 'mouseup';
+	transform3d: ('WebKitCSSMatrix' in window && 'm11' in new WebKitCSSMatrix()),
+	touch: ('ontouchstart' in window)
+},
+touchStartEvent =  support.touch ? 'touchstart' : 'mousedown',
+touchMoveEvent =  support.touch ? 'touchmove' : 'mousemove',
+touchEndEvent =  support.touch ? 'touchend' : 'mouseup';
 
 var Flipsnap = function(element, conf) {
 	return (this instanceof Flipsnap)
@@ -28,7 +28,7 @@ Flipsnap.prototype = {
 
 		self.element = element;
 		if (typeof element === 'string') {
-			self.element = d.querySelector(element);
+			self.element = document.querySelector(element);
 		}
 		self.element.style.webkitTransitionProperty = '-webkit-transform';
 		self.element.style.webkitTransitionTimingFunction = 'cubic-bezier(0,0,0.25,1)';
@@ -260,4 +260,4 @@ function getPage(event, page) {
 
 window.Flipsnap = Flipsnap;
 
-})(this);
+})(this, this.document);
