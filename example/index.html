@@ -54,7 +54,9 @@ h2 {
     padding-left: 40px;
 }
 .flipsnap1 .item ,
-.flipsnap6 .item {
+.flipsnap6 .item ,
+.flipsnap8 .item ,
+.flipsnap7 .item {
     width: 310px;
     margin: 0;
 }
@@ -66,6 +68,20 @@ h2 {
 }
 .btns {
     text-align: center;
+}
+
+.arrow {
+    display: inline-block;
+    padding: 5px 20px;
+    border: 1px solid #000;
+    margin: 0 5px;
+    cursor: pointer;
+    background: #CCC;
+}
+
+.noHasNext {
+    opacity: 0.2;
+    cursor: auto;
 }
 
 .pointer {
@@ -123,7 +139,7 @@ $(function() {
     var $pointer = $(".pointer span");
     var f5 = Flipsnap(".flipsnap5", {
         distance: 230,
-        ontouchend: function() {
+        onmoveend: function() {
             $pointer.filter(".current").removeClass("current");
             $pointer.eq( this.currentPoint ).addClass("current");
         }
@@ -134,6 +150,23 @@ $(function() {
     $(".flipsnap6 a").click(function(e) {
         e.preventDefault();
         alert("clicked1");
+    });
+
+    // btn
+    var f7 = Flipsnap(".flipsnap7");
+    var $next = $(".next").click(function() { f7.toNext(); });
+    var $prev = $(".prev").click(function() { f7.toPrev(); });
+    var nohas = "noHasNext";
+    f7.onmoveend = function() {
+        this.hasNext() ? $next.removeClass(nohas) : $next.addClass(nohas);
+        this.hasPrev() ? $prev.removeClass(nohas) : $prev.addClass(nohas);
+    };
+
+    // num
+    var f8 = Flipsnap(".flipsnap8");
+    var $num = $(".num");
+    $(".go").click(function() {
+        f8.moveToPoint($num.val() - 1);
     });
 });
 </script>
@@ -200,6 +233,33 @@ $(function() {
     <div class="item"><a href="dummy">1</a></div>
     <div class="item"><a href="dummy">2</a></div>
     <div class="item"><a href="dummy">3</a></div>
+</div>
+
+<h2 id="ex7">example7</h2>
+<div class="flipsnap flipsnap7">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+</div>
+<div class="btns">
+    <span class="prev arrow noHasNext">←</span>
+    <span class="next arrow">→</span>
+</div>
+
+<h2 id="ex8">example8</h2>
+<div class="flipsnap flipsnap8">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+    <div class="item">4</div>
+    <div class="item">5</div>
+    <div class="item">6</div>
+    <div class="item">7</div>
+    <div class="item">8</div>
+    <div class="item">9</div>
+</div>
+<div class="btns">
+    <input type="number" size="3" class="num"><button class="go">GO</button>
 </div>
 
 </div>

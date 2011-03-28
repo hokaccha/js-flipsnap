@@ -1,7 +1,7 @@
 /*
  * flipsnap.js
  *
- * @version  0.1.2
+ * @version  0.1.3
  *
  */
 
@@ -36,7 +36,7 @@ Flipsnap.prototype = {
 		self.element.style.webkitTransform = getTranslate(0);
 
 		self.conf = conf || {};
-		self.ontouchend = self.conf.ontouchend || function() {};
+		self.onmoveend = self.conf.onmoveend || function() {};
 		self.enabled = true;
 		self.currentPoint = 0;
 		self.currentX = 0;
@@ -46,9 +46,6 @@ Flipsnap.prototype = {
 		self.element.addEventListener(touchStartEvent, self, false);
 		self.element.addEventListener(touchMoveEvent, self, false);
 		self.element.addEventListener(touchEndEvent, self, false);
-		self.element.addEventListener('webkitTransitionEnd', function() {
-			self.element.removeEventListener('click', self, true);
-		}, false);
 
 		return self;
 	},
@@ -104,6 +101,47 @@ Flipsnap.prototype = {
 		if (self.currentX < self.maxX) {
 			self._setX(self.maxX);
 		}
+	},
+	hasNext: function() {
+		var self = this;
+
+		return self.currentPoint < self.maxPoint;
+	},
+	hasPrev: function() {
+		var self = this;
+
+		return self.currentPoint > 0;
+	},
+	toNext: function() {
+		var self = this;
+
+		if (!self.hasNext()) {
+			return;
+		}
+
+		self.moveToPoint(self.currentPoint + 1);
+	},
+	toPrev: function() {
+		var self = this;
+
+		if (!self.hasPrev()) {
+			return;
+		}
+
+		self.moveToPoint(self.currentPoint - 1);
+	},
+	moveToPoint: function(point) {
+		var self = this;
+
+		self.currentPoint = 
+			(point < 0) ? 0 :
+			(point > self.maxPoint) ? self.maxPoint :
+			parseInt(point);
+
+		self.element.style.webkitTransitionDuration = '350ms';
+		self._setX(- self.currentPoint * self.distance)
+
+		self.onmoveend();
 	},
 	_setX: function(x) {
 		var self = this;
@@ -183,37 +221,17 @@ Flipsnap.prototype = {
 
 		self.scrolling = false;
 
-		var newPoint = -self.currentX / self.distance,
-			newX;
-
-		// to int
+		var newPoint = -self.currentX / self.distance;
 		newPoint =
 			(self.directionX > 0) ? Math.ceil(newPoint) :
 			(self.directionX < 0) ? Math.floor(newPoint) :
 			Math.round(newPoint);
 
-		self.currentPoint = newPoint;
-		newX = -newPoint * self.distance;
+		self.moveToPoint(newPoint);
 
-		if (newX > 0) {
-			newX = self.currentPoint = 0;
-		} else if (newX < self.maxX) {
-			self.currentPoint = self.maxPoint;
-			newX = self.maxX;
-		}
-
-		if (newX === self.currentX) {
-			// not fire webkitTransition
-			setTimeout(function() {
-				self.element.removeEventListener('click', self, true);
-			}, 100);
-		}
-		else {
-			self.element.style.webkitTransitionDuration = '350ms';
-			self._setX(newX);
-		}
-
-		self.ontouchend();
+		setTimeout(function() {
+			self.element.removeEventListener('click', self, true);
+		}, 200);
 	},
 	_click: function(event) {
 		var self = this;
