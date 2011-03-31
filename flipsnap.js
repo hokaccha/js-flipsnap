@@ -40,7 +40,7 @@ Flipsnap.prototype = {
 		self.element.style.webkitTransform = getTranslate(0);
 
 		self.conf = conf || {};
-		self.enabled = true;
+		self.touchEnabled = true;
 		self.currentPoint = 0;
 		self.currentX = 0;
 
@@ -155,7 +155,7 @@ Flipsnap.prototype = {
 	_touchStart: function(event) {
 		var self = this;
 
-		if (!self.enabled) {
+		if (!self.touchEnabled) {
 			return;
 		}
 
