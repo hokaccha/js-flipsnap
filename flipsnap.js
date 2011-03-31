@@ -99,12 +99,10 @@ Flipsnap.prototype = {
 		// setting distance
 		self.distance = conf.distance || self.element.scrollWidth / (self.maxPoint + 1);
 
-		// setting
+		// setting maxX
 		self.maxX = conf.maxX ? - conf.maxX : - self.distance * self.maxPoint;
 
-		if (self.currentX < self.maxX) {
-			self._setX(self.maxX);
-		}
+		self.moveToPoint(self.currentPoint);
 	},
 	hasNext: function() {
 		var self = this;
