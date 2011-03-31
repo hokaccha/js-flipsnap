@@ -40,7 +40,6 @@ Flipsnap.prototype = {
 		self.element.style.webkitTransform = getTranslate(0);
 
 		self.conf = conf || {};
-		self.onmoveend = self.conf.onmoveend || function() {};
 		self.enabled = true;
 		self.currentPoint = 0;
 		self.currentX = 0;
