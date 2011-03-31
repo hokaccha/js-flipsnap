@@ -5,7 +5,7 @@
  * Licensed under the MIT License:
  * http://www.opensource.org/licenses/mit-license.php
  *
- * @version  0.1.4
+ * @version  0.1.5
  *
  */
 
