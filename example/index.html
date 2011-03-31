@@ -137,12 +137,11 @@ $(function() {
 (function() {
     // stop callback
     var $pointer = $(".pointer span");
-    var f5 = Flipsnap("#flipsnap5", {
-        onmoveend: function() {
-            $pointer.filter(".current").removeClass("current");
-            $pointer.eq( this.currentPoint ).addClass("current");
-        }
-    });
+    var f5 = Flipsnap("#flipsnap5");
+    f5.element.addEventListener('flipsnap.moveend', function() {
+        $pointer.filter(".current").removeClass("current");
+        $pointer.eq( f5.currentPoint ).addClass("current");
+    }, false);
 })();
 
 (function() {
@@ -160,10 +159,10 @@ $(function() {
     var $next = $(".next").click(function() { f7.toNext(); });
     var $prev = $(".prev").click(function() { f7.toPrev(); });
     var nohas = "noHasNext";
-    f7.onmoveend = function() {
-        this.hasNext() ? $next.removeClass(nohas) : $next.addClass(nohas);
-        this.hasPrev() ? $prev.removeClass(nohas) : $prev.addClass(nohas);
-    };
+    f7.element.addEventListener('flipsnap.moveend', function() {
+        f7.hasNext() ? $next.removeClass(nohas) : $next.addClass(nohas);
+        f7.hasPrev() ? $prev.removeClass(nohas) : $prev.addClass(nohas);
+    }, false);
 })();
 
 (function() {

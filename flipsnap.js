@@ -145,7 +145,9 @@ Flipsnap.prototype = {
 		self.element.style.webkitTransitionDuration = '350ms';
 		self._setX(- self.currentPoint * self.distance)
 
-		self.onmoveend();
+		var ev = document.createEvent('Event');
+		ev.initEvent('flipsnap.moveend', true, false);
+		self.element.dispatchEvent(ev);
 	},
 	_setX: function(x) {
 		var self = this;
