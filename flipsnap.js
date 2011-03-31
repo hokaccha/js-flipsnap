@@ -263,4 +263,4 @@ function getPage(event, page) {
 
 window.Flipsnap = Flipsnap;
 
-})(this, this.document);
+})(this);
