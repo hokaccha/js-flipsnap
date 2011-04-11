@@ -13,12 +13,12 @@
 
 var document = window.document,
 	support = {
-	transform3d: ('WebKitCSSMatrix' in window && 'm11' in new WebKitCSSMatrix()),
-	touch: ('ontouchstart' in window)
-},
-touchStartEvent =  support.touch ? 'touchstart' : 'mousedown',
-touchMoveEvent =  support.touch ? 'touchmove' : 'mousemove',
-touchEndEvent =  support.touch ? 'touchend' : 'mouseup';
+		transform3d: ('WebKitCSSMatrix' in window && 'm11' in new WebKitCSSMatrix()),
+		touch: ('ontouchstart' in window)
+	},
+	touchStartEvent =  support.touch ? 'touchstart' : 'mousedown',
+	touchMoveEvent =  support.touch ? 'touchmove' : 'mousemove',
+	touchEndEvent =  support.touch ? 'touchend' : 'mouseup';
 
 var Flipsnap = function(element, conf) {
 	return (this instanceof Flipsnap)
