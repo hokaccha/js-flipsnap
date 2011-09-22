@@ -32,8 +32,12 @@ h2 {
     border-bottom: 1px solid #333;
 }
 .flipsnap {
-    display: -webkit-box;
     margin: 10px 0;
+}
+.flipsnap:after {
+    content: '';
+    display: block;
+    clear: both;
 }
 .item {
     width: 310px;
@@ -44,6 +48,10 @@ h2 {
     font-size: 100px;
     color: #999;
     line-height: 200px;
+    float: left;
+}
+#flipsnap1 {
+    width: 960px;
 }
 
 .middle {

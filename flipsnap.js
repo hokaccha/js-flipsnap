@@ -12,8 +12,31 @@
 (function(window, undefined) {
 
 var document = window.document,
+	div = document.createElement('div'),
+	prefix = ['webkit', 'moz', 'o', 'ms'],
+	saveProp = {},
 	support = {
-		transform3d: ('WebKitCSSMatrix' in window && 'm11' in new WebKitCSSMatrix()),
+		transform3d: hasProp([
+			'perspectiveProperty',
+			'WebkitPerspective',
+			'MozPerspective',
+			'OPerspective',
+			'msPerspective'
+		]),
+		transform: hasProp([
+			'transformProperty',
+			'WebkitTransform',
+			'MozTransform',
+			'OTransform',
+			'msTransform'
+		]),
+		transition: hasProp([
+			'transitionProperty',
+			'WebkitTransitionProperty',
+			'MozTransitionProperty',
+			'OTransitionProperty',
+			'msTransitionProperty'
+		]),
 		touch: ('ontouchstart' in window)
 	},
 	touchStartEvent =  support.touch ? 'touchstart' : 'mousedown',
@@ -34,10 +57,13 @@ Flipsnap.prototype = {
 		if (typeof element === 'string') {
 			self.element = document.querySelector(element);
 		}
-		self.element.style.webkitTransitionProperty = '-webkit-transform';
-		self.element.style.webkitTransitionTimingFunction = 'cubic-bezier(0,0,0.25,1)';
-		self.element.style.webkitTransitionDuration = '0';
-		self.element.style.webkitTransform = getTranslate(0);
+
+		self._setStyle({
+			transitionProperty: getCSSVal('transform'),
+			transitionTimingFunction: 'cubic-bezier(0,0,0.25,1)',
+			transitionDuration: '0',
+			transform: getTranslate(0),
+		});
 
 		self.conf = conf || {};
 		self.touchEnabled = true;
@@ -139,7 +165,7 @@ Flipsnap.prototype = {
 			(point > self.maxPoint) ? self.maxPoint :
 			parseInt(point);
 
-		self.element.style.webkitTransitionDuration = '350ms';
+		self._setStyle({ 'transitionDuration': '350ms' });
 		self._setX(- self.currentPoint * self.distance)
 
 		var ev = document.createEvent('Event');
@@ -150,7 +176,7 @@ Flipsnap.prototype = {
 		var self = this;
 
 		self.currentX = x;
-		self.element.style.webkitTransform = getTranslate(x);
+		self.element.style.WebkitTransform = getTranslate(x);
 	},
 	_touchStart: function(event) {
 		var self = this;
@@ -163,7 +189,7 @@ Flipsnap.prototype = {
 			event.preventDefault();
 		}
 
-		self.element.style.webkitTransitionDuration = '0';
+		self.element.style.OTransitionDuration = '0';
 		self.scrolling = true;
 		self.moveReady = false;
 		self.startPageX = getPage(event, 'pageX');
@@ -242,6 +268,14 @@ Flipsnap.prototype = {
 		event.stopPropagation();
 		event.preventDefault();
 	},
+	_setStyle: function(styles) {
+		var self = this;
+		var style = self.element.style;
+
+		for (var prop in styles) {
+			setStyle(style, prop, styles[prop]);
+		}
+	},
 	destroy: function() {
 		var self = this;
 
@@ -259,6 +293,54 @@ function getTranslate(x) {
 
 function getPage(event, page) {
 	return support.touch ? event.changedTouches[0][page] : event[page];
+}
+
+function hasProp(props) {
+	return props.some(function(prop) {
+		return div.style[ prop ] !== undefined;
+	});
+}
+
+function setStyle(style, prop, val) {
+	var _saveProp = saveProp[ prop ];
+	if (_saveProp) {
+		style[ _saveProp ] = val;
+	}
+	else if (style[ prop ] !== undefined) {
+		saveProp[ prop ] = prop;
+		style[ prop ] = val;
+	}
+	else {
+		prefix.some(function(_prefix) {
+			var _prop = ucFirst(_prefix) + ucFirst(prop);
+			if (style[ _prop ] !== undefined) {
+				saveProp[ prop ] = _prop;
+				style[ _prop ] = val;
+				return true;
+			}
+		});
+	}
+}
+
+function getCSSVal(prop) {
+	if (div.style[ prop ] !== undefined) {
+		return prop;
+	}
+	else {
+		var ret;
+		prefix.some(function(_prefix) {
+			var _prop = ucFirst(_prefix) + ucFirst(prop);
+			if (div.style[ _prop ] !== undefined) {
+				ret = '-' + _prefix + '-' + prop;
+				return true;
+			}
+		});
+		return ret;
+	}
+}
+
+function ucFirst(str) {
+	return str.charAt(0).toUpperCase() + str.substr(1);
 }
 
 window.Flipsnap = Flipsnap;
