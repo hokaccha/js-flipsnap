@@ -43,6 +43,8 @@ var document = window.document,
 	touchMoveEvent =  support.touch ? 'touchmove' : 'mousemove',
 	touchEndEvent =  support.touch ? 'touchend' : 'mouseup';
 
+support.cssAnimation = (support.transform3d || support.transform) && support.transition;
+
 var Flipsnap = function(element, conf) {
 	return (this instanceof Flipsnap)
 		? this.init(element, conf)
@@ -58,17 +60,26 @@ Flipsnap.prototype = {
 			self.element = document.querySelector(element);
 		}
 
-		self._setStyle({
-			transitionProperty: getCSSVal('transform'),
-			transitionTimingFunction: 'cubic-bezier(0,0,0.25,1)',
-			transitionDuration: '0ms',
-			transform: getTranslate(0),
-		});
+		if (support.cssAnimation) {
+			self._setStyle({
+				transitionProperty: getCSSVal('transform'),
+				transitionTimingFunction: 'cubic-bezier(0,0,0.25,1)',
+				transitionDuration: '0ms',
+				transform: getTranslate(0)
+			});
+		}
+		else {
+			self._setStyle({
+				position: 'relative',
+				left: '0px'
+			});
+		}
 
 		self.conf = conf || {};
 		self.touchEnabled = true;
 		self.currentPoint = 0;
 		self.currentX = 0;
+		self.animate = false;
 
 		self.refresh();
 
@@ -165,7 +176,12 @@ Flipsnap.prototype = {
 			(point > self.maxPoint) ? self.maxPoint :
 			parseInt(point);
 
-		self._setStyle({ transitionDuration: '350ms' });
+		if (support.cssAnimation) {
+			self._setStyle({ transitionDuration: '350ms' });
+		}
+		else {
+			self.animate = true;
+		}
 		self._setX(- self.currentPoint * self.distance)
 
 		var ev = document.createEvent('Event');
@@ -176,7 +192,17 @@ Flipsnap.prototype = {
 		var self = this;
 
 		self.currentX = x;
-		self.element.style[ saveProp.transform ] = getTranslate(x);
+		if (support.cssAnimation) {
+			self.element.style[ saveProp.transform ] = getTranslate(x);
+		}
+		else {
+			if (self.animate) {
+				self._animate(x);
+			}
+			else {
+				self.element.style.left = x + 'px';
+			}
+		}
 	},
 	_touchStart: function(event) {
 		var self = this;
@@ -189,7 +215,12 @@ Flipsnap.prototype = {
 			event.preventDefault();
 		}
 
-		self._setStyle({ transitionDuration: '0ms' });
+		if (support.cssAnimation) {
+			self._setStyle({ transitionDuration: '0ms' });
+		}
+		else {
+			self.animate = false;
+		}
 		self.scrolling = true;
 		self.moveReady = false;
 		self.startPageX = getPage(event, 'pageX');
@@ -276,6 +307,31 @@ Flipsnap.prototype = {
 			setStyle(style, prop, styles[prop]);
 		}
 	},
+	_animate: function(x) {
+		var self = this;
+
+		var elem = self.element;
+		var begin = +new Date;
+		var from = parseInt(elem.style.left);
+		var to = x;
+		var duration = 350;
+		var easing = function(time, duration) {
+			return -(time /= duration) * (time - 2);
+		};
+		var timer = setInterval(function() {
+			var time = new Date - begin;
+			var pos, now;
+			if (time > duration) {
+				clearInterval(timer);
+				now = to;
+			}
+			else {
+				pos = easing(time, duration);
+				now = pos * (to - from) + from;
+			}
+			elem.style.left = now + "px";
+		}, 10);
+	},
 	destroy: function() {
 		var self = this;
 
@@ -296,7 +352,7 @@ function getPage(event, page) {
 }
 
 function hasProp(props) {
-	return props.some(function(prop) {
+	return some(props, function(prop) {
 		return div.style[ prop ] !== undefined;
 	});
 }
@@ -311,7 +367,7 @@ function setStyle(style, prop, val) {
 		style[ prop ] = val;
 	}
 	else {
-		prefix.some(function(_prefix) {
+		some(prefix, function(_prefix) {
 			var _prop = ucFirst(_prefix) + ucFirst(prop);
 			if (style[ _prop ] !== undefined) {
 				saveProp[ prop ] = _prop;
@@ -328,7 +384,7 @@ function getCSSVal(prop) {
 	}
 	else {
 		var ret;
-		prefix.some(function(_prefix) {
+		some(prefix, function(_prefix) {
 			var _prop = ucFirst(_prefix) + ucFirst(prop);
 			if (div.style[ _prop ] !== undefined) {
 				ret = '-' + _prefix + '-' + prop;
@@ -341,6 +397,32 @@ function getCSSVal(prop) {
 
 function ucFirst(str) {
 	return str.charAt(0).toUpperCase() + str.substr(1);
+}
+
+function some(ary, callback) {
+	for (var i = 0, len = ary.length; i < len; i++) {
+		if (callback(ary[i], i)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function animate(element, property, from, to, duration, easing) {
+	var begin = +new Date;
+	var timer = setInterval(function() {
+		var time = new Date - begin;
+		var pos, now;
+		if (time > duration) {
+			clearInterval(timer);
+			now = to;
+		}
+		else {
+			pos = easing(time, duration);
+			now = pos * (to - from) + from;
+		}
+		element.style[property] = now + "px";
+	}, 10);
 }
 
 window.Flipsnap = Flipsnap;
