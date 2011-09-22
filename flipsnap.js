@@ -61,7 +61,7 @@ Flipsnap.prototype = {
 		self._setStyle({
 			transitionProperty: getCSSVal('transform'),
 			transitionTimingFunction: 'cubic-bezier(0,0,0.25,1)',
-			transitionDuration: '0',
+			transitionDuration: '0ms',
 			transform: getTranslate(0),
 		});
 
@@ -165,7 +165,7 @@ Flipsnap.prototype = {
 			(point > self.maxPoint) ? self.maxPoint :
 			parseInt(point);
 
-		self._setStyle({ 'transitionDuration': '350ms' });
+		self._setStyle({ transitionDuration: '350ms' });
 		self._setX(- self.currentPoint * self.distance)
 
 		var ev = document.createEvent('Event');
@@ -176,7 +176,7 @@ Flipsnap.prototype = {
 		var self = this;
 
 		self.currentX = x;
-		self.element.style.WebkitTransform = getTranslate(x);
+		self.element.style[ saveProp.transform ] = getTranslate(x);
 	},
 	_touchStart: function(event) {
 		var self = this;
@@ -189,7 +189,7 @@ Flipsnap.prototype = {
 			event.preventDefault();
 		}
 
-		self.element.style.OTransitionDuration = '0';
+		self._setStyle({ transitionDuration: '0ms' });
 		self.scrolling = true;
 		self.moveReady = false;
 		self.startPageX = getPage(event, 'pageX');
