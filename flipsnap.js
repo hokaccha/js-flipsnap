@@ -254,7 +254,12 @@ Flipsnap.prototype = {
 			}
 			self._setX(newX);
 
-			self.directionX = distX > 0 ? -1 : 1;
+			// When distX is 0, use one previous value.
+			// For android firefox. When touchend fired, touchmove also
+			// fired and distX is certainly set to 0. 
+			self.directionX =
+				distX === 0 ? self.directionX :
+				distX > 0 ? -1 : 1;
 		}
 		else {
 			deltaX = Math.abs(pageX - self.startPageX);
