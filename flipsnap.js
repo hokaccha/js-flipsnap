@@ -78,7 +78,6 @@ Flipsnap.prototype.init = function(element, conf) {
 	}
 
 	self.conf = conf || {};
-	self.conf.touchEnable = self.conf.touchEnable || true;
 	self.currentPoint = 0;
 	self.currentX = 0;
 	self.animation = false;
@@ -218,7 +217,7 @@ Flipsnap.prototype._setX = function(x) {
 Flipsnap.prototype._touchStart = function(event) {
 	var self = this;
 
-	if (!self.conf.touchEnable) {
+	if (self.conf.touchDisable) {
 		return;
 	}
 
