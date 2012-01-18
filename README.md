@@ -17,6 +17,7 @@ http://dl.dropbox.com/u/336104/demo/flipsnap/example/index.html
 * Windows Phone7 IE9+ (*2)
 
 *1: Androidは（特に2.1などで）機種によってはtouchmoveのイベントがtouchendまで発生しないものあるのでタッチコントロールがうまく動かない端末もある。
+
 *2: Windows Phone7のIE9はmousemoveがうまく発火せずにタッチコントロールは動作せず（moveToやtoNext等のメソッドは動く）。
 
 ### PC
