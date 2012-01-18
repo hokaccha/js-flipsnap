@@ -141,7 +141,7 @@ Flipsnap.prototype.refresh = function() {
 	// setting maxX
 	self.maxX = -self.distance * self.maxPoint;
 
-	self.moveToPoint(self.currentPoint);
+	self.moveToPoint(self.currentPoint, true);
 };
 
 Flipsnap.prototype.hasNext = function() {
@@ -176,7 +176,7 @@ Flipsnap.prototype.toPrev = function() {
 	self.moveToPoint(self.currentPoint - 1);
 };
 
-Flipsnap.prototype.moveToPoint = function(point) {
+Flipsnap.prototype.moveToPoint = function(point, noFireEvent) {
 	var self = this;
 
 	self.currentPoint = 
@@ -192,10 +192,10 @@ Flipsnap.prototype.moveToPoint = function(point) {
 	}
 	self._setX(- self.currentPoint * self.distance)
 
-	var ev = document.createEvent('Event');
-	ev.initEvent('fsmoveend', true, false);
-	ev.initEvent('flipsnap.moveend', true, false); // backward compatibility (deprecated)
-	self.element.dispatchEvent(ev);
+	if (!noFireEvent) {
+		triggerEvent(self.element, 'fsmoveend', true, false);
+		triggerEvent(self.element, 'flipsnap.moveend', true, false); // backward compatibility (deprecated)
+	}
 };
 
 Flipsnap.prototype._setX = function(x) {
@@ -423,6 +423,12 @@ function some(ary, callback) {
 		}
 	}
 	return false;
+}
+
+function triggerEvent(element, type, bubbles, cancelable) {
+	var ev = document.createEvent('Event');
+	ev.initEvent(type, bubbles, cancelable);
+	element.dispatchEvent(ev);
 }
 
 window.Flipsnap = Flipsnap;
