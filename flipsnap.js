@@ -1,12 +1,13 @@
-/*
+/**
+ * @preserve
  * flipsnap.js
+ *
+ * @version  0.2.0
+ * @url http://pxgrid.github.com/js-flipsnap/
  *
  * Copyright 2011 PixelGrid, Inc.
  * Licensed under the MIT License:
  * http://www.opensource.org/licenses/mit-license.php
- *
- * @version  0.2.0
- *
  */
 
 (function(window, document, undefined) {
