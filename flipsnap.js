@@ -192,7 +192,7 @@ Flipsnap.prototype.moveToPoint = function(point) {
 	self._setX(- self.currentPoint * self.distance)
 
 	var ev = document.createEvent('Event');
-	ev.initEvent('flipsnap.moveend', true, false);
+	ev.initEvent('fsmoveend', true, false);
 	self.element.dispatchEvent(ev);
 };
 
