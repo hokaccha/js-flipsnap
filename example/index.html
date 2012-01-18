@@ -7,99 +7,99 @@
 <title>flipsnap.js example</title>
 <style>
 body {
-    margin: 0;
-    padding: 0;
-    background: #CCC;
+	margin: 0;
+	padding: 0;
+	background: #CCC;
 }
 .all {
-    width: 320px;
-    overflow: hidden;
-    background: #FFF;
-    margin: 0 auto;
-    padding-bottom: 20px;
+	width: 320px;
+	overflow: hidden;
+	background: #FFF;
+	margin: 0 auto;
+	padding-bottom: 20px;
 }
 h1 {
-    margin: 0;
-    padding: 10px;
-    text-align: center;
-    font-size: 30px;
+	margin: 0;
+	padding: 10px;
+	text-align: center;
+	font-size: 30px;
 }
 h2 {
-    padding: 10px;
-    margin: 20px 0 5px;
-    background: #EFEFEF;
-    font-size: 20px;
-    border-top: 1px solid #333;
-    border-bottom: 1px solid #333;
+	padding: 10px;
+	margin: 20px 0 5px;
+	background: #EFEFEF;
+	font-size: 20px;
+	border-top: 1px solid #333;
+	border-bottom: 1px solid #333;
 }
 .flipsnap {
-    margin: 10px 0;
+	margin: 10px 0;
 }
 .flipsnap:after {
-    content: '';
-    display: block;
-    clear: both;
+	content: '';
+	display: block;
+	clear: both;
 }
 .item {
-    width: 310px;
-    height: 200px;
-    border: 5px solid #000;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 100px;
-    color: #999;
-    line-height: 200px;
-    float: left;
+	width: 310px;
+	height: 200px;
+	border: 5px solid #000;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 100px;
+	color: #999;
+	line-height: 200px;
+	float: left;
 }
 
 .middle {
-    padding-left: 40px;
+	padding-left: 40px;
 }
 .middle .item {
-    width: 200px;
-    margin: 0 10px;
+	width: 200px;
+	margin: 0 10px;
 }
 
 .small .item {
-    width: 50px;
-    height: 50px;
-    margin: 0 10px;
-    line-height: 50px;
-    font-size: 20px;
+	width: 50px;
+	height: 50px;
+	margin: 0 10px;
+	line-height: 50px;
+	font-size: 20px;
 }
 
 .btns {
-    text-align: center;
+	text-align: center;
 }
 .pointer {
-    text-align: center;
+	text-align: center;
 }
 .pointer span {
-    display: inline-block;
-    width: 7px;
-    height: 7px;
-    border-radius: 5px;
-    border: 1px solid #000;
+	display: inline-block;
+	width: 7px;
+	height: 7px;
+	border-radius: 5px;
+	border: 1px solid #000;
 }
 .pointer span.current {
-    background: #FC0;
+	background: #FC0;
 }
 .item a {
-    display: block;
-    width: 100%;
-    height: 100%;
+	display: block;
+	width: 100%;
+	height: 100%;
 }
 .arrow {
-    display: inline-block;
-    padding: 5px 20px;
-    border: 1px solid #000;
-    margin: 0 5px;
-    cursor: pointer;
-    background: #CCC;
+	display: inline-block;
+	padding: 5px 20px;
+	border: 1px solid #000;
+	margin: 0 5px;
+	cursor: pointer;
+	background: #CCC;
 }
 .noHasNext {
-    opacity: 0.2;
-    cursor: auto;
+	opacity: 0.2;
+	cursor: auto;
 }
 </style>
 <script src="jquery-1.5.js"></script>
@@ -108,22 +108,33 @@ h2 {
 $(function() {
 
 $.fn.calcWidth = function() {
-    return this.each(function() {
-        var $elem = $(this);
-        var $items = $elem.find(".item");
-        $elem.width($items.size() * $items.outerWidth(true));
-    });
+	return this.each(function() {
+		var $elem = $(this);
+		var $items = $elem.find(".item");
+		$elem.width($items.size() * $items.outerWidth(true));
+	});
 };
 
 // width calc
 $(".flipsnap").calcWidth();
 
-Flipsnap("#flipsnap1");
-Flipsnap("#flipsnap2", { distance: 230 });
-Flipsnap("#flipsnap3", {
-	distance: 160,
-	point: 3
-});
+(function() {
+	// simple
+	var f1 = Flipsnap("#flipsnap1");
+})();
+
+(function() {
+	// set distance
+	var f2 = Flipsnap("#flipsnap2", { distance: 230 });
+})();
+
+(function() {
+	// set distance and point
+	var f3 = Flipsnap("#flipsnap3", {
+		distance: 160,
+		point: 3
+	});
+})();
 
 (function() {
 	var flipsnap = Flipsnap("#flipsnap4", { distance: 230 });
@@ -151,53 +162,53 @@ Flipsnap("#flipsnap3", {
 })();
 
 (function() {
-    // link
-    var f6 = Flipsnap("#flipsnap6");
-    $("#flipsnap6 a").click(function(e) {
-        e.preventDefault();
-        alert("clicked1");
-    });
+	// link
+	var f6 = Flipsnap("#flipsnap6");
+	$("#flipsnap6 a").click(function(e) {
+		e.preventDefault();
+		alert("clicked1");
+	});
 })();
 
 (function() {
-    // prev and next btn
-    var f7 = Flipsnap("#flipsnap7");
+	// prev and next btn
+	var f7 = Flipsnap("#flipsnap7");
 	var $box = $("#ex7");
-    var $next = $box.find(".next").click(function() { f7.toNext(); });
-    var $prev = $box.find(".prev").click(function() { f7.toPrev(); });
-    var nohas = "noHasNext";
-    f7.element.addEventListener('flipsnap.moveend', function() {
-        f7.hasNext() ? $next.removeClass(nohas) : $next.addClass(nohas);
-        f7.hasPrev() ? $prev.removeClass(nohas) : $prev.addClass(nohas);
-    }, false);
+	var $next = $box.find(".next").click(function() { f7.toNext(); });
+	var $prev = $box.find(".prev").click(function() { f7.toPrev(); });
+	var nohas = "noHasNext";
+	f7.element.addEventListener('flipsnap.moveend', function() {
+		f7.hasNext() ? $next.removeClass(nohas) : $next.addClass(nohas);
+		f7.hasPrev() ? $prev.removeClass(nohas) : $prev.addClass(nohas);
+	}, false);
 })();
 
 (function() {
-    // set number jump
-    var f8 = Flipsnap("#flipsnap8");
+	// set number jump
+	var f8 = Flipsnap("#flipsnap8");
 	var $box = $("#ex8");
-    var $num = $box.find(".num");
-    $box.find(".go").click(function() {
-        f8.moveToPoint($num.val() - 1);
-    });
+	var $num = $box.find(".num");
+	$box.find(".go").click(function() {
+		f8.moveToPoint($num.val() - 1);
+	});
 })();
 
 (function() {
-    // set number jump
-    var f9 = Flipsnap("#flipsnap9", { touchDisable: true });
+	// set number jump
+	var f9 = Flipsnap("#flipsnap9", { touchDisable: true });
 	var $box = $("#ex9");
-    var $num = $box.find(".num");
-    $box.find(".go").click(function() {
-        f9.moveToPoint($num.val() - 1);
-    });
+	var $num = $box.find(".num");
+	$box.find(".go").click(function() {
+		f9.moveToPoint($num.val() - 1);
+	});
 
-    var $next = $box.find(".next").click(function() { f9.toNext(); });
-    var $prev = $box.find(".prev").click(function() { f9.toPrev(); });
-    var nohas = "noHasNext";
-    f9.element.addEventListener('flipsnap.moveend', function() {
-        f9.hasNext() ? $next.removeClass(nohas) : $next.addClass(nohas);
-        f9.hasPrev() ? $prev.removeClass(nohas) : $prev.addClass(nohas);
-    }, false);
+	var $next = $box.find(".next").click(function() { f9.toNext(); });
+	var $prev = $box.find(".prev").click(function() { f9.toPrev(); });
+	var nohas = "noHasNext";
+	f9.element.addEventListener('flipsnap.moveend', function() {
+		f9.hasNext() ? $next.removeClass(nohas) : $next.addClass(nohas);
+		f9.hasPrev() ? $prev.removeClass(nohas) : $prev.addClass(nohas);
+	}, false);
 })();
 
 });
@@ -208,130 +219,130 @@ Flipsnap("#flipsnap3", {
 <h1>flipsnap.js</h1>
 
 <section id="ex1">
-    <h2>example1</h2>
-    <div class="flipsnap" id="flipsnap1">
-        <div class="item">1</div>
-        <div class="item">2</div>
-        <div class="item">3</div>
-    </div>
+	<h2>example1</h2>
+	<div class="flipsnap" id="flipsnap1">
+		<div class="item">1</div>
+		<div class="item">2</div>
+		<div class="item">3</div>
+	</div>
 </section>
 
 <section id="ex2">
-    <h2>example2</h2>
-    <div class="flipsnap middle" id="flipsnap2">
-        <div class="item">1</div>
-        <div class="item">2</div>
-        <div class="item">3</div>
-    </div>
+	<h2>example2</h2>
+	<div class="flipsnap middle" id="flipsnap2">
+		<div class="item">1</div>
+		<div class="item">2</div>
+		<div class="item">3</div>
+	</div>
 </section>
 
 <section id="ex3">
-    <h2>example3</h2>
-    <div class="flipsnap small" id="flipsnap3">
-        <div class="item">1</div>
-        <div class="item">2</div>
-        <div class="item">3</div>
-        <div class="item">4</div>
-        <div class="item">5</div>
-        <div class="item">6</div>
-        <div class="item">7</div>
-        <div class="item">8</div>
-        <div class="item">9</div>
-        <div class="item">10</div>
-    </div>
+	<h2>example3</h2>
+	<div class="flipsnap small" id="flipsnap3">
+		<div class="item">1</div>
+		<div class="item">2</div>
+		<div class="item">3</div>
+		<div class="item">4</div>
+		<div class="item">5</div>
+		<div class="item">6</div>
+		<div class="item">7</div>
+		<div class="item">8</div>
+		<div class="item">9</div>
+		<div class="item">10</div>
+	</div>
 </section>
 
 <section id="ex4">
-    <h2>example4</h2>
-    <div class="flipsnap middle" id="flipsnap4">
-        <div class="item">1</div>
-    </div>
-    <p class="btns">
-        <button class="btn1">add</button>
-        <button class="btn2">remove</button>
-    </p>
+	<h2>example4</h2>
+	<div class="flipsnap middle" id="flipsnap4">
+		<div class="item">1</div>
+	</div>
+	<p class="btns">
+		<button class="btn1">add</button>
+		<button class="btn2">remove</button>
+	</p>
 </section>
 
 <section id="ex5">
-    <h2>example5</h2>
-    <div class="flipsnap" id="flipsnap5">
-        <div class="item">1</div>
-        <div class="item">2</div>
-        <div class="item">3</div>
-        <div class="item">4</div>
-        <div class="item">5</div>
-    </div>
-    <div class="pointer">
-        <span class="current"></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
+	<h2>example5</h2>
+	<div class="flipsnap" id="flipsnap5">
+		<div class="item">1</div>
+		<div class="item">2</div>
+		<div class="item">3</div>
+		<div class="item">4</div>
+		<div class="item">5</div>
+	</div>
+	<div class="pointer">
+		<span class="current"></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+	</div>
 </section>
 
 <section id="ex6">
-    <h2>example6</h2>
-    <div class="flipsnap" id="flipsnap6">
-        <div class="item"><a href="dummy">1</a></div>
-        <div class="item"><a href="dummy">2</a></div>
-        <div class="item"><a href="dummy">3</a></div>
-    </div>
+	<h2>example6</h2>
+	<div class="flipsnap" id="flipsnap6">
+		<div class="item"><a href="dummy">1</a></div>
+		<div class="item"><a href="dummy">2</a></div>
+		<div class="item"><a href="dummy">3</a></div>
+	</div>
 </section>
 
 <section id="ex7">
-    <h2>example7</h2>
-    <div class="flipsnap" id="flipsnap7">
-        <div class="item">1</div>
-        <div class="item">2</div>
-        <div class="item">3</div>
-    </div>
-    <div class="btns">
-        <span class="prev arrow noHasNext">←</span>
-        <span class="next arrow">→</span>
-    </div>
+	<h2>example7</h2>
+	<div class="flipsnap" id="flipsnap7">
+		<div class="item">1</div>
+		<div class="item">2</div>
+		<div class="item">3</div>
+	</div>
+	<div class="btns">
+		<span class="prev arrow noHasNext">←</span>
+		<span class="next arrow">→</span>
+	</div>
 </section>
 
 <section id="ex8">
-    <h2>example8</h2>
-    <div class="flipsnap" id="flipsnap8">
-        <div class="item">1</div>
-        <div class="item">2</div>
-        <div class="item">3</div>
-        <div class="item">4</div>
-        <div class="item">5</div>
-        <div class="item">6</div>
-        <div class="item">7</div>
-        <div class="item">8</div>
-        <div class="item">9</div>
-    </div>
-    <div class="btns">
-        <input type="number" size="3" class="num"><button class="go">GO</button>
-    </div>
+	<h2>example8</h2>
+	<div class="flipsnap" id="flipsnap8">
+		<div class="item">1</div>
+		<div class="item">2</div>
+		<div class="item">3</div>
+		<div class="item">4</div>
+		<div class="item">5</div>
+		<div class="item">6</div>
+		<div class="item">7</div>
+		<div class="item">8</div>
+		<div class="item">9</div>
+	</div>
+	<div class="btns">
+		<input type="number" size="3" class="num"><button class="go">GO</button>
+	</div>
 </section>
 
 <section id="ex9">
-    <h2>example9</h2>
-    <p style="text-align: center">(disable touch)</p>
-    <div class="flipsnap" id="flipsnap9">
-        <div class="item">1</div>
-        <div class="item">2</div>
-        <div class="item">3</div>
-        <div class="item">4</div>
-        <div class="item">5</div>
-        <div class="item">6</div>
-        <div class="item">7</div>
-        <div class="item">8</div>
-        <div class="item">9</div>
-        <div class="item">10</div>
-    </div>
-    <div class="btns">
-        <span class="prev arrow noHasNext">←</span>
-        <span class="next arrow">→</span>
-    </div>
-    <div class="btns" style="margin-top:20px">
-        <input type="number" size="3" class="num"><button class="go">GO</button>
-    </div>
+	<h2>example9</h2>
+	<p style="text-align: center">(disable touch)</p>
+	<div class="flipsnap" id="flipsnap9">
+		<div class="item">1</div>
+		<div class="item">2</div>
+		<div class="item">3</div>
+		<div class="item">4</div>
+		<div class="item">5</div>
+		<div class="item">6</div>
+		<div class="item">7</div>
+		<div class="item">8</div>
+		<div class="item">9</div>
+		<div class="item">10</div>
+	</div>
+	<div class="btns">
+		<span class="prev arrow noHasNext">←</span>
+		<span class="next arrow">→</span>
+	</div>
+	<div class="btns" style="margin-top:20px">
+		<input type="number" size="3" class="num"><button class="go">GO</button>
+	</div>
 </section>
 
 
