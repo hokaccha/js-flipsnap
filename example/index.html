@@ -51,9 +51,6 @@ h2 {
     line-height: 200px;
     float: left;
 }
-#flipsnap1 {
-    width: 960px;
-}
 
 .middle {
     padding-left: 40px;
@@ -110,47 +107,47 @@ h2 {
 <script>
 $(function() {
 
-(function() {
-    // simple
-    var f1 = Flipsnap("#flipsnap1");
-})();
-
-(function() {
-    // set distance
-    var f2 = Flipsnap("#flipsnap2", { distance: 230 });
-})();
-
-(function() {
-    // set distance and point
-    var f3 = Flipsnap("#flipsnap3", {
-        distance: 160,
-        point: 3
+$.fn.calcWidth = function() {
+    return this.each(function() {
+        var $elem = $(this);
+        var $items = $elem.find(".item");
+        $elem.width($items.size() * $items.outerWidth(true));
     });
+};
+
+// width calc
+$(".flipsnap").calcWidth();
+
+Flipsnap("#flipsnap1");
+Flipsnap("#flipsnap2", { distance: 230 });
+Flipsnap("#flipsnap3", {
+	distance: 160,
+	point: 3
+});
+
+(function() {
+	var flipsnap = Flipsnap("#flipsnap4", { distance: 230 });
+	var $flipsnap = $("#flipsnap4");
+	$(".btn1").click(function() {
+		var $item = $("<div>").addClass("item").text(
+			$flipsnap.find(".item").size() + 1
+		);
+		$flipsnap.append( $item ).calcWidth();
+		flipsnap.refresh();
+	});
+	$(".btn2").click(function() {
+		$flipsnap.find(".item").last().remove().calcWidth();
+		flipsnap.refresh();
+	});
 })();
 
 (function() {
-    // add and remove, refresh
-    var f4 = Flipsnap("#flipsnap4", { distance: 230 });
-    var $f4 = $("#flipsnap4");
-    $(".btn1").click(function() {
-        var $item = $("<div>").addClass("item").text( $f4.find(".item").size() + 1 );
-        $f4.append( $item );
-        f4.refresh();
-    });
-    $(".btn2").click(function() {
-        $f4.find(".item").last().remove();
-        f4.refresh();
-    });
-})();
-
-(function() {
-    // stop callback
-    var $pointer = $(".pointer span");
-    var f5 = Flipsnap("#flipsnap5");
-    f5.element.addEventListener('flipsnap.moveend', function() {
-        $pointer.filter(".current").removeClass("current");
-        $pointer.eq( f5.currentPoint ).addClass("current");
-    }, false);
+	var $pointer = $(".pointer span");
+	var f5 = Flipsnap("#flipsnap5");
+	f5.element.addEventListener('flipsnap.moveend', function() {
+		$pointer.filter(".current").removeClass("current");
+		$pointer.eq( f5.currentPoint ).addClass("current");
+	}, false);
 })();
 
 (function() {
