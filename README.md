@@ -8,7 +8,7 @@ http://dl.dropbox.com/u/336104/demo/flipsnap/example/index.html
 
 ## support
 
-## Mobile
+### Mobile
 
 * iOS Safari (iOS4+)
 * Android Browser (Android 2.1+) (*1)
