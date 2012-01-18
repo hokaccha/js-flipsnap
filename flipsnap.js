@@ -115,7 +115,8 @@ Flipsnap.prototype.refresh = function() {
 	var self = this;
 
 	// setting max point
-	self.maxPoint = self.conf.maxPoint || (function() {
+    // conf.point is backward compatibility. (deprecated)
+	self.maxPoint = self.conf.maxPoint || self.conf.point || (function() {
 		var childNodes = self.element.childNodes,
 			itemLength = 0,
 			i = 0,
@@ -193,6 +194,7 @@ Flipsnap.prototype.moveToPoint = function(point) {
 
 	var ev = document.createEvent('Event');
 	ev.initEvent('fsmoveend', true, false);
+	ev.initEvent('flipsnap.moveend', true, false); // backward compatibility (deprecated)
 	self.element.dispatchEvent(ev);
 };
 
