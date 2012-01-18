@@ -114,10 +114,8 @@ Flipsnap.prototype.handleEvent = function(event) {
 Flipsnap.prototype.refresh = function() {
 	var self = this;
 
-	var conf = self.conf;
-
 	// setting max point
-	self.maxPoint = conf.point || (function() {
+	self.maxPoint = self.conf.maxPoint || (function() {
 		var childNodes = self.element.childNodes,
 			itemLength = 0,
 			i = 0,
@@ -137,10 +135,10 @@ Flipsnap.prototype.refresh = function() {
 	})();
 
 	// setting distance
-	self.distance = conf.distance || self.element.scrollWidth / (self.maxPoint + 1);
+	self.distance = self.conf.distance || self.element.scrollWidth / (self.maxPoint + 1);
 
 	// setting maxX
-	self.maxX = conf.maxX ? - conf.maxX : - self.distance * self.maxPoint;
+	self.maxX = -self.distance * self.maxPoint;
 
 	self.moveToPoint(self.currentPoint);
 };
