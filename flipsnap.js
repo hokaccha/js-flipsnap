@@ -141,7 +141,7 @@ Flipsnap.prototype.refresh = function() {
 	// setting maxX
 	self.maxX = -self.distance * self.maxPoint;
 
-	self.moveToPoint(self.currentPoint, true);
+	self.moveToPoint();
 };
 
 Flipsnap.prototype.hasNext = function() {
@@ -176,13 +176,25 @@ Flipsnap.prototype.toPrev = function() {
 	self.moveToPoint(self.currentPoint - 1);
 };
 
-Flipsnap.prototype.moveToPoint = function(point, noFireEvent) {
+Flipsnap.prototype.moveToPoint = function(point) {
 	var self = this;
 
-	self.currentPoint = 
-		(point < 0) ? 0 :
-		(point > self.maxPoint) ? self.maxPoint :
-		parseInt(point);
+	var beforePoint = self.currentPoint;
+
+	// not called from `refresh()`
+	if (point === undefined) {
+		point = self.currentPoint;
+	}
+
+	if (point < 0) {
+		self.currentPoint = 0;
+	}
+	else if (point > self.maxPoint) {
+		self.currentPoint = self.maxPoint;
+	}
+	else {
+		self.currentPoint = parseInt(point);
+	}
 
 	if (support.cssAnimation) {
 		self._setStyle({ transitionDuration: '350ms' });
@@ -190,9 +202,9 @@ Flipsnap.prototype.moveToPoint = function(point, noFireEvent) {
 	else {
 		self.animation = true;
 	}
-	self._setX(- self.currentPoint * self.distance)
+	self._setX(- self.currentPoint * self.distance);
 
-	if (!noFireEvent) {
+	if (beforePoint !== self.currentPoint) { // is move?
 		triggerEvent(self.element, 'fsmoveend', true, false);
 		triggerEvent(self.element, 'flipsnap.moveend', true, false); // backward compatibility (deprecated)
 	}
