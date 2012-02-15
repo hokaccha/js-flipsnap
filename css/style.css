@@ -216,13 +216,6 @@ a:hover {
 .all {
   margin: 0 auto;
 }
-ul {
-  list-style: circle;
-  padding: 5px 0 5px 40px;
-}
-li {
-  margin: 5px 0;
-}
 button[disabled] {
   color: #CCC;
 }
@@ -247,14 +240,14 @@ button[disabled] {
 }
 .mod-header nav li {
   display: inline-block;
-  padding: 0 20px 0 0;
+  padding: 0 10px;
 }
 .mod-header nav li a {
   text-decoration: none;
 }
 .main {
-  width: 720px;
-  padding: 10px 0;
+  width: 700px;
+  padding: 10px;
   margin: 0 auto;
 }
 .main h2 {
@@ -272,6 +265,13 @@ button[disabled] {
 }
 .main .note {
   font-size: 12px;
+}
+.main ul {
+  list-style: circle;
+  padding: 5px 0 5px 40px;
+}
+.main li {
+  margin: 5px 0;
 }
 .demo .wrapper {
   width: 320px;
@@ -352,4 +352,19 @@ button[disabled] {
 }
 #demo-moveToPoint .flipsnap {
   width: 2345px;
+}
+@media screen and (max-width: 480px) {
+  .mod-header h1 {
+    font-size: 34px;
+    padding-bottom: 10px;
+  }
+  .mod-header nav ul {
+    font-size: 18px;
+  }
+  .main {
+    width: 300px;
+  }
+  .github-ribbon {
+    display: none;
+  }
 }
