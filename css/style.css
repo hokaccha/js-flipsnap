@@ -322,5 +322,13 @@ button[disabled] {
   .main {
     width: 300px; }
 
+  .demo {
+    position: relative;
+    left: -10px; }
+
+  .demo h3 {
+    position: relative;
+    left: 10px; }
+
   .github-ribbon {
     display: none; } }
