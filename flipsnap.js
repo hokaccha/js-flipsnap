@@ -67,9 +67,10 @@ Flipsnap.prototype.init = function(element, conf) {
 	self.currentPoint = 0;
 	self.currentX = 0;
 	self.animation = false;
-	self.use3d = (self.conf.use3d === undefined)
-		? support.transform3d
-		: self.conf.use3d;
+	self.use3d = support.transform3d;
+	if (self.conf.use3d === false) {
+		self.use3d = false;
+	}
 
 	if (support.cssAnimation) {
 		self._setStyle({
