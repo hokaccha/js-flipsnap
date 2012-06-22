@@ -63,12 +63,20 @@ Flipsnap.prototype.init = function(element, conf) {
 		self.element = document.querySelector(element);
 	}
 
+	self.conf = conf || {};
+	self.currentPoint = 0;
+	self.currentX = 0;
+	self.animation = false;
+	self.use3d = (self.conf.use3d === undefined)
+		? support.transform3d
+		: self.conf.use3d;
+
 	if (support.cssAnimation) {
 		self._setStyle({
 			transitionProperty: getCSSVal('transform'),
 			transitionTimingFunction: 'cubic-bezier(0,0,0.25,1)',
 			transitionDuration: '0ms',
-			transform: getTranslate(0)
+			transform: self._getTranslate(0)
 		});
 	}
 	else {
@@ -77,11 +85,6 @@ Flipsnap.prototype.init = function(element, conf) {
 			left: '0px'
 		});
 	}
-
-	self.conf = conf || {};
-	self.currentPoint = 0;
-	self.currentX = 0;
-	self.animation = false;
 
 	self.refresh();
 
@@ -215,7 +218,7 @@ Flipsnap.prototype._setX = function(x) {
 
 	self.currentX = x;
 	if (support.cssAnimation) {
-		self.element.style[ saveProp.transform ] = getTranslate(x);
+		self.element.style[ saveProp.transform ] = self._getTranslate(x);
 	}
 	else {
 		if (self.animation) {
@@ -370,11 +373,13 @@ Flipsnap.prototype.destroy = function() {
 	self.element.removeEventListener(touchEndEvent, self);
 };
 
-function getTranslate(x) {
-	return support.transform3d
+Flipsnap.prototype._getTranslate = function(x) {
+	var self = this;
+
+	return self.use3d
 		? 'translate3d(' + x + 'px, 0, 0)'
 		: 'translate(' + x + 'px, 0)';
-}
+};
 
 function getPage(event, page) {
 	return support.touch ? event.changedTouches[0][page] : event[page];
