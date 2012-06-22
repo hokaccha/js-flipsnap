@@ -1,2 +1,2 @@
 destination: _site
-exclude: Rakefile
+exclude: [Rakefile, Gemfile, Gemfile.lock]
