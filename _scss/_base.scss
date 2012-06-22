@@ -1,0 +1,193 @@
+body {
+	font-family: 'Hiragino Kaku Gothic Pro',Meiryo,'MS PGothic',sans-serif;
+	line-height: 1.5;
+}
+
+a {
+	color: #3579b3;
+}
+
+a:hover {
+	color: #C00;
+}
+
+.all {
+	margin: 0 auto;
+}
+
+button[disabled] {
+	color: #CCC;
+}
+
+.mod-header {
+	background: #eee7d3;
+	padding: 20px 0;
+	border-bottom: 3px solid #bfb9a9;
+
+	h1 {
+		font-size: 56px;
+		padding: 0 0 20px 0;
+		text-align: center;
+		font-family: monospace;
+	}
+
+	h1 a {
+		color: #444;
+		text-decoration: none;
+	}
+
+
+	nav {
+		ul {
+			text-align: center;
+			font-size: 20px;
+		}
+
+		li {
+			display: inline-block;
+			padding: 0 10px;
+		}
+
+		li a {
+			text-decoration: none;
+		}
+	}
+}
+
+.main {
+	width: 700px;
+	padding: 10px;
+	margin: 0 auto;
+
+	h2 {
+		font-size: 30px;
+		padding: 10px 0;
+		color: #504e47;
+	}
+
+	h3 {
+		color: #504e47;
+		border-bottom: 2px solid #bfb9a9;
+		padding: 10px 0;
+	}
+
+	section {
+		margin-bottom: 20px;
+	}
+
+	.note {
+		font-size: 12px;
+	}
+
+	ul {
+		list-style: circle;
+		padding: 5px 0 5px 40px;
+	}
+
+	li {
+		margin: 5px 0;
+	}
+
+}
+
+.demo {
+	.wrapper {
+		width: 320px;
+		overflow: hidden;
+		margin: 0 auto;
+		padding: 30px 0;
+	}
+
+	.flipsnap {
+		width: 230px * 5 + 45px; /* 230px(item) * 5 + 45px(padding) */
+		padding-left: 45px;
+	}
+
+	.item {
+		width: 200px;
+		margin: 0 10px;
+		font-size: 50px;
+		text-align: center;
+		padding: 50px 0;
+		background: #EFEFEF;
+		border: 5px solid #999;
+		float: left;
+		color: #666;
+	}
+
+	.pointer {
+		text-align: center;
+	}
+	.pointer span {
+		display: inline-block;
+		width: 8px;
+		height: 8px;
+		border-radius: 8px;
+		border: 1px solid #000;
+	}
+	.pointer span.current {
+		background: #FC0;
+	}
+
+	.controls {
+		text-align: center;
+		margin: 0 0 15px 0;
+	}
+
+	.controls .num {
+		width: 60px;
+	}
+}
+
+#demo-simple {
+	.flipsnap {
+		width: 960px;
+		padding: 0;
+	}
+
+	.item {
+		width: 310px;
+		margin: 0;
+	}
+}
+
+#demo-maxPoint {
+	.flipsnap {
+		width: 80px * 10; /* 80px(item) * 10 */
+		padding: 0;
+	}
+
+	.item {
+		width: 50px;
+		font-size: 20px;
+		padding: 10px 0;
+	}
+}
+
+#demo-refresh {
+	.flipsnap {
+		width: 270px;
+	}
+}
+
+#demo-link {
+	.item {
+		padding: 0;
+	}
+
+	.item a {
+		width: 200px;
+		height: 180px;
+		display: table-cell;
+		vertical-align: middle;
+		text-align: center;
+		color: #00F;
+		font-size: 18px;
+	}
+}
+
+#demo-moveToPoint {
+	.flipsnap {
+		width: 230px * 10 + 45px;
+	}
+}

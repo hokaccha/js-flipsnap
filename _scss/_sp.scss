@@ -1,0 +1,32 @@
+@media screen and (max-width: 480px) {
+
+.mod-header {
+	h1 {
+		font-size: 34px;
+		padding-bottom: 10px;
+	}
+
+	nav ul {
+		font-size: 18px;
+	}
+}
+
+.main {
+	width: 300px;
+}
+
+.demo {
+	position: relative;
+	left: -10px;
+}
+
+.demo h3 {
+	position: relative;
+	left: 10px;
+}
+
+.github-ribbon {
+	display: none;
+}
+
+} // @media max-width: 480px
