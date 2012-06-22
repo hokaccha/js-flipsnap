@@ -343,7 +343,7 @@ Flipsnap.prototype._animate = function(x) {
 	var self = this;
 
 	var elem = self.element;
-	var begin = +new Date;
+	var begin = +new Date();
 	var from = parseInt(elem.style.left, 10);
 	var to = x;
 	var duration = 350;
@@ -351,7 +351,7 @@ Flipsnap.prototype._animate = function(x) {
 		return -(time /= duration) * (time - 2);
 	};
 	var timer = setInterval(function() {
-		var time = new Date - begin;
+		var time = new Date() - begin;
 		var pos, now;
 		if (time > duration) {
 			clearInterval(timer);
