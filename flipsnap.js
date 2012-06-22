@@ -196,7 +196,7 @@ Flipsnap.prototype.moveToPoint = function(point) {
 		self.currentPoint = self.maxPoint;
 	}
 	else {
-		self.currentPoint = parseInt(point);
+		self.currentPoint = parseInt(point, 10);
 	}
 
 	if (support.cssAnimation) {
@@ -344,7 +344,7 @@ Flipsnap.prototype._animate = function(x) {
 
 	var elem = self.element;
 	var begin = +new Date;
-	var from = parseInt(elem.style.left);
+	var from = parseInt(elem.style.left, 10);
 	var to = x;
 	var duration = 350;
 	var easing = function(time, duration) {
