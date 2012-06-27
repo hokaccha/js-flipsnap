@@ -63,6 +63,10 @@ Flipsnap.prototype.init = function(element, conf) {
 		self.element = document.querySelector(element);
 	}
 
+	if (!self.element) {
+		throw new Error('element not found');
+	}
+
 	self.conf = conf || {};
 	self.currentPoint = 0;
 	self.currentX = 0;
