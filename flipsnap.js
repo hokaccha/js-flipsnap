@@ -222,7 +222,6 @@ Flipsnap.prototype.moveToPoint = function(point) {
 
 	if (beforePoint !== self.currentPoint) { // is move?
 		triggerEvent(self.element, 'fsmoveend', true, false);
-		triggerEvent(self.element, 'flipsnap.moveend', true, false); // backward compatibility (deprecated)
 	}
 };
 
