@@ -1,0 +1,58 @@
+---
+layout: default
+title: Getting Started
+---
+
+<section>
+	<h2>Getting Started</h2>
+	<section>
+		<div class="viewport" id="demo-simple">
+			<div class="flipsnap">
+				<div class="item">1</div>
+				<div class="item">2</div>
+				<div class="item">3</div>
+			</div>
+		</div>
+		<section>
+			<h4>HTML</h4>
+<pre><code>&lt;div class="viewport"&gt;
+    &lt;div class="flipsnap"&gt;
+        &lt;div class="item"&gt;1&lt;/div&gt;
+        &lt;div class="item"&gt;2&lt;/div&gt;
+        &lt;div class="item"&gt;3&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre> 
+		</section>
+		<section>
+			<h4>CSS</h4>
+<pre><code>.viewport {
+    <strong>width: 320px;</strong>
+    <strong>overflow: hidden;</strong>
+    margin: 0 auto;
+    padding: 30px 0;
+}
+
+.flipsnap {
+    <strong>width: 960px; /* 320px(item width) * 3(item count) */</strong>
+}
+
+.item {
+    width: 320px;
+    font-size: 50px;
+    text-align: center;
+    padding: 50px 0;
+    background: #EFEFEF;
+    border: 5px solid #999;
+    float: left;
+    color: #666;
+}</code></pre>
+	</section>
+	<section>
+		<h4>JavaScript</h4>
+		<pre class="language-javascript"><code>Flipsnap('.flipsnap');</code></pre>
+	</section>
+</section>
+
+<script>
+Flipsnap('.flipsnap');
+</script>

@@ -15,6 +15,11 @@ pre {
 	margin: 15px 0;
 }
 
+pre strong,
+pre strong *, {
+	color: #C00 !important;
+}
+
 table {
 	margin: 10px 0;
 	width: 100%;
@@ -115,53 +120,51 @@ button[disabled] {
 
 }
 
-.demo {
-	.wrapper {
-		width: 320px;
-		overflow: hidden;
-		margin: 0 auto;
-		padding: 30px 0;
-	}
+.viewport {
+	width: 320px;
+	overflow: hidden;
+	margin: 0 auto;
+	padding: 30px 0;
+}
 
-	.flipsnap {
-		width: 230px * 5 + 45px; /* 230px(item) * 5 + 45px(padding) */
-		padding-left: 45px;
-	}
+.flipsnap {
+	width: 230px * 5 + 45px; /* 230px(item) * 5 + 45px(padding) */
+	padding-left: 45px;
+}
 
-	.item {
-		width: 200px;
-		margin: 0 10px;
-		font-size: 50px;
-		text-align: center;
-		padding: 50px 0;
-		background: #EFEFEF;
-		border: 5px solid #999;
-		float: left;
-		color: #666;
-	}
+.item {
+	width: 200px;
+	margin: 0 10px;
+	font-size: 50px;
+	text-align: center;
+	padding: 50px 0;
+	background: #EFEFEF;
+	border: 5px solid #999;
+	float: left;
+	color: #666;
+}
 
-	.pointer {
-		text-align: center;
-	}
-	.pointer span {
-		display: inline-block;
-		width: 8px;
-		height: 8px;
-		border-radius: 8px;
-		border: 1px solid #000;
-	}
-	.pointer span.current {
-		background: #FC0;
-	}
+.pointer {
+	text-align: center;
+}
+.pointer span {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	border-radius: 8px;
+	border: 1px solid #000;
+}
+.pointer span.current {
+	background: #FC0;
+}
 
-	.controls {
-		text-align: center;
-		margin: 0 0 15px 0;
-	}
+.controls {
+	text-align: center;
+	margin: 0 0 15px 0;
+}
 
-	.controls .num {
-		width: 60px;
-	}
+.controls .num {
+	width: 60px;
 }
 
 #demo-simple {
