@@ -3,8 +3,133 @@ layout: default
 title: Document
 ---
 
-<section>
+<section class="page-document">
 	<h2>Document</h2>
 
-	<p>Working now</p>
+	<section>
+		<h3>Function</h3>
+		<pre class="language-javascript"><code>Flipsnap(HTMLElement|String, option)</pre></code>
+		<ul>
+			<li>HTMLElement or String is required. option is optinal.</li>
+			<li>String must be CSS Selector</li>
+			<li>When set string, to get first element of result. Not all element.</li>
+		</ul>
+		<section>
+			<h4>example</h4>
+			<pre><code>// HTMLElement
+var elem = document.getElementById('foo');
+var flipsnap = Flipsnap(elem);</code></pre>
+			<pre><code>// CSS Selector
+var flipsnap = Flipsnap('#foo');</code></pre>
+
+			<pre><code>// With options
+var flipsnap = Flipsnap('#foo', { distance: 240 });</code></pre>
+		</section>
+	</section>
+
+	<section>
+		<h3>Option</h3>
+		<table>
+			<tr>
+				<th>name</th>
+				<th>type</th>
+				<th>description</th>
+			</tr>
+			<tr>
+				<td>maxPoint</td>
+				<td>Number</td>
+				<td>Stop point count. default is auto calculate from element item count.<br><a href="demo.html#demo-maxPoint">demo</a></td>
+			</tr>
+			<tr>
+				<td>distance</td>
+				<td>Number</td>
+				<td>Move distance. default is auto calculate from element width and maxPont.<br><a href="demo.html#demo-distance">demo</a></td>
+			</tr>
+			<tr>
+				<td>disableTouch</td>
+				<td>Boolean</td>
+				<td>When set true, touch event is disabled. Only handling button or etc interface. default is false.<br><a href="demo.html#demo-disableTouch">demo</a></td>
+			</tr>
+			<tr>
+				<td>disable3d</td>
+				<td>Boolean</td>
+				<td>When support 3D transform browser and this option set true, it is not used 3D transform and use 2D transform. You should set true, when it is a device which has a bug in 3D transform(old Android or BlackBerry etc). default is false.</td>
+			</tr>
+		</table>
+	</section>
+
+	<section>
+		<h3>Method</h3>
+
+		<section>
+			<h4>refresh</h4>
+			<p>Recalculate values. <a href="demo.html#demo-refresh">demo</a></p>
+			<pre><code>var flipsnap = Flipsnap('#foo');
+flipsnap.refresh();</code></pre>
+		</section>
+
+		<section>
+			<h4>hasNext</h4>
+			<p>Return true or false. true is returned when there is next element.  <a href="demo.html#demo-nextprev">demo</a></p>
+			<pre><code>var flipsnap = Flipsnap('#foo');
+if (flipsnap.hasNext()) {
+    // do something
+}</code></pre>
+		</section>
+
+		<section>
+			<h4>hasPrev</h4>
+			<p>Return true or false. true is returned when there is previous element. <a href="demo.html#demo-nextprev">demo</a></p>
+			<pre><code>var flipsnap = Flipsnap('#foo');
+if (flipsnap.hasPrev()) {
+    // do something
+}</code></pre>
+		</section>
+
+		<section>
+			<h4>toNext</h4>
+			<p>Move to next item. <a href="demo.html#demo-nextprev">demo</a></p>
+			<pre><code>var flipsnap = Flipsnap('#foo');
+$('.nextBtn').click(function() {
+    flipsnap.toNext();
+});</code></pre>
+		</section>
+
+		<section>
+			<h4>toPrev</h4>
+			<p>Move to previous item. <a href="demo.html#demo-nextprev">demo</a></p>
+			<pre><code>var flipsnap = Flipsnap('#foo');
+$('.prevBtn').click(function() {
+    flipsnap.toPrev();
+});</code></pre>
+		</section>
+
+		<section>
+			<h4>moveToPoint</h4>
+			<p>Move to item of number. <a href="demo.html#demo-moveToPoint">demo</a></p>
+			<pre><code>var flipsnap = Flipsnap('#foo');
+$('.moveBtn').click(function() {
+    var point = $('input.point').val();
+    flipsnap.moveToPoint(point);
+});</code></pre>
+		</section>
+	</section>
+
+	<section>
+		<h3>Event</h3>
+
+		<section>
+			<h4>fsmoveend</h4>
+			<p>Fired move end. <a href="demo.html#demo-moveend">demo</a>.</p>
+			<pre><code>var flipsnap = Flipsnap('#foo');
+flipsnap.element.addEventListener('fsmoveend', function() {
+    // do something
+}, false);</code></pre>
+			<pre><code>// using jQuery .bind()
+var flipsnap = Flipsnap('#foo');
+$(flipsnap.element).bind('fsmoveend', function() {
+    // do something
+}, false);</code></pre>
+		</section>
+	</section>
 </section>

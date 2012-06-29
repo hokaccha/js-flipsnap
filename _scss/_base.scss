@@ -11,6 +11,24 @@ a:hover {
 	color: #C00;
 }
 
+pre {
+	margin: 15px 0;
+}
+
+table {
+	margin: 10px 0;
+	width: 100%;
+}
+
+th {
+	background: #EFEFEF;
+}
+
+th, td {
+	border: 1px solid #CCC;
+	padding: 5px;
+}
+
 .all {
 	margin: 0 auto;
 }
@@ -69,6 +87,13 @@ button[disabled] {
 		color: #504e47;
 		border-bottom: 2px solid #bfb9a9;
 		padding: 10px 0;
+		font-size: 22px;
+	}
+
+	h4 {
+		margin: 10px 0;
+		font-size: 18px;
+		color: #504e47;
 	}
 
 	section {

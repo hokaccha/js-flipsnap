@@ -106,15 +106,15 @@ if (!$('.demo').length) return;
 })();
 
 (function disableTouch() {
-	var $demo = $('#demo-touchDisable');
-	var flipsnap = Flipsnap('#demo-touchDisable .flipsnap', {
+	var $demo = $('#demo-disableTouch');
+	var flipsnap = Flipsnap('#demo-disableTouch .flipsnap', {
 		distance: 230,
-		touchDisable: true
+		disableTouch: true
 	});
 
 	// disable check
 	$demo.find('.isDisable').change(function() {
-		flipsnap.conf.touchDisable = $(this).is(':checked');
+		flipsnap.disableTouch = $(this).is(':checked');
 	});
 
 	// Go btn
