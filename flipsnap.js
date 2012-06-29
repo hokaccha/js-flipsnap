@@ -48,15 +48,16 @@ var touchStartEvent = support.touch ? 'touchstart' : 'mousedown';
 var touchMoveEvent = support.touch ? 'touchmove' : 'mousemove';
 var touchEndEvent = support.touch ? 'touchend' : 'mouseup';
 
-function Flipsnap(element, conf) {
+function Flipsnap(element, opts) {
 	return (this instanceof Flipsnap)
-		? this.init(element, conf)
-		: new Flipsnap(element, conf);
+		? this.init(element, opts)
+		: new Flipsnap(element, opts);
 }
 
-Flipsnap.prototype.init = function(element, conf) {
+Flipsnap.prototype.init = function(element, opts) {
 	var self = this;
 
+	// set element
 	self.element = element;
 	if (typeof element === 'string') {
 		self.element = document.querySelector(element);
@@ -66,15 +67,23 @@ Flipsnap.prototype.init = function(element, conf) {
 		throw new Error('element not found');
 	}
 
-	self.conf = conf || {};
+	// set opts
+	opts = opts || {};
+	self.distance = (opts.distance === undefined) ? null : opts.distance;
+	self.maxPoint = (opts.maxPoint === undefined) ? null : opts.maxPoint;
+	self.disableTouch = (opts.disableTouch === undefined) ? false : opts.disableTouch;
+	self.disable3d = (opts.disable3d === undefined) ? false : opts.disable3d;
+
+	// set property
 	self.currentPoint = 0;
 	self.currentX = 0;
 	self.animation = false;
 	self.use3d = support.transform3d;
-	if (self.conf.use3d === false) {
+	if (self.disable3d === true) {
 		self.use3d = false;
 	}
 
+	// set default style
 	if (support.cssAnimation) {
 		self._setStyle({
 			transitionProperty: getCSSVal('transform'),
@@ -90,6 +99,7 @@ Flipsnap.prototype.init = function(element, conf) {
 		});
 	}
 
+	// initilize
 	self.refresh();
 
 	self.element.addEventListener(touchStartEvent, self, false);
@@ -122,8 +132,7 @@ Flipsnap.prototype.refresh = function() {
 	var self = this;
 
 	// setting max point
-    // conf.point is backward compatibility. (deprecated)
-	self.maxPoint = self.conf.maxPoint || self.conf.point || (function() {
+	self._maxPoint = self.maxPoint || (function() {
 		var childNodes = self.element.childNodes,
 			itemLength = 0,
 			i = 0,
@@ -143,10 +152,10 @@ Flipsnap.prototype.refresh = function() {
 	})();
 
 	// setting distance
-	self.distance = self.conf.distance || self.element.scrollWidth / (self.maxPoint + 1);
+	self._distance = self.distance || self.element.scrollWidth / (self._maxPoint + 1);
 
 	// setting maxX
-	self.maxX = -self.distance * self.maxPoint;
+	self._maxX = -self._distance * self._maxPoint;
 
 	self.moveToPoint();
 };
@@ -154,7 +163,7 @@ Flipsnap.prototype.refresh = function() {
 Flipsnap.prototype.hasNext = function() {
 	var self = this;
 
-	return self.currentPoint < self.maxPoint;
+	return self.currentPoint < self._maxPoint;
 };
 
 Flipsnap.prototype.hasPrev = function() {
@@ -196,8 +205,8 @@ Flipsnap.prototype.moveToPoint = function(point) {
 	if (point < 0) {
 		self.currentPoint = 0;
 	}
-	else if (point > self.maxPoint) {
-		self.currentPoint = self.maxPoint;
+	else if (point > self._maxPoint) {
+		self.currentPoint = self._maxPoint;
 	}
 	else {
 		self.currentPoint = parseInt(point, 10);
@@ -209,7 +218,7 @@ Flipsnap.prototype.moveToPoint = function(point) {
 	else {
 		self.animation = true;
 	}
-	self._setX(- self.currentPoint * self.distance);
+	self._setX(- self.currentPoint * self._distance);
 
 	if (beforePoint !== self.currentPoint) { // is move?
 		triggerEvent(self.element, 'fsmoveend', true, false);
@@ -237,7 +246,7 @@ Flipsnap.prototype._setX = function(x) {
 Flipsnap.prototype._touchStart = function(event) {
 	var self = this;
 
-	if (self.conf.touchDisable) {
+	if (self.disableTouch) {
 		return;
 	}
 
@@ -276,7 +285,7 @@ Flipsnap.prototype._touchMove = function(event) {
 
 		distX = pageX - self.basePageX;
 		newX = self.currentX + distX;
-		if (newX >= 0 || newX < self.maxX) {
+		if (newX >= 0 || newX < self._maxX) {
 			newX = Math.round(self.currentX + distX / 3);
 		}
 		self._setX(newX);
@@ -314,7 +323,7 @@ Flipsnap.prototype._touchEnd = function(event) {
 
 	self.scrolling = false;
 
-	var newPoint = -self.currentX / self.distance;
+	var newPoint = -self.currentX / self._distance;
 	newPoint =
 		(self.directionX > 0) ? Math.ceil(newPoint) :
 		(self.directionX < 0) ? Math.floor(newPoint) :
