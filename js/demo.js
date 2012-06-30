@@ -136,4 +136,13 @@ if (!$('.demo').length) return;
 	}, false);
 })();
 
+$('.sample a').click(function(e) {
+  e.preventDefault();
+  var $a = $(this);
+  var $code = $a.parents('.sample').find('pre');
+  $code.slideToggle('fast', function() {
+    $a.text($code.is(':visible') ? 'hide code' : 'show code');
+  });
+});
+
 });

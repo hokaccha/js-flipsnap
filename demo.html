@@ -14,6 +14,10 @@ title: Demo
 				<div class="item">3</div>
 			</div>
 		</div>
+		<div class="sample">
+			<p class="toggle"><a href="#">show code</a></p>
+			<pre class="language-javascript"><code>Flipsnap('.flipsnap');</code></pre>
+		</div>
 	</section>
 
 	<section class="demo" id="demo-distance">
@@ -26,6 +30,12 @@ title: Demo
 				<div class="item">4</div>
 				<div class="item">5</div>
 			</div>
+		</div>
+		<div class="sample">
+			<p class="toggle"><a href="#">show code</a></p>
+<pre class="language-javascript"><code>Flipsnap('.flipsnap', {
+    distance: 230
+});</code></pre>
 		</div>
 	</section>
 
@@ -44,6 +54,13 @@ title: Demo
 				<div class="item">9</div>
 				<div class="item">10</div>
 			</div>
+		</div>
+		<div class="sample">
+			<p class="toggle"><a href="#">show code</a></p>
+<pre class="language-javascript"><code>Flipsnap('.flipsnap', {
+    distance: 160, // 80px * 2
+    maxPoint: 3    // move able 3 times
+});</code></pre>
 		</div>
 	</section>
 
@@ -65,6 +82,17 @@ title: Demo
 			<span></span>
 			<span></span>
 		</div>
+		<div class="sample">
+			<p class="toggle"><a href="#">show code</a></p>
+<pre><code>var $pointer = $('.pointer span');
+var flipsnap = Flipsnap('.flipsnap', {
+    distance: 230
+});
+flipsnap.element.addEventListener('fsmoveend', function() {
+    $pointer.filter('.current').removeClass('current');
+    $pointer.eq(flipsnap.currentPoint).addClass('current');
+}, false);</code></pre>
+		</div>
 	</section>
 
 	<section class="demo" id="demo-refresh">
@@ -78,6 +106,32 @@ title: Demo
 			<button class="add">add</button>
 			<button class="remove">remove</button>
 		</p>
+		<div class="sample">
+			<p class="toggle"><a href="#">show code</a></p>
+<pre><code>var $flipsnap = $('.flipsnap');
+var flipsnap = Flipsnap(".flipsnap", {
+    distance: 230
+});
+var width = 270;
+
+// append new item
+$(".add").click(function() {
+    var newNumber = $flipsnap.find(".item").size() + 1;
+    var $item = $("&lt;div&gt;").addClass("item").text(newNumber);
+    width += 230;
+    $flipsnap.append($item).width(width);
+    flipsnap.refresh();
+});
+
+// remove last item
+$(".remove").click(function() {
+    var $items = $flipsnap.find(".item");
+    if ($items.size() &lt;= 1) return;
+    width -= 230;
+    $items.last().remove().width(width);
+    flipsnap.refresh();
+});</code></pre>
+		</div>
 	</section>
 
 	<section class="demo" id="demo-link">
@@ -88,6 +142,24 @@ title: Demo
 				<div class="item"><a href="./">click event</a></div>
 				<div class="item"><a href="./">click event<br>and link</a></div>
 			</div>
+		</div>
+		<div class="sample">
+			<p class="toggle"><a href="#">show code</a></p>
+<pre><code>Flipsnap('.flipsnap', {
+    distance: 230
+});
+
+var $a = $('.item a');
+// click event
+$a.eq(1).click(function(e) {
+    e.preventDefault();
+    alert("clicked");
+});
+
+// click event and link
+$a.eq(2).click(function(e) {
+    alert("clicked and link to index");
+});</code></pre>
 		</div>
 	</section>
 
@@ -104,6 +176,22 @@ title: Demo
 			<button class="prev" disabled>prev</button>
 			<button class="next">next</button>
 		</p>
+		<div class="sample">
+			<p class="toggle"><a href="#">show code</a></p>
+<pre><code>var flipsnap = Flipsnap('.flipsnap', {
+    distance: 230
+});
+var $next = $('.next').click(function() {
+    flipsnap.toNext();
+});
+var $prev = $('.prev').click(function() {
+    flipsnap.toPrev();
+});
+flipsnap.element.addEventListener('fsmoveend', function() {
+    $next.attr('disabled', !flipsnap.hasNext());
+    $prev.attr('disabled', !flipsnap.hasPrev());
+}, false);</code></pre>
+		</div>
 	</section>
 
 	<section class="demo" id="demo-moveToPoint">
@@ -126,6 +214,16 @@ title: Demo
 			<input type="number" size="3" class="num">
 			<button class="go">Go</button>
 		</p>
+		<div class="sample">
+			<p class="toggle"><a href="#">show code</a></p>
+<pre><code>var flipsnap = Flipsnap('.flipsnap', {
+    distance: 230
+});
+var $num = $('input.num');
+$('button.go').click(function() {
+    flipsnap.moveToPoint($num.val() - 1);
+});</code></pre>
+		</div>
 	</section>
 
 	<section class="demo" id="demo-disableTouch">
@@ -150,5 +248,35 @@ title: Demo
 			<input type="number" size="3" class="num">
 			<button class="go">Go</button>
 		</p>
+		<div class="sample">
+			<p class="toggle"><a href="#">show code</a></p>
+<pre><code>var flipsnap = Flipsnap('.flipsnap', {
+    distance: 230,
+    disableTouch: true
+});
+
+// disable check
+$('.isDisable').change(function() {
+    flipsnap.disableTouch = $(this).is(':checked');
+});
+
+// Go btn
+var $num = $('input.num');
+$('button.go').click(function() {
+    flipsnap.moveToPoint($num.val() - 1);
+});
+
+// next, prev btn
+var $next = $('.next').click(function() {
+    flipsnap.toNext();
+});
+var $prev = $('.prev').click(function() {
+    flipsnap.toPrev();
+});
+flipsnap.element.addEventListener('fsmoveend', function() {
+    $next.attr('disabled', !flipsnap.hasNext());
+    $prev.attr('disabled', !flipsnap.hasPrev());
+}, false);</code></pre>
+		</div>
 	</section>
 </section>

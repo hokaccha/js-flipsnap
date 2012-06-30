@@ -342,6 +342,9 @@ button[disabled] {
 #demo-moveToPoint .flipsnap {
   width: 2345px; }
 
+.sample pre {
+  display: none; }
+
 @media screen and (max-width: 480px) {
   .mod-header h1 {
     font-size: 34px;
