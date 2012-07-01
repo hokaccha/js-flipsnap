@@ -109,16 +109,18 @@ flipsnap.element.addEventListener('fsmoveend', function() {
 		<div class="sample">
 			<p class="toggle"><a href="#">show code</a></p>
 <pre><code>var $flipsnap = $('.flipsnap');
+var distance = 230;
+var padding = 30;
 var flipsnap = Flipsnap(".flipsnap", {
-    distance: 230
+    distance: distance
 });
-var width = 270;
+var width = distance + padding;
 
 // append new item
 $(".add").click(function() {
     var newNumber = $flipsnap.find(".item").size() + 1;
     var $item = $("&lt;div&gt;").addClass("item").text(newNumber);
-    width += 230;
+    width += distance;
     $flipsnap.append($item).width(width);
     flipsnap.refresh();
 });
@@ -127,7 +129,7 @@ $(".add").click(function() {
 $(".remove").click(function() {
     var $items = $flipsnap.find(".item");
     if ($items.size() &lt;= 1) return;
-    width -= 230;
+    width -= distance;
     $items.last().remove().width(width);
     flipsnap.refresh();
 });</code></pre>

@@ -6,30 +6,31 @@ title: Getting Started
 <section>
 	<h2>Getting Started</h2>
 	<section>
-		<div class="viewport" id="demo-simple">
-			<div class="flipsnap">
-				<div class="item">1</div>
-				<div class="item">2</div>
-				<div class="item">3</div>
-			</div>
-		</div>
-		<section>
-			<h4>HTML</h4>
+		<h3>1. Download and load</h3>
+		<p>Download code <a href="download.html">here</a>. And load script like below.</p>
+		<pre><code>&lt;script src="flipsnap.js"&gt;&lt;/script&gt;</code></pre>
+		<p>flipsnap.js is not dependent other library.</p>
+	</section>
+
+	<section>
+		<h3>2. Write HTML</h3>
+		<p>HTML set up outer element and inner element. in this case, outer element is <code>.viewport</code>, inner element is <code>.flipsnap</code></p>
 <pre><code>&lt;div class="viewport"&gt;
     &lt;div class="flipsnap"&gt;
         &lt;div class="item"&gt;1&lt;/div&gt;
         &lt;div class="item"&gt;2&lt;/div&gt;
         &lt;div class="item"&gt;3&lt;/div&gt;
     &lt;/div&gt;
-&lt;/div&gt;</code></pre> 
-		</section>
-		<section>
-			<h4>CSS</h4>
+&lt;/div&gt;</code></pre>
+	</section>
+
+	<section>
+		<h3>3. Write CSS</h3>
+		<p>Write CSS like below.</p>
 <pre><code>.viewport {
     <strong>width: 320px;</strong>
     <strong>overflow: hidden;</strong>
     margin: 0 auto;
-    padding: 30px 0;
 }
 
 .flipsnap {
@@ -37,19 +38,41 @@ title: Getting Started
 }
 
 .item {
+    <strong>float: left;</strong>
     width: 320px;
     font-size: 50px;
     text-align: center;
     padding: 50px 0;
     background: #EFEFEF;
     border: 5px solid #999;
-    float: left;
     color: #666;
 }</code></pre>
+		<ul>
+			<li><code>.viewport</code> set <code>overflow:hidden</code> and real view width.</li>
+			<li><code>.flipsnap</code> set additional all item width.
+			<li><code>.item</code> is made into one row using <code>float</code>. Probably, it or flexbox may be used(if supported browser).</li>
+		</ul>
+		<p><img src="img/about1.png" alt="flipsnap css structure"></p>
 	</section>
+
 	<section>
-		<h4>JavaScript</h4>
+		<h3>4. Write JavaScript</h3>
+		<p>Call <code>Flipsnap()</code> with CSS selector of inner element. in this case, it is <code>.flipsnap</code></p>
 		<pre class="language-javascript"><code>Flipsnap('.flipsnap');</code></pre>
+		<p>JavaScript code is only one line! You can set options and bind event. see also <a href="doc.html">document</a> and <a href="demo.html">demo</a>.</p>
+	</section>
+
+	<section>
+		<h3>5. Complete!</h3>
+		<div class="viewport" id="demo-simple">
+			<div class="flipsnap">
+				<div class="item">1</div>
+				<div class="item">2</div>
+				<div class="item">3</div>
+			</div>
+		</div>
+
+		<p><img src="img/about2.png"</p>
 	</section>
 </section>
 

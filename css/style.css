@@ -252,6 +252,7 @@ button[disabled] {
     color: #504e47;
     border-bottom: 2px solid #bfb9a9;
     padding: 10px 0;
+    margin-bottom: 15px;
     font-size: 22px; }
   .main h4 {
     margin: 10px 0;

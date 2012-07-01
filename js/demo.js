@@ -34,16 +34,18 @@ if (!$('.demo').length) return;
 (function refresh() {
 	var $demo = $("#demo-refresh");
 	var $flipsnap = $demo.find('.flipsnap');
+    var distance = 230;
+    var padding = 30;
 	var flipsnap = Flipsnap("#demo-refresh .flipsnap", {
-		distance: 230
+		distance: distance
 	});
-	var width = 270;
+	var width = distance + padding;
 
 	// append new item
 	$demo.find(".add").click(function() {
 		var newNumber = $flipsnap.find(".item").size() + 1;
 		var $item = $("<div>").addClass("item").text(newNumber);
-		width += 230;
+		width += distance;
 		$flipsnap.append($item).width(width);
 		flipsnap.refresh();
 	});
@@ -52,7 +54,7 @@ if (!$('.demo').length) return;
 	$(".remove").click(function() {
 		var $items = $flipsnap.find(".item");
 		if ($items.size() <= 1) return;
-		width -= 230;
+		width -= distance;
 		$items.last().remove().width(width);
 		flipsnap.refresh();
 	});
