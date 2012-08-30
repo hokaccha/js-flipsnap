@@ -249,6 +249,10 @@ Flipsnap.prototype._touchStart = function(event) {
 		return;
 	}
 
+	if (!support.touch) {
+		event.preventDefault();
+	}
+
 	if (support.cssAnimation) {
 		self._setStyle({ transitionDuration: '0ms' });
 	}
