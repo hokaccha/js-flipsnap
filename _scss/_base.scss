@@ -7,6 +7,10 @@ a {
 	color: #3579b3;
 }
 
+img {
+	vertical-align: bottom;
+}
+
 a:hover {
 	color: #C00;
 }
@@ -180,6 +184,21 @@ button[disabled] {
 	}
 }
 
+#demo-img {
+	.flipsnap {
+		width: 960px;
+		padding: 0;
+	}
+
+	.item {
+		margin: 0;
+		padding: 0;
+		border: none;
+		width: auto;
+		height: auto;
+	}
+}
+
 #demo-maxPoint {
 	.flipsnap {
 		width: 80px * 10; /* 80px(item) * 10 */
@@ -219,6 +238,10 @@ button[disabled] {
 	.flipsnap {
 		width: 230px * 10 + 45px;
 	}
+}
+
+.sample p {
+	text-align: center;
 }
 
 .sample pre {

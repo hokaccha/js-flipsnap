@@ -6,6 +6,10 @@ if (!$('.demo').length) return;
 	Flipsnap('#demo-simple .flipsnap');
 })();
 
+(function img() {
+	Flipsnap('#demo-img .flipsnap');
+})();
+
 (function distance() {
 	Flipsnap('#demo-distance .flipsnap', {
 		distance: 230
