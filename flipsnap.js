@@ -41,12 +41,22 @@ support.transition = hasProp([
 ]);
 
 support.touch = 'ontouchstart' in window;
+support.mspointer = window.navigator.msPointerEnabled;
 
 support.cssAnimation = (support.transform3d || support.transform) && support.transition;
 
-var touchStartEvent = support.touch ? 'touchstart' : 'mousedown';
-var touchMoveEvent = support.touch ? 'touchmove' : 'mousemove';
-var touchEndEvent = support.touch ? 'touchend' : 'mouseup';
+var touchStartEvent =
+	support.mspointer ? 'MSPointerDown' :
+	support.touch ? 'touchstart' :
+	'mousedown';
+var touchMoveEvent =
+	support.mspointer ? 'MSPointerMove' :
+	support.touch ? 'touchmove' :
+	'mousemove';
+var touchEndEvent =
+	support.mspointer ? 'MSPointerUp' :
+	support.touch ? 'touchend' :
+	'mouseup';
 
 function Flipsnap(element, opts) {
 	return (this instanceof Flipsnap)
@@ -65,6 +75,10 @@ Flipsnap.prototype.init = function(element, opts) {
 
 	if (!self.element) {
 		throw new Error('element not found');
+	}
+
+	if (support.mspointer) {
+		self.element.style.msTouchAction = 'none';
 	}
 
 	// set opts
