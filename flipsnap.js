@@ -401,7 +401,7 @@ Flipsnap.prototype.destroy = function() {
 
 	self.element.removeEventListener(touchStartEvent, self);
 	self.element.removeEventListener(touchMoveEvent, self);
-	self.element.removeEventListener(touchEndEvent, self);
+	document.removeEventListener(touchEndEvent, self);
 };
 
 Flipsnap.prototype._getTranslate = function(x) {
