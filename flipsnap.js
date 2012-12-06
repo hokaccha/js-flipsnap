@@ -87,6 +87,7 @@ Flipsnap.prototype.init = function(element, opts) {
 	self.maxPoint = (opts.maxPoint === undefined) ? null : opts.maxPoint;
 	self.disableTouch = (opts.disableTouch === undefined) ? false : opts.disableTouch;
 	self.disable3d = (opts.disable3d === undefined) ? false : opts.disable3d;
+	self.transitionDuration = (opts.transitionDuration === undefined) ? '350ms' : opts.transitionDuration + 'ms';
 
 	// set property
 	self.currentPoint = 0;
@@ -227,7 +228,7 @@ Flipsnap.prototype.moveToPoint = function(point) {
 	}
 
 	if (support.cssAnimation) {
-		self._setStyle({ transitionDuration: '350ms' });
+		self._setStyle({ transitionDuration: self.transitionDuration });
 	}
 	else {
 		self.animation = true;
