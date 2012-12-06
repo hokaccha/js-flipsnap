@@ -23,6 +23,13 @@ if (!$('.demo').length) return;
 	});
 })();
 
+(function transitionDuration() {
+	Flipsnap('#demo-transitionDuration .flipsnap', {
+		distance: 230,
+		transitionDuration: 1000
+	});
+})();
+
 (function moveend() {
 	var $demo = $('#demo-moveend');
 	var $pointer = $demo.find('.pointer span');

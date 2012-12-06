@@ -1,7 +1,7 @@
 /**
  * flipsnap.js
  *
- * @version  0.4.0
+ * @version  0.4.1
  * @url http://pxgrid.github.com/js-flipsnap/
  *
  * Copyright 2011 PixelGrid, Inc.
@@ -87,6 +87,7 @@ Flipsnap.prototype.init = function(element, opts) {
 	self.maxPoint = (opts.maxPoint === undefined) ? null : opts.maxPoint;
 	self.disableTouch = (opts.disableTouch === undefined) ? false : opts.disableTouch;
 	self.disable3d = (opts.disable3d === undefined) ? false : opts.disable3d;
+	self.transitionDuration = (opts.transitionDuration === undefined) ? '350ms' : opts.transitionDuration + 'ms';
 
 	// set property
 	self.currentPoint = 0;
@@ -118,7 +119,7 @@ Flipsnap.prototype.init = function(element, opts) {
 
 	self.element.addEventListener(touchStartEvent, self, false);
 	self.element.addEventListener(touchMoveEvent, self, false);
-	self.element.addEventListener(touchEndEvent, self, false);
+	document.addEventListener(touchEndEvent, self, false);
 
 	return self;
 };
@@ -227,7 +228,7 @@ Flipsnap.prototype.moveToPoint = function(point) {
 	}
 
 	if (support.cssAnimation) {
-		self._setStyle({ transitionDuration: '350ms' });
+		self._setStyle({ transitionDuration: self.transitionDuration });
 	}
 	else {
 		self.animation = true;
@@ -400,7 +401,7 @@ Flipsnap.prototype.destroy = function() {
 
 	self.element.removeEventListener(touchStartEvent, self);
 	self.element.removeEventListener(touchMoveEvent, self);
-	self.element.removeEventListener(touchEndEvent, self);
+	document.removeEventListener(touchEndEvent, self);
 };
 
 Flipsnap.prototype._getTranslate = function(x) {

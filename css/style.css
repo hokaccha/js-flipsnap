@@ -282,6 +282,12 @@ button[disabled] {
   /* 230px(item) * 5 + 45px(padding) */
   padding-left: 45px; }
 
+.flipsnap:after {
+  content: '';
+  display: block;
+  clear: both;
+  height: 0; }
+
 .item {
   width: 200px;
   margin: 0 10px;
