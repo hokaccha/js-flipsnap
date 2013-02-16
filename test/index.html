@@ -2,8 +2,14 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>flipsnap.js Test</title>
 <link rel="stylesheet" href="lib/mocha.css">
+<style>
+#sandbox {
+  visibility: hidden;
+}
+</style>
 </head>
 <body>
 <div id="mocha"></div>
@@ -14,5 +20,6 @@
 <script src="lib/setup.js"></script>
 <script src="../flipsnap.js"></script>
 <script src="tests/basic.js"></script>
+<div id="sandbox"></div>
 </body>
 </html>
