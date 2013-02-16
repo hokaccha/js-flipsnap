@@ -1,11 +1,16 @@
 describe('Flipsnap', function() {
   var f;
   beforeEach(function() {
-    var $flipsnap = $('<div>')
-      .append('<div>')
-      .append('<div>')
-      .append('<div>');
+    var html = '<div class="flipsnap">' +
+               '  <div style="width:100px">item1</div>' + 
+               '  <div style="width:100px">item2</div>' + 
+               '  <div style="width:100px">item3</div>' + 
+               '</div>';
+    var $flipsnap = $(html).appendTo('#sandbox');
     f = Flipsnap($flipsnap.get(0));
+  });
+  afterEach(function() {
+    $(f.element).remove();
   });
 
   describe('constructor', function() {
@@ -126,6 +131,66 @@ describe('Flipsnap', function() {
         f.moveToPoint(1);
         expect(f.currentPoint).to.be(1);
       });
+    });
+  });
+
+  describe('Flip Events', function() {
+    var support = {};
+    support.touch = 'ontouchstart' in window;
+    support.mspointer = window.navigator.msPointerEnabled;
+
+    var touchStartEvent =
+        support.mspointer ? 'MSPointerDown' :
+        support.touch ? 'touchstart' :
+        'mousedown';
+    var touchMoveEvent =
+        support.mspointer ? 'MSPointerMove' :
+        support.touch ? 'touchmove' :
+        'mousemove';
+    var touchEndEvent =
+        support.mspointer ? 'MSPointerUp' :
+        support.touch ? 'touchend' :
+        'mouseup';
+
+    function trigger(element, eventType, params) {
+      if (support.touch) {
+        params = { changedTouches: [ params ] };
+      }
+
+      var ev = document.createEvent('Event');
+      ev.initEvent(eventType, true, false);
+      $.extend(ev, params || {});
+      element.dispatchEvent(ev);
+    }
+
+    it('should move to next', function() {
+      trigger(f.element, touchStartEvent, { pageX: 50, pageY: 0 });
+      expect(f.currentPoint).to.be(0);
+
+      trigger(f.element, touchMoveEvent, { pageX: 40, pageY: 0 });
+      trigger(f.element, touchMoveEvent, { pageX: 30, pageY: 0 });
+      expect(f.currentPoint).to.be(0);
+
+      trigger(document, touchEndEvent);
+      expect(f.currentPoint).to.be(1);
+    });
+
+    it('should move to prev', function() {
+      trigger(f.element, touchStartEvent, { pageX: 50, pageY: 0 });
+      trigger(f.element, touchMoveEvent, { pageX: 40, pageY: 0 });
+      trigger(f.element, touchMoveEvent, { pageX: 30, pageY: 0 });
+      trigger(document, touchEndEvent);
+      expect(f.currentPoint).to.be(1);
+
+      trigger(f.element, touchStartEvent, { pageX: 50, pageY: 0 });
+      expect(f.currentPoint).to.be(1);
+
+      trigger(f.element, touchMoveEvent, { pageX: 60, pageY: 0 });
+      trigger(f.element, touchMoveEvent, { pageX: 70, pageY: 0 });
+      expect(f.currentPoint).to.be(1);
+
+      trigger(document, touchEndEvent);
+      expect(f.currentPoint).to.be(0);
     });
   });
 });
