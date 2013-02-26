@@ -187,28 +187,30 @@ Flipsnap.prototype.hasPrev = function() {
 	return self.currentPoint > 0;
 };
 
-Flipsnap.prototype.toNext = function() {
+Flipsnap.prototype.toNext = function(transitionDuration) {
 	var self = this;
 
 	if (!self.hasNext()) {
 		return;
 	}
 
-	self.moveToPoint(self.currentPoint + 1);
+	self.moveToPoint(self.currentPoint + 1, transitionDuration);
 };
 
-Flipsnap.prototype.toPrev = function() {
+Flipsnap.prototype.toPrev = function(transitionDuration) {
 	var self = this;
 
 	if (!self.hasPrev()) {
 		return;
 	}
 
-	self.moveToPoint(self.currentPoint - 1);
+	self.moveToPoint(self.currentPoint - 1, transitionDuration);
 };
 
-Flipsnap.prototype.moveToPoint = function(point) {
+Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
 	var self = this;
+	
+	transitionDuration = transitionDuration == null ? self.transitionDuration : transitionDuration;
 
 	var beforePoint = self.currentPoint;
 
@@ -228,7 +230,7 @@ Flipsnap.prototype.moveToPoint = function(point) {
 	}
 
 	if (support.cssAnimation) {
-		self._setStyle({ transitionDuration: self.transitionDuration });
+		self._setStyle({ transitionDuration: transitionDuration });
 	}
 	else {
 		self.animation = true;
@@ -249,7 +251,7 @@ Flipsnap.prototype._setX = function(x) {
 	}
 	else {
 		if (self.animation) {
-			self._animate(x);
+			self._animate(x, self.transitionDuration);
 		}
 		else {
 			self.element.style.left = x + 'px';
@@ -370,14 +372,14 @@ Flipsnap.prototype._setStyle = function(styles) {
 	}
 };
 
-Flipsnap.prototype._animate = function(x) {
+Flipsnap.prototype._animate = function(x, transitionDuration) {
 	var self = this;
 
 	var elem = self.element;
 	var begin = +new Date();
 	var from = parseInt(elem.style.left, 10);
 	var to = x;
-	var duration = self.transitionDuration;
+	var duration = transitionDuration;
 	var easing = function(time, duration) {
 		return -(time /= duration) * (time - 2);
 	};
