@@ -239,7 +239,10 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
 	self._setX(- self.currentPoint * self._distance);
 
 	if (beforePoint !== self.currentPoint) { // is move?
+		// `fsmoveend` is deprecated
+		// `fspointmove` is recommend.
 		triggerEvent(self.element, 'fsmoveend', true, false);
+		triggerEvent(self.element, 'fspointmove', true, false);
 	}
 };
 
