@@ -281,6 +281,7 @@ Flipsnap.prototype._touchStart = function(event) {
 	self.basePageX = self.startPageX;
 	self.directionX = 0;
 	self.startTime = event.timeStamp;
+	triggerEvent(self.element, 'fstouchstart', true, false);
 };
 
 Flipsnap.prototype._touchMove = function(event) {
@@ -306,7 +307,6 @@ Flipsnap.prototype._touchMove = function(event) {
 		if (newX >= 0 || newX < self._maxX) {
 			newX = Math.round(self.currentX + distX / 3);
 		}
-		self._setX(newX);
 
 		// When distX is 0, use one previous value.
 		// For android firefox. When touchend fired, touchmove also
@@ -314,6 +314,19 @@ Flipsnap.prototype._touchMove = function(event) {
 		self.directionX =
 			distX === 0 ? self.directionX :
 			distX > 0 ? -1 : 1;
+		
+		// if they prevent us then stop it
+		if (!triggerEvent(self.element, 'fstouchmove', true, true, {"delta": distX, "direction": self.directionX})) {
+			console.log('prevented touch move');
+			self.scrolling = false;
+			self.moveReady = false;
+			setTimeout(function() {
+				self.element.removeEventListener('click', self, true);
+			}, 200);
+			triggerEvent(self.element, 'fstouchend', true, false, {"moved": false, "pages": {"original": self.currentPoint, "new": self.currentPoint}, "cancelled": true});
+		} else {
+			self._setX(newX);
+		}
 	}
 	else {
 		deltaX = Math.abs(pageX - self.startPageX);
@@ -346,6 +359,8 @@ Flipsnap.prototype._touchEnd = function(event) {
 		(self.directionX > 0) ? Math.ceil(newPoint) :
 		(self.directionX < 0) ? Math.floor(newPoint) :
 		Math.round(newPoint);
+
+	triggerEvent(self.element, 'fstouchend', true, false, {"moved": newPoint != self.currentPoint, "pages": {"original": self.currentPoint, "new": newPoint}, "cancelled": false});
 
 	self.moveToPoint(newPoint);
 
@@ -473,10 +488,15 @@ function some(ary, callback) {
 	return false;
 }
 
-function triggerEvent(element, type, bubbles, cancelable) {
+function triggerEvent(element, type, bubbles, cancelable, data) {
 	var ev = document.createEvent('Event');
 	ev.initEvent(type, bubbles, cancelable);
-	element.dispatchEvent(ev);
+	if (data != null) {
+		for (d in data) {
+			ev[d] = data[d];
+		}
+	}
+	return element.dispatchEvent(ev);
 }
 
 window.Flipsnap = Flipsnap;
