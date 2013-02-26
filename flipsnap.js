@@ -377,7 +377,7 @@ Flipsnap.prototype._animate = function(x) {
 	var begin = +new Date();
 	var from = parseInt(elem.style.left, 10);
 	var to = x;
-	var duration = 350;
+	var duration = self.transitionDuration;
 	var easing = function(time, duration) {
 		return -(time /= duration) * (time - 2);
 	};
