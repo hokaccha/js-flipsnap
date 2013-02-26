@@ -317,13 +317,12 @@ Flipsnap.prototype._touchMove = function(event) {
 		
 		// if they prevent us then stop it
 		if (!triggerEvent(self.element, 'fstouchmove', true, true, {"delta": distX, "direction": self.directionX})) {
-			console.log('prevented touch move');
 			self.scrolling = false;
 			self.moveReady = false;
 			setTimeout(function() {
 				self.element.removeEventListener('click', self, true);
 			}, 200);
-			triggerEvent(self.element, 'fstouchend', true, false, {"moved": false, "pages": {"original": self.currentPoint, "new": self.currentPoint}, "cancelled": true});
+			triggerEvent(self.element, 'fstouchend', true, false, {"moved": false, "originalPoint": self.currentPoint, "newPoint": self.currentPoint, "cancelled": true});
 		} else {
 			self._setX(newX);
 		}
@@ -360,7 +359,7 @@ Flipsnap.prototype._touchEnd = function(event) {
 		(self.directionX < 0) ? Math.floor(newPoint) :
 		Math.round(newPoint);
 
-	triggerEvent(self.element, 'fstouchend', true, false, {"moved": newPoint != self.currentPoint, "pages": {"original": self.currentPoint, "new": newPoint}, "cancelled": false});
+	triggerEvent(self.element, 'fstouchend', true, false, {"moved": newPoint != self.currentPoint, "originalPoint": self.currentPoint, "newPoint": newPoint, "cancelled": false});
 
 	self.moveToPoint(newPoint);
 
