@@ -1,7 +1,7 @@
 /**
  * flipsnap.js
  *
- * @version  0.4.1
+ * @version  0.5.0-beta
  * @url http://pxgrid.github.com/js-flipsnap/
  *
  * Copyright 2011 PixelGrid, Inc.
