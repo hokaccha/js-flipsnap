@@ -210,7 +210,8 @@ Flipsnap.prototype.toPrev = function(transitionDuration) {
 Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
 	var self = this;
 	
-	transitionDuration = transitionDuration == null ? self.transitionDuration : transitionDuration;
+	transitionDuration = transitionDuration === undefined
+		? self.transitionDuration : transitionDuration;
 
 	var beforePoint = self.currentPoint;
 
@@ -492,7 +493,7 @@ function some(ary, callback) {
 function triggerEvent(element, type, bubbles, cancelable, data) {
 	var ev = document.createEvent('Event');
 	ev.initEvent(type, bubbles, cancelable);
-	if (data != null) {
+	if (data) {
 		for (var d in data) {
 			ev[d] = data[d];
 		}
