@@ -493,7 +493,7 @@ function triggerEvent(element, type, bubbles, cancelable, data) {
 	var ev = document.createEvent('Event');
 	ev.initEvent(type, bubbles, cancelable);
 	if (data != null) {
-		for (d in data) {
+		for (var d in data) {
 			ev[d] = data[d];
 		}
 	}
