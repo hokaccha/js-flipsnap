@@ -1,12 +1,14 @@
 describe('Flipsnap', function() {
+  var html;
+  var $flipsnap;
   var f;
   beforeEach(function() {
-    var html = '<div class="flipsnap">' +
+    html = '<div class="flipsnap">' +
                '  <div style="width:100px">item1</div>' + 
                '  <div style="width:100px">item2</div>' + 
                '  <div style="width:100px">item3</div>' + 
                '</div>';
-    var $flipsnap = $(html).appendTo('#sandbox');
+    $flipsnap = $(html).appendTo('#sandbox');
     f = Flipsnap($flipsnap.get(0));
   });
   afterEach(function() {
@@ -38,6 +40,29 @@ describe('Flipsnap', function() {
             Flipsnap('#foo');
           }).to.throwError(/element not found/);
         });
+      });
+    });
+  });
+
+  describe('maxPoint', function() {
+    context('when set maxPoint to 0', function() {
+      it('should set _maxPoint to 0', function() {
+        var f = Flipsnap($(html).get(0), { maxPoint: 0 });
+        expect(f._maxPoint).to.be(0);
+      });
+    });
+
+    context('when set maxPoint to 1', function() {
+      it('should set _maxPoint to 1', function() {
+        var f = Flipsnap($(html).get(0), { maxPoint: 1 });
+        expect(f._maxPoint).to.be(1);
+      });
+    });
+
+    context('when dont set maxPoint', function() {
+      it('should set _maxPoint to element length - 1', function() {
+        var f = Flipsnap($(html).get(0));
+        expect(f._maxPoint).to.be(2);
       });
     });
   });

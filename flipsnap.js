@@ -83,8 +83,8 @@ Flipsnap.prototype.init = function(element, opts) {
 
 	// set opts
 	opts = opts || {};
-	self.distance = (opts.distance === undefined) ? null : opts.distance;
-	self.maxPoint = (opts.maxPoint === undefined) ? null : opts.maxPoint;
+	self.distance = opts.distance;
+	self.maxPoint = opts.maxPoint;
 	self.disableTouch = (opts.disableTouch === undefined) ? false : opts.disableTouch;
 	self.disable3d = (opts.disable3d === undefined) ? false : opts.disable3d;
 	self.transitionDuration = (opts.transitionDuration === undefined) ? '350ms' : opts.transitionDuration + 'ms';
@@ -147,7 +147,7 @@ Flipsnap.prototype.refresh = function() {
 	var self = this;
 
 	// setting max point
-	self._maxPoint = self.maxPoint || (function() {
+	self._maxPoint = (self.maxPoint === undefined) ? (function() {
 		var childNodes = self.element.childNodes,
 			itemLength = 0,
 			i = 0,
@@ -164,10 +164,12 @@ Flipsnap.prototype.refresh = function() {
 		}
 
 		return itemLength;
-	})();
+	})() : self.maxPoint;
 
 	// setting distance
-	self._distance = self.distance || self.element.scrollWidth / (self._maxPoint + 1);
+	self._distance = (self.distance === undefined)
+					? self.element.scrollWidth / (self._maxPoint + 1)
+					: self.distance;
 
 	// setting maxX
 	self._maxX = -self._distance * self._maxPoint;
