@@ -40,6 +40,59 @@ if (!$('.demo').length) return;
 		$pointer.filter('.current').removeClass('current');
 		$pointer.eq(flipsnap.currentPoint).addClass('current');
 	}, false);
+
+	var $next = $demo.find(".next").click(function() {
+		flipsnap.toNext();
+	});
+	var $prev = $demo.find(".prev").click(function() {
+		flipsnap.toPrev();
+	});
+	flipsnap.element.addEventListener('fspointmove', function() {
+		$next.attr("disabled", !flipsnap.hasNext());
+		$prev.attr("disabled", !flipsnap.hasPrev());
+	}, false);
+})();
+
+(function touchevents() {
+	var $demo = $('#demo-touchevents');
+	var $event = $demo.find('.event span');
+	var $detail = $demo.find('.detail span');
+	var flipsnap = Flipsnap('#demo-touchevents .flipsnap', {
+		distance: 230
+	});
+	flipsnap.element.addEventListener('fstouchstart', function(ev) {
+		$event.text('fstouchstart');
+	}, false);
+
+	flipsnap.element.addEventListener('fstouchmove', function(ev) {
+		$event.text('fstouchmove');
+		$detail.text(JSON.stringify({
+			delta: ev.delta,
+			direction: ev.direction
+		}));
+	}, false);
+
+	flipsnap.element.addEventListener('fstouchend', function(ev) {
+		$event.text('fstouchend');
+		$detail.text(JSON.stringify({
+			moved: ev.moved,
+			originalPoint: ev.originalPoint,
+			newPoint: ev.newPoint,
+			cancelled: ev.cancelled
+		}));
+	}, false);
+})();
+
+(function cancelmove() {
+	var $demo = $('#demo-cancelmove');
+	var flipsnap = Flipsnap('#demo-cancelmove .flipsnap', {
+		distance: 230
+	});
+	flipsnap.element.addEventListener('fstouchmove', function(ev) {
+		if (ev.direction === -1) {
+			ev.preventDefault();
+		}
+	}, false);
 })();
 
 (function refresh() {

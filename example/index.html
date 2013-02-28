@@ -2,6 +2,8 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Flipsnap Sample</title>
 <link rel="stylesheet" href="style.css">
 <script src="../flipsnap.js"></script>
@@ -79,7 +81,7 @@
 	</section>
 
 	<section class="demo" id="demo-pointmove">
-		<h3>pointmove</h3>
+		<h3>pointmove event</h3>
 		<div class="viewport">
 			<div class="flipsnap">
 				<div class="item">1</div>
@@ -95,6 +97,36 @@
 			<span></span>
 			<span></span>
 			<span></span>
+		</div>
+		<p class="controls">
+			<button class="prev" disabled>prev</button>
+			<button class="next">next</button>
+		</p>
+	</section>
+
+	<section class="demo" id="demo-touchevents">
+		<h3>touch events</h3>
+		<div class="viewport">
+			<div class="flipsnap">
+				<div class="item">1</div>
+				<div class="item">2</div>
+				<div class="item">3</div>
+			</div>
+		</div>
+		<div class="log">
+			<div class="event">event: <span></span></div>
+			<div class="detail">detail: <span></span></div>
+		</div>
+	</section>
+
+	<section class="demo" id="demo-cancelmove">
+		<h3>cancel move</h3>
+		<div class="viewport">
+			<div class="flipsnap">
+				<div class="item">1</div>
+				<div class="item">2</div>
+				<div class="item">3</div>
+			</div>
 		</div>
 	</section>
 
