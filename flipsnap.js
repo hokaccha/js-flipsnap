@@ -15,6 +15,7 @@ var div = document.createElement('div');
 var prefix = ['webkit', 'moz', 'o', 'ms'];
 var saveProp = {};
 var support = {};
+var gestureStart = false;
 
 support.transform3d = hasProp([
 	'perspectiveProperty',
@@ -63,6 +64,14 @@ function Flipsnap(element, opts) {
 		? this.init(element, opts)
 		: new Flipsnap(element, opts);
 }
+
+document.addEventListener('gesturestart', function() {
+	gestureStart = true;
+});
+
+document.addEventListener('gestureend', function() {
+	gestureStart = false;
+});
 
 Flipsnap.prototype.init = function(element, opts) {
 	var self = this;
@@ -268,7 +277,7 @@ Flipsnap.prototype._setX = function(x) {
 Flipsnap.prototype._touchStart = function(event) {
 	var self = this;
 
-	if (self.disableTouch) {
+	if (self.disableTouch || gestureStart) {
 		return;
 	}
 
@@ -295,7 +304,7 @@ Flipsnap.prototype._touchStart = function(event) {
 Flipsnap.prototype._touchMove = function(event) {
 	var self = this;
 
-	if (!self.scrolling) {
+	if (!self.scrolling || gestureStart) {
 		return;
 	}
 
