@@ -128,7 +128,6 @@ Flipsnap.prototype.init = function(element, opts) {
 
 	self.element.addEventListener(touchStartEvent, self, false);
 	self.element.addEventListener(touchMoveEvent, self, false);
-	document.addEventListener(touchEndEvent, self, false);
 
 	return self;
 };
@@ -281,6 +280,8 @@ Flipsnap.prototype._touchStart = function(event) {
 		return;
 	}
 
+	document.addEventListener(touchEndEvent, self, false);
+
 	if (!support.touch) {
 		event.preventDefault();
 	}
@@ -370,6 +371,8 @@ Flipsnap.prototype._touchMove = function(event) {
 Flipsnap.prototype._touchEnd = function(event) {
 	var self = this;
 
+	document.removeEventListener(touchEndEvent, self, false);
+
 	if (!self.scrolling) {
 		return;
 	}
@@ -457,7 +460,6 @@ Flipsnap.prototype.destroy = function() {
 
 	self.element.removeEventListener(touchStartEvent, self);
 	self.element.removeEventListener(touchMoveEvent, self);
-	document.removeEventListener(touchEndEvent, self);
 };
 
 Flipsnap.prototype._getTranslate = function(x) {
