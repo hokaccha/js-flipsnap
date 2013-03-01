@@ -371,6 +371,13 @@ Flipsnap.prototype._touchEnd = function(event) {
 		(self.directionX < 0) ? Math.floor(newPoint) :
 		Math.round(newPoint);
 
+	if (newPoint < 0) {
+		newPoint = 0;
+	}
+	else if (newPoint > self._maxPoint) {
+		newPoint = self._maxPoint;
+	}
+
 	self._touchAfter({
 		moved: newPoint !== self.currentPoint,
 		originalPoint: self.currentPoint,
