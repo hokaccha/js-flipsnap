@@ -1,7 +1,7 @@
 /**
  * flipsnap.js
  *
- * @version  0.4.1
+ * @version  0.5.0
  * @url http://pxgrid.github.com/js-flipsnap/
  *
  * Copyright 2011 PixelGrid, Inc.
@@ -15,6 +15,7 @@ var div = document.createElement('div');
 var prefix = ['webkit', 'moz', 'o', 'ms'];
 var saveProp = {};
 var support = {};
+var gestureStart = false;
 
 support.transform3d = hasProp([
 	'perspectiveProperty',
@@ -64,6 +65,14 @@ function Flipsnap(element, opts) {
 		: new Flipsnap(element, opts);
 }
 
+document.addEventListener('gesturestart', function() {
+	gestureStart = true;
+});
+
+document.addEventListener('gestureend', function() {
+	gestureStart = false;
+});
+
 Flipsnap.prototype.init = function(element, opts) {
 	var self = this;
 
@@ -83,8 +92,8 @@ Flipsnap.prototype.init = function(element, opts) {
 
 	// set opts
 	opts = opts || {};
-	self.distance = (opts.distance === undefined) ? null : opts.distance;
-	self.maxPoint = (opts.maxPoint === undefined) ? null : opts.maxPoint;
+	self.distance = opts.distance;
+	self.maxPoint = opts.maxPoint;
 	self.disableTouch = (opts.disableTouch === undefined) ? false : opts.disableTouch;
 	self.disable3d = (opts.disable3d === undefined) ? false : opts.disable3d;
 	self.transitionDuration = (opts.transitionDuration === undefined) ? '350ms' : opts.transitionDuration + 'ms';
@@ -119,7 +128,6 @@ Flipsnap.prototype.init = function(element, opts) {
 
 	self.element.addEventListener(touchStartEvent, self, false);
 	self.element.addEventListener(touchMoveEvent, self, false);
-	document.addEventListener(touchEndEvent, self, false);
 
 	return self;
 };
@@ -147,7 +155,7 @@ Flipsnap.prototype.refresh = function() {
 	var self = this;
 
 	// setting max point
-	self._maxPoint = self.maxPoint || (function() {
+	self._maxPoint = (self.maxPoint === undefined) ? (function() {
 		var childNodes = self.element.childNodes,
 			itemLength = 0,
 			i = 0,
@@ -164,10 +172,12 @@ Flipsnap.prototype.refresh = function() {
 		}
 
 		return itemLength;
-	})();
+	})() : self.maxPoint;
 
 	// setting distance
-	self._distance = self.distance || self.element.scrollWidth / (self._maxPoint + 1);
+	self._distance = (self.distance === undefined)
+					? self.element.scrollWidth / (self._maxPoint + 1)
+					: self.distance;
 
 	// setting maxX
 	self._maxX = -self._distance * self._maxPoint;
@@ -187,28 +197,31 @@ Flipsnap.prototype.hasPrev = function() {
 	return self.currentPoint > 0;
 };
 
-Flipsnap.prototype.toNext = function() {
+Flipsnap.prototype.toNext = function(transitionDuration) {
 	var self = this;
 
 	if (!self.hasNext()) {
 		return;
 	}
 
-	self.moveToPoint(self.currentPoint + 1);
+	self.moveToPoint(self.currentPoint + 1, transitionDuration);
 };
 
-Flipsnap.prototype.toPrev = function() {
+Flipsnap.prototype.toPrev = function(transitionDuration) {
 	var self = this;
 
 	if (!self.hasPrev()) {
 		return;
 	}
 
-	self.moveToPoint(self.currentPoint - 1);
+	self.moveToPoint(self.currentPoint - 1, transitionDuration);
 };
 
-Flipsnap.prototype.moveToPoint = function(point) {
+Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
 	var self = this;
+	
+	transitionDuration = transitionDuration === undefined
+		? self.transitionDuration : transitionDuration;
 
 	var beforePoint = self.currentPoint;
 
@@ -228,7 +241,7 @@ Flipsnap.prototype.moveToPoint = function(point) {
 	}
 
 	if (support.cssAnimation) {
-		self._setStyle({ transitionDuration: self.transitionDuration });
+		self._setStyle({ transitionDuration: transitionDuration });
 	}
 	else {
 		self.animation = true;
@@ -236,7 +249,10 @@ Flipsnap.prototype.moveToPoint = function(point) {
 	self._setX(- self.currentPoint * self._distance);
 
 	if (beforePoint !== self.currentPoint) { // is move?
+		// `fsmoveend` is deprecated
+		// `fspointmove` is recommend.
 		triggerEvent(self.element, 'fsmoveend', true, false);
+		triggerEvent(self.element, 'fspointmove', true, false);
 	}
 };
 
@@ -249,7 +265,7 @@ Flipsnap.prototype._setX = function(x) {
 	}
 	else {
 		if (self.animation) {
-			self._animate(x);
+			self._animate(x, self.transitionDuration);
 		}
 		else {
 			self.element.style.left = x + 'px';
@@ -260,9 +276,11 @@ Flipsnap.prototype._setX = function(x) {
 Flipsnap.prototype._touchStart = function(event) {
 	var self = this;
 
-	if (self.disableTouch) {
+	if (self.disableTouch || gestureStart) {
 		return;
 	}
+
+	document.addEventListener(touchEndEvent, self, false);
 
 	if (!support.touch) {
 		event.preventDefault();
@@ -281,12 +299,13 @@ Flipsnap.prototype._touchStart = function(event) {
 	self.basePageX = self.startPageX;
 	self.directionX = 0;
 	self.startTime = event.timeStamp;
+	triggerEvent(self.element, 'fstouchstart', true, false);
 };
 
 Flipsnap.prototype._touchMove = function(event) {
 	var self = this;
 
-	if (!self.scrolling) {
+	if (!self.scrolling || gestureStart) {
 		return;
 	}
 
@@ -306,7 +325,6 @@ Flipsnap.prototype._touchMove = function(event) {
 		if (newX >= 0 || newX < self._maxX) {
 			newX = Math.round(self.currentX + distX / 3);
 		}
-		self._setX(newX);
 
 		// When distX is 0, use one previous value.
 		// For android firefox. When touchend fired, touchmove also
@@ -314,6 +332,23 @@ Flipsnap.prototype._touchMove = function(event) {
 		self.directionX =
 			distX === 0 ? self.directionX :
 			distX > 0 ? -1 : 1;
+
+		// if they prevent us then stop it
+		var isPrevent = !triggerEvent(self.element, 'fstouchmove', true, true, {
+			delta: distX,
+			direction: self.directionX
+		});
+
+		if (isPrevent) {
+			self._touchAfter({
+				moved: false,
+				originalPoint: self.currentPoint,
+				newPoint: self.currentPoint,
+				cancelled: true
+			});
+		} else {
+			self._setX(newX);
+		}
 	}
 	else {
 		deltaX = Math.abs(pageX - self.startPageX);
@@ -335,11 +370,11 @@ Flipsnap.prototype._touchMove = function(event) {
 Flipsnap.prototype._touchEnd = function(event) {
 	var self = this;
 
+	document.removeEventListener(touchEndEvent, self, false);
+
 	if (!self.scrolling) {
 		return;
 	}
-
-	self.scrolling = false;
 
 	var newPoint = -self.currentX / self._distance;
 	newPoint =
@@ -347,11 +382,21 @@ Flipsnap.prototype._touchEnd = function(event) {
 		(self.directionX < 0) ? Math.floor(newPoint) :
 		Math.round(newPoint);
 
-	self.moveToPoint(newPoint);
+	if (newPoint < 0) {
+		newPoint = 0;
+	}
+	else if (newPoint > self._maxPoint) {
+		newPoint = self._maxPoint;
+	}
 
-	setTimeout(function() {
-		self.element.removeEventListener('click', self, true);
-	}, 200);
+	self._touchAfter({
+		moved: newPoint !== self.currentPoint,
+		originalPoint: self.currentPoint,
+		newPoint: newPoint,
+		cancelled: false
+	});
+
+	self.moveToPoint(newPoint);
 };
 
 Flipsnap.prototype._click = function(event) {
@@ -359,6 +404,19 @@ Flipsnap.prototype._click = function(event) {
 
 	event.stopPropagation();
 	event.preventDefault();
+};
+
+Flipsnap.prototype._touchAfter = function(params) {
+	var self = this;
+
+	self.scrolling = false;
+	self.moveReady = false;
+
+	setTimeout(function() {
+		self.element.removeEventListener('click', self, true);
+	}, 200);
+
+	triggerEvent(self.element, 'fstouchend', true, false, params);
 };
 
 Flipsnap.prototype._setStyle = function(styles) {
@@ -370,14 +428,14 @@ Flipsnap.prototype._setStyle = function(styles) {
 	}
 };
 
-Flipsnap.prototype._animate = function(x) {
+Flipsnap.prototype._animate = function(x, transitionDuration) {
 	var self = this;
 
 	var elem = self.element;
 	var begin = +new Date();
 	var from = parseInt(elem.style.left, 10);
 	var to = x;
-	var duration = 350;
+	var duration = transitionDuration;
 	var easing = function(time, duration) {
 		return -(time /= duration) * (time - 2);
 	};
@@ -401,7 +459,6 @@ Flipsnap.prototype.destroy = function() {
 
 	self.element.removeEventListener(touchStartEvent, self);
 	self.element.removeEventListener(touchMoveEvent, self);
-	document.removeEventListener(touchEndEvent, self);
 };
 
 Flipsnap.prototype._getTranslate = function(x) {
@@ -473,10 +530,15 @@ function some(ary, callback) {
 	return false;
 }
 
-function triggerEvent(element, type, bubbles, cancelable) {
+function triggerEvent(element, type, bubbles, cancelable, data) {
 	var ev = document.createEvent('Event');
 	ev.initEvent(type, bubbles, cancelable);
-	element.dispatchEvent(ev);
+	if (data) {
+		for (var d in data) {
+			ev[d] = data[d];
+		}
+	}
+	return element.dispatchEvent(ev);
 }
 
 window.Flipsnap = Flipsnap;

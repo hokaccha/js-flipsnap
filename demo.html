@@ -99,8 +99,8 @@ title: Demo
 		</div>
 	</section>
 
-	<section class="demo" id="demo-moveend">
-		<h3>moveend</h3>
+	<section class="demo" id="demo-pointmove">
+		<h3>pointmove</h3>
 		<div class="viewport">
 			<div class="flipsnap">
 				<div class="item">1</div>
@@ -123,7 +123,7 @@ title: Demo
 var flipsnap = Flipsnap('.flipsnap', {
     distance: 230
 });
-flipsnap.element.addEventListener('fsmoveend', function() {
+flipsnap.element.addEventListener('fspointmove', function() {
     $pointer.filter('.current').removeClass('current');
     $pointer.eq(flipsnap.currentPoint).addClass('current');
 }, false);</code></pre>
@@ -224,7 +224,7 @@ var $next = $('.next').click(function() {
 var $prev = $('.prev').click(function() {
     flipsnap.toPrev();
 });
-flipsnap.element.addEventListener('fsmoveend', function() {
+flipsnap.element.addEventListener('fspointmove', function() {
     $next.attr('disabled', !flipsnap.hasNext());
     $prev.attr('disabled', !flipsnap.hasPrev());
 }, false);</code></pre>
@@ -310,10 +310,81 @@ var $next = $('.next').click(function() {
 var $prev = $('.prev').click(function() {
     flipsnap.toPrev();
 });
-flipsnap.element.addEventListener('fsmoveend', function() {
+flipsnap.element.addEventListener('fspointmove', function() {
     $next.attr('disabled', !flipsnap.hasNext());
     $prev.attr('disabled', !flipsnap.hasPrev());
 }, false);</code></pre>
 		</div>
 	</section>
+
+	<section class="demo" id="demo-touchevents">
+		<h3>touch events</h3>
+		<div class="viewport">
+			<div class="flipsnap">
+				<div class="item">1</div>
+				<div class="item">2</div>
+				<div class="item">3</div>
+			</div>
+		</div>
+		<div class="log">
+			<div class="event">event: <span></span></div>
+			<pre class="detail"></pre>
+		</div>
+		<div class="sample">
+			<p class="toggle"><a href="#">show code</a></p>
+<pre><code>var $demo = $('#demo-touchevents');
+var $event = $demo.find('.event span');
+var $detail = $demo.find('.detail');
+var flipsnap = Flipsnap('#demo-touchevents .flipsnap', {
+    distance: 230
+});
+flipsnap.element.addEventListener('fstouchstart', function(ev) {
+    $event.text('fstouchstart');
+}, false);
+
+flipsnap.element.addEventListener('fstouchmove', function(ev) {
+    $event.text('fstouchmove');
+    $detail.text(JSON.stringify({
+        delta: ev.delta,
+        direction: ev.direction
+    }, null, 2));
+}, false);
+
+flipsnap.element.addEventListener('fstouchend', function(ev) {
+    $event.text('fstouchend');
+    $detail.text(JSON.stringify({
+        moved: ev.moved,
+        originalPoint: ev.originalPoint,
+        newPoint: ev.newPoint,
+        cancelled: ev.cancelled
+    }, null, 2));
+}, false);</code></pre>
+		</div>
+	</section>
+
+	<section class="demo" id="demo-cancelmove">
+		<h3>cancel move (only next)</h3>
+		<div class="viewport">
+			<div class="flipsnap">
+				<div class="item">1</div>
+				<div class="item">2</div>
+				<div class="item">3</div>
+			</div>
+		</div>
+		<div class="log">
+			<div class="event">event: <span></span></div>
+			<pre class="detail"></pre>
+		</div>
+		<div class="sample">
+			<p class="toggle"><a href="#">show code</a></p>
+<pre><code>flipsnap.element.addEventListener('fstouchmove', function(ev) {
+    // if touchmove to prev, when touchmove event cancel
+    if (ev.direction === -1) {
+        ev.preventDefault();
+        flipsnap.moveToPoint(ev.newPoint);
+    }
+});</code></pre>
+		</div>
+	</section>
+
 </section>

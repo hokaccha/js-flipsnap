@@ -50,7 +50,7 @@ hr {
   box-sizing: content-box; }
 
 pre {
-  font-family: monospace, sans-serif;
+  font-family: monaco, monospace, sans-serif;
   white-space: pre-wrap;
   word-wrap: break-word;
   margin: 0; }
@@ -79,7 +79,7 @@ abbr[title] {
   border-bottom: 1px dotted; }
 
 code, samp, kbd {
-  font-family: monospace, sans-serif; }
+  font-family: monaco, monospace, sans-serif; }
 
 mark {
   color: black;
@@ -216,6 +216,9 @@ th, td {
   border: 1px solid #CCC;
   padding: 5px; }
 
+pre code {
+  line-height: 1.6; }
+
 .all {
   margin: 0 auto; }
 
@@ -260,9 +263,11 @@ button[disabled] {
   .main h4 {
     margin: 10px 0;
     font-size: 18px;
-    color: #504e47; }
+    color: #333; }
   .main section {
     margin-bottom: 20px; }
+  .main .mod-section01 {
+    margin-bottom: 40px; }
   .main .note {
     font-size: 12px; }
   .main ul {
@@ -361,6 +366,16 @@ button[disabled] {
 
 #demo-moveToPoint .flipsnap {
   width: 2345px; }
+
+#demo-touchevents .log, #demo-cancelmove .log {
+  width: 300px;
+  margin: 0 auto; }
+#demo-touchevents pre.detail, #demo-cancelmove pre.detail {
+  background: #EFEFEF;
+  padding: 5px;
+  border: 1px solid #CCC;
+  height: 105px;
+  font-size: 12px; }
 
 .sample p {
   text-align: center; }

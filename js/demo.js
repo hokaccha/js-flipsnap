@@ -30,13 +30,13 @@ if (!$('.demo').length) return;
 	});
 })();
 
-(function moveend() {
-	var $demo = $('#demo-moveend');
+(function pointmove() {
+	var $demo = $('#demo-pointmove');
 	var $pointer = $demo.find('.pointer span');
-	var flipsnap = Flipsnap('#demo-moveend .flipsnap', {
+	var flipsnap = Flipsnap('#demo-pointmove .flipsnap', {
 		distance: 230
 	});
-	flipsnap.element.addEventListener('fsmoveend', function() {
+	flipsnap.element.addEventListener('fspointmove', function() {
 		$pointer.filter('.current').removeClass('current');
 		$pointer.eq(flipsnap.currentPoint).addClass('current');
 	}, false);
@@ -101,7 +101,7 @@ if (!$('.demo').length) return;
 	var $prev = $demo.find(".prev").click(function() {
 		flipsnap.toPrev();
 	});
-	flipsnap.element.addEventListener('fsmoveend', function() {
+	flipsnap.element.addEventListener('fspointmove', function() {
 		$next.attr("disabled", !flipsnap.hasNext());
 		$prev.attr("disabled", !flipsnap.hasPrev());
 	}, false);
@@ -143,9 +143,74 @@ if (!$('.demo').length) return;
 	var $prev = $demo.find(".prev").click(function() {
 		flipsnap.toPrev();
 	});
-	flipsnap.element.addEventListener('fsmoveend', function() {
+	flipsnap.element.addEventListener('fspointmove', function() {
 		$next.attr("disabled", !flipsnap.hasNext());
 		$prev.attr("disabled", !flipsnap.hasPrev());
+	}, false);
+})();
+
+(function touchevents() {
+	var $demo = $('#demo-touchevents');
+	var $event = $demo.find('.event span');
+	var $detail = $demo.find('.detail');
+	var flipsnap = Flipsnap('#demo-touchevents .flipsnap', {
+		distance: 230
+	});
+	flipsnap.element.addEventListener('fstouchstart', function(ev) {
+		$event.text('fstouchstart');
+	}, false);
+
+	flipsnap.element.addEventListener('fstouchmove', function(ev) {
+		$event.text('fstouchmove');
+		$detail.text(JSON.stringify({
+			delta: ev.delta,
+			direction: ev.direction
+		}, null, 2));
+	}, false);
+
+	flipsnap.element.addEventListener('fstouchend', function(ev) {
+		$event.text('fstouchend');
+		$detail.text(JSON.stringify({
+			moved: ev.moved,
+			originalPoint: ev.originalPoint,
+			newPoint: ev.newPoint,
+			cancelled: ev.cancelled
+		}, null, 2));
+	}, false);
+})();
+
+(function cancelmove() {
+	var $demo = $('#demo-cancelmove');
+	var $event = $demo.find('.event span');
+	var $detail = $demo.find('.detail');
+	var flipsnap = Flipsnap('#demo-cancelmove .flipsnap', {
+		distance: 230
+	});
+	flipsnap.element.addEventListener('fstouchstart', function(ev) {
+		$event.text('fstouchstart');
+	}, false);
+
+	flipsnap.element.addEventListener('fstouchmove', function(ev) {
+		// if touchmove to prev, when touchmove event cancel
+		if (ev.direction === -1) {
+			ev.preventDefault();
+			flipsnap.moveToPoint(ev.newPoint);
+		}
+		$event.text('fstouchmove');
+		$detail.text(JSON.stringify({
+			delta: ev.delta,
+			direction: ev.direction
+		}, null, 2));
+	}, false);
+
+	flipsnap.element.addEventListener('fstouchend', function(ev) {
+		$event.text('fstouchend');
+		$detail.text(JSON.stringify({
+			moved: ev.moved,
+			originalPoint: ev.originalPoint,
+			newPoint: ev.newPoint,
+			cancelled: ev.cancelled
+		}, null, 2));
 	}, false);
 })();
 

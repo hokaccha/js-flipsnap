@@ -38,6 +38,10 @@ th, td {
 	padding: 5px;
 }
 
+pre code {
+	line-height: 1.6;
+}
+
 .all {
 	margin: 0 auto;
 }
@@ -103,11 +107,15 @@ button[disabled] {
 	h4 {
 		margin: 10px 0;
 		font-size: 18px;
-		color: #504e47;
+		color: #333;
 	}
 
 	section {
 		margin-bottom: 20px;
+	}
+
+	.mod-section01 {
+		margin-bottom: 40px;
 	}
 
 	.note {
@@ -244,6 +252,21 @@ button[disabled] {
 #demo-moveToPoint {
 	.flipsnap {
 		width: 230px * 10 + 45px;
+	}
+}
+
+#demo-touchevents, #demo-cancelmove{
+	.log {
+		width: 300px;
+		margin: 0 auto;
+	}
+	
+	pre.detail {
+		background: #EFEFEF;
+		padding: 5px;
+		border: 1px solid #CCC;
+		height: 105px;
+		font-size: 12px;
 	}
 }
 

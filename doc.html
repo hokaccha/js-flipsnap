@@ -14,7 +14,7 @@ title: Document
 			<li>String must be CSS Selector</li>
 			<li>When set string, to get first element of result. Not all element.</li>
 		</ul>
-		<section>
+		<section class="mod-section01">
 			<h4>example</h4>
 			<pre><code>// HTMLElement
 var elem = document.getElementById('foo');
@@ -66,14 +66,14 @@ var flipsnap = Flipsnap('#foo', { distance: 240 });</code></pre>
 	<section>
 		<h3>Method</h3>
 
-		<section>
+		<section class="mod-section01">
 			<h4>refresh</h4>
 			<p>Recalculate values. <a href="demo.html#demo-refresh">demo</a></p>
 			<pre><code>var flipsnap = Flipsnap('#foo');
 flipsnap.refresh();</code></pre>
 		</section>
 
-		<section>
+		<section class="mod-section01">
 			<h4>hasNext</h4>
 			<p>Return true or false. true is returned when there is next element.  <a href="demo.html#demo-nextprev">demo</a></p>
 			<pre><code>var flipsnap = Flipsnap('#foo');
@@ -82,7 +82,7 @@ if (flipsnap.hasNext()) {
 }</code></pre>
 		</section>
 
-		<section>
+		<section class="mod-section01">
 			<h4>hasPrev</h4>
 			<p>Return true or false. true is returned when there is previous element. <a href="demo.html#demo-nextprev">demo</a></p>
 			<pre><code>var flipsnap = Flipsnap('#foo');
@@ -91,7 +91,7 @@ if (flipsnap.hasPrev()) {
 }</code></pre>
 		</section>
 
-		<section>
+		<section class="mod-section01">
 			<h4>toNext</h4>
 			<p>Move to next item. <a href="demo.html#demo-nextprev">demo</a></p>
 			<pre><code>var flipsnap = Flipsnap('#foo');
@@ -123,17 +123,54 @@ $('.moveBtn').click(function() {
 	<section>
 		<h3>Event</h3>
 
-		<section>
-			<h4>fsmoveend</h4>
-			<p>Fired move end. <a href="demo.html#demo-moveend">demo</a>.</p>
+		<section class="mod-section01">
+			<h4>fspointmove</h4>
+			<p>This event is fired when point moved. <a href="demo.html#demo-moveend">demo</a>.</p>
 			<pre><code>var flipsnap = Flipsnap('#foo');
-flipsnap.element.addEventListener('fsmoveend', function() {
+flipsnap.element.addEventListener('fspointmove', function() {
     // do something
 }, false);</code></pre>
 			<pre><code>// using jQuery .bind()
 var flipsnap = Flipsnap('#foo');
-$(flipsnap.element).bind('fsmoveend', function() {
+$(flipsnap.element).bind('fspointmove', function() {
     // do something
+}, false);</code></pre>
+		</section>
+
+		<section class="mod-section01">
+			<h4>fstouchstart</h4>
+			<p>This event is fired when touch start. <a href="demo.html#demo-touchevents">demo</a>.</p>
+			<pre><code>var flipsnap = Flipsnap('#foo');
+flipsnap.element.addEventListener('fstouchstart', function() {
+    // do something
+}, false);</code></pre>
+		</section>
+
+		<section class="mod-section01">
+			<h4>fstouchmove</h4>
+			<p>This event is fired when touch move. <a href="demo.html#demo-touchevents">demo</a>.</p>
+			<pre><code>var flipsnap = Flipsnap('#foo');
+flipsnap.element.addEventListener('fstouchmove', function(ev) {
+    ev.delta;     //=> delta x value, given px
+    ev.direction; //=> direction value, 1 or -1
+}, false);</code></pre>
+			<p>This event is cancelable. <a href="demo.html#demo-cancelmove">demo</a>.</p>
+			<pre><code>flipsnap.element.addEventListener('fstouchmove', function(ev) {
+    if (ev.direction === -1) {
+      ev.preventDefault(); // cancel touchmove event and fire touchend event.
+    }
+});
+		</section>
+
+		<section class="mod-section01">
+			<h4>fstouchend</h4>
+			<p>This event is fired when touch end. <a href="demo.html#demo-touchevents">demo</a>.</p>
+			<pre><code>var flipsnap = Flipsnap('#foo');
+flipsnap.element.addEventListener('fstouchmove', function(ev) {
+    ev.moved;         //=> is moved, true or false
+    ev.originalPoint; //=> original point
+    ev.newPoint;      //=> new point
+    ev.cancelled;     //=> is cancelled, true or false
 }, false);</code></pre>
 		</section>
 	</section>
