@@ -26,7 +26,7 @@ if (!$('.demo').length) return;
 (function transitionDuration() {
 	Flipsnap('#demo-transitionDuration .flipsnap', {
 		distance: 230,
-		transitionDuration: 1000
+		transitionDuration: 150
 	});
 })();
 
@@ -56,7 +56,7 @@ if (!$('.demo').length) return;
 (function touchevents() {
 	var $demo = $('#demo-touchevents');
 	var $event = $demo.find('.event span');
-	var $detail = $demo.find('.detail span');
+	var $detail = $demo.find('.detail');
 	var flipsnap = Flipsnap('#demo-touchevents .flipsnap', {
 		distance: 230
 	});
@@ -69,7 +69,7 @@ if (!$('.demo').length) return;
 		$detail.text(JSON.stringify({
 			delta: ev.delta,
 			direction: ev.direction
-		}));
+		}, null, 2));
 	}, false);
 
 	flipsnap.element.addEventListener('fstouchend', function(ev) {
@@ -79,7 +79,7 @@ if (!$('.demo').length) return;
 			originalPoint: ev.originalPoint,
 			newPoint: ev.newPoint,
 			cancelled: ev.cancelled
-		}));
+		}, null, 2));
 	}, false);
 })();
 

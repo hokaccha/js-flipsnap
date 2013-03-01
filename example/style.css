@@ -86,12 +86,16 @@ h1, h2, h3 {
   padding: 10px 0; }
 
 #demo-touchevents .log {
-  width: 200px;
+  width: 280px;
   margin: 0 auto;
 }
 
-#demo-touchevents .log > div {
-  white-space: nowrap;
+#demo-touchevents pre.detail {
+  background: #EFEFEF;
+  padding: 5px;
+  border: 1px solid #CCC;
+  height: 80px;
+  font-size: 12px;
 }
 
 #demo-refresh .flipsnap {
