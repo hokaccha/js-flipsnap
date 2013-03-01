@@ -322,15 +322,21 @@ Flipsnap.prototype._touchMove = function(event) {
 		self.directionX =
 			distX === 0 ? self.directionX :
 			distX > 0 ? -1 : 1;
-		
+
 		// if they prevent us then stop it
-		if (!triggerEvent(self.element, 'fstouchmove', true, true, {"delta": distX, "direction": self.directionX})) {
-			self.scrolling = false;
-			self.moveReady = false;
-			setTimeout(function() {
-				self.element.removeEventListener('click', self, true);
-			}, 200);
-			triggerEvent(self.element, 'fstouchend', true, false, {"moved": false, "originalPoint": self.currentPoint, "newPoint": self.currentPoint, "cancelled": true});
+		var isPrevent = !triggerEvent(self.element, 'fstouchmove', true, true, {
+			delta: distX,
+			direction:
+			self.directionX
+		});
+
+		if (isPrevent) {
+			self._touchAfter({
+				moved: false,
+				originalPoint: self.currentPoint,
+				newPoint: self.currentPoint,
+				cancelled: true
+			});
 		} else {
 			self._setX(newX);
 		}
@@ -359,21 +365,20 @@ Flipsnap.prototype._touchEnd = function(event) {
 		return;
 	}
 
-	self.scrolling = false;
-
 	var newPoint = -self.currentX / self._distance;
 	newPoint =
 		(self.directionX > 0) ? Math.ceil(newPoint) :
 		(self.directionX < 0) ? Math.floor(newPoint) :
 		Math.round(newPoint);
 
-	triggerEvent(self.element, 'fstouchend', true, false, {"moved": newPoint != self.currentPoint, "originalPoint": self.currentPoint, "newPoint": newPoint, "cancelled": false});
+	self._touchAfter({
+		moved: newPoint !== self.currentPoint,
+		originalPoint: self.currentPoint,
+		newPoint: newPoint,
+		cancelled: false
+	});
 
 	self.moveToPoint(newPoint);
-
-	setTimeout(function() {
-		self.element.removeEventListener('click', self, true);
-	}, 200);
 };
 
 Flipsnap.prototype._click = function(event) {
@@ -381,6 +386,19 @@ Flipsnap.prototype._click = function(event) {
 
 	event.stopPropagation();
 	event.preventDefault();
+};
+
+Flipsnap.prototype._touchAfter = function(params) {
+	var self = this;
+
+	self.scrolling = false;
+	self.moveReady = false;
+
+	setTimeout(function() {
+		self.element.removeEventListener('click', self, true);
+	}, 200);
+
+	triggerEvent(self.element, 'fstouchend', true, false, params);
 };
 
 Flipsnap.prototype._setStyle = function(styles) {
