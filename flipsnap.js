@@ -289,13 +289,14 @@ Flipsnap.prototype._setX = function(x) {
 Flipsnap.prototype._touchStart = function(event) {
 	var self = this;
 
-	if (self.disableTouch || gestureStart) {
+	if (self.disableTouch || self._eventType || gestureStart) {
 		return;
 	}
 
-	eventTypes.forEach(function(type) {
+	some(eventTypes, function(type) {
 		if (event.type === events.start[type]) {
 			self._eventType = type;
+			return true;
 		}
 	});
 
@@ -392,6 +393,7 @@ Flipsnap.prototype._touchEnd = function(event) {
 
 	self.element.removeEventListener(events.move[self._eventType], self, false);
 	document.removeEventListener(events.end[self._eventType], self, false);
+	self._eventType = null;
 
 	if (!self.scrolling) {
 		return;
@@ -492,7 +494,7 @@ Flipsnap.prototype._getTranslate = function(x) {
 };
 
 function getPage(event, page) {
-	return support.touch ? event.changedTouches[0][page] : event[page];
+	return event.changedTouches ? event.changedTouches[0][page] : event[page];
 }
 
 function hasProp(props) {
