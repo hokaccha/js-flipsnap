@@ -1,3 +1,8 @@
+0.5.1  / 2013-03-05
+====================
+
+* Fix, Mouse event don't work in Window8 Chrome and Firefox. #20
+
 0.5.0  / 2013-03-01
 ====================
 
