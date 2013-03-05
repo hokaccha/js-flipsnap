@@ -160,62 +160,75 @@ describe('Flipsnap', function() {
   });
 
   describe('Flip Events', function() {
-    var support = {};
-    support.touch = 'ontouchstart' in window;
-    support.mspointer = window.navigator.msPointerEnabled;
-
-    var touchStartEvent =
-        support.mspointer ? 'MSPointerDown' :
-        support.touch ? 'touchstart' :
-        'mousedown';
-    var touchMoveEvent =
-        support.mspointer ? 'MSPointerMove' :
-        support.touch ? 'touchmove' :
-        'mousemove';
-    var touchEndEvent =
-        support.mspointer ? 'MSPointerUp' :
-        support.touch ? 'touchend' :
-        'mouseup';
-
     function trigger(element, eventType, params) {
-      if (support.touch) {
-        params = { changedTouches: [ params ] };
-      }
-
       var ev = document.createEvent('Event');
       ev.initEvent(eventType, true, false);
       $.extend(ev, params || {});
       element.dispatchEvent(ev);
     }
 
-    it('should move to next', function() {
-      trigger(f.element, touchStartEvent, { pageX: 50, pageY: 0 });
-      expect(f.currentPoint).to.be(0);
+    function moveEventTest(start, move, end) {
+      it('should move to next', function() {
+        trigger(f.element, start, { pageX: 50, pageY: 0 });
+        expect(f.currentPoint).to.be(0);
 
-      trigger(f.element, touchMoveEvent, { pageX: 40, pageY: 0 });
-      trigger(f.element, touchMoveEvent, { pageX: 30, pageY: 0 });
-      expect(f.currentPoint).to.be(0);
+        trigger(f.element, move, { pageX: 40, pageY: 0 });
+        trigger(f.element, move, { pageX: 30, pageY: 0 });
+        expect(f.currentPoint).to.be(0);
 
-      trigger(document, touchEndEvent);
-      expect(f.currentPoint).to.be(1);
+        trigger(document, end);
+        expect(f.currentPoint).to.be(1);
+      });
+
+      it('should move to prev', function() {
+        trigger(f.element, start, { pageX: 50, pageY: 0 });
+        trigger(f.element, move, { pageX: 40, pageY: 0 });
+        trigger(f.element, move, { pageX: 30, pageY: 0 });
+        trigger(document, end);
+        expect(f.currentPoint).to.be(1);
+
+        trigger(f.element, start, { pageX: 50, pageY: 0 });
+        expect(f.currentPoint).to.be(1);
+
+        trigger(f.element, move, { pageX: 60, pageY: 0 });
+        trigger(f.element, move, { pageX: 70, pageY: 0 });
+        expect(f.currentPoint).to.be(1);
+
+        trigger(document, end);
+        expect(f.currentPoint).to.be(0);
+      });
+    }
+
+    context('when fired touch event', function() {
+      moveEventTest('touchstart', 'touchmove', 'touchend');
     });
 
-    it('should move to prev', function() {
-      trigger(f.element, touchStartEvent, { pageX: 50, pageY: 0 });
-      trigger(f.element, touchMoveEvent, { pageX: 40, pageY: 0 });
-      trigger(f.element, touchMoveEvent, { pageX: 30, pageY: 0 });
-      trigger(document, touchEndEvent);
-      expect(f.currentPoint).to.be(1);
+    context('when fired mouse event', function() {
+      moveEventTest('mousedown', 'mousemove', 'mouseup');
+    });
 
-      trigger(f.element, touchStartEvent, { pageX: 50, pageY: 0 });
-      expect(f.currentPoint).to.be(1);
+    context('when fired MSPointer event', function() {
+      moveEventTest('MSPointerDown', 'MSPointerMove', 'MSPointerUp');
+    });
 
-      trigger(f.element, touchMoveEvent, { pageX: 60, pageY: 0 });
-      trigger(f.element, touchMoveEvent, { pageX: 70, pageY: 0 });
-      expect(f.currentPoint).to.be(1);
+    context('when fired touchstart and mousedown event', function() {
+      beforeEach(function() {
+        this.spy = sinon.spy(f.element, 'addEventListener');
+        trigger(f.element, 'touchstart', { pageX: 0, pageY: 0 });
+        trigger(f.element, 'mousedown', { pageX: 0, pageY: 0 });
+      });
+      afterEach(function() {
+        this.spy.restore();
+      });
 
-      trigger(document, touchEndEvent);
-      expect(f.currentPoint).to.be(0);
+      it('_eventType should be first fired event type', function() {
+        expect(f._eventType).to.be('touch');
+      });
+
+      it('move event should bind only first fired event type', function() {
+        expect(this.spy.callCount).to.be(1);
+        expect(this.spy.args[0][0]).to.be('touchmove');
+      });
     });
   });
 });

@@ -46,18 +46,24 @@ support.mspointer = window.navigator.msPointerEnabled;
 
 support.cssAnimation = (support.transform3d || support.transform) && support.transition;
 
-var touchStartEvent =
-	support.mspointer ? 'MSPointerDown' :
-	support.touch ? 'touchstart' :
-	'mousedown';
-var touchMoveEvent =
-	support.mspointer ? 'MSPointerMove' :
-	support.touch ? 'touchmove' :
-	'mousemove';
-var touchEndEvent =
-	support.mspointer ? 'MSPointerUp' :
-	support.touch ? 'touchend' :
-	'mouseup';
+var eventTypes = ['touch', 'mouse', 'pointer'];
+var events = {
+	start: {
+		touch: 'touchstart',
+		mouse: 'mousedown',
+		pointer: 'MSPointerDown'
+	},
+	move: {
+		touch: 'touchmove',
+		mouse: 'mousemove',
+		pointer: 'MSPointerMove'
+	},
+	end: {
+		touch: 'touchend',
+		mouse: 'mouseup',
+		pointer: 'MSPointerUp'
+	}
+};
 
 function Flipsnap(element, opts) {
 	return (this instanceof Flipsnap)
@@ -126,8 +132,9 @@ Flipsnap.prototype.init = function(element, opts) {
 	// initilize
 	self.refresh();
 
-	self.element.addEventListener(touchStartEvent, self, false);
-	self.element.addEventListener(touchMoveEvent, self, false);
+	eventTypes.forEach(function(type) {
+		self.element.addEventListener(events.start[type], self, false);
+	});
 
 	return self;
 };
@@ -136,13 +143,19 @@ Flipsnap.prototype.handleEvent = function(event) {
 	var self = this;
 
 	switch (event.type) {
-		case touchStartEvent:
+		case events.start.touch:
+		case events.start.mouse:
+		case events.start.pointer:
 			self._touchStart(event);
 			break;
-		case touchMoveEvent:
+		case events.move.touch:
+		case events.move.mouse:
+		case events.move.pointer:
 			self._touchMove(event);
 			break;
-		case touchEndEvent:
+		case events.end.touch:
+		case events.end.mouse:
+		case events.end.pointer:
 			self._touchEnd(event);
 			break;
 		case 'click':
@@ -276,11 +289,19 @@ Flipsnap.prototype._setX = function(x) {
 Flipsnap.prototype._touchStart = function(event) {
 	var self = this;
 
-	if (self.disableTouch || gestureStart) {
+	if (self.disableTouch || self._eventType || gestureStart) {
 		return;
 	}
 
-	document.addEventListener(touchEndEvent, self, false);
+	some(eventTypes, function(type) {
+		if (event.type === events.start[type]) {
+			self._eventType = type;
+			return true;
+		}
+	});
+
+	self.element.addEventListener(events.move[self._eventType], self, false);
+	document.addEventListener(events.end[self._eventType], self, false);
 
 	if (!support.touch) {
 		event.preventDefault();
@@ -370,7 +391,9 @@ Flipsnap.prototype._touchMove = function(event) {
 Flipsnap.prototype._touchEnd = function(event) {
 	var self = this;
 
-	document.removeEventListener(touchEndEvent, self, false);
+	self.element.removeEventListener(events.move[self._eventType], self, false);
+	document.removeEventListener(events.end[self._eventType], self, false);
+	self._eventType = null;
 
 	if (!self.scrolling) {
 		return;
@@ -457,8 +480,9 @@ Flipsnap.prototype._animate = function(x, transitionDuration) {
 Flipsnap.prototype.destroy = function() {
 	var self = this;
 
-	self.element.removeEventListener(touchStartEvent, self);
-	self.element.removeEventListener(touchMoveEvent, self);
+	eventTypes.forEach(function(type) {
+		self.element.removeEventListener(events.start[type], self, false);
+	});
 };
 
 Flipsnap.prototype._getTranslate = function(x) {
@@ -470,7 +494,7 @@ Flipsnap.prototype._getTranslate = function(x) {
 };
 
 function getPage(event, page) {
-	return support.touch ? event.changedTouches[0][page] : event[page];
+	return event.changedTouches ? event.changedTouches[0][page] : event[page];
 }
 
 function hasProp(props) {
