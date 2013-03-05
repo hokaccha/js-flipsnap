@@ -1,7 +1,7 @@
 /**
  * flipsnap.js
  *
- * @version  0.5.1
+ * @version  0.5.2
  * @url http://pxgrid.github.com/js-flipsnap/
  *
  * Copyright 2011 PixelGrid, Inc.
@@ -41,6 +41,7 @@ support.transition = hasProp([
 	'msTransitionProperty'
 ]);
 
+support.addEventListener = 'addEventListener' in window;
 support.touch = 'ontouchstart' in window;
 support.mspointer = window.navigator.msPointerEnabled;
 
@@ -65,19 +66,21 @@ var events = {
 	}
 };
 
+if (support.addEventListener) {
+	document.addEventListener('gesturestart', function() {
+		gestureStart = true;
+	});
+
+	document.addEventListener('gestureend', function() {
+		gestureStart = false;
+	});
+}
+
 function Flipsnap(element, opts) {
 	return (this instanceof Flipsnap)
 		? this.init(element, opts)
 		: new Flipsnap(element, opts);
 }
-
-document.addEventListener('gesturestart', function() {
-	gestureStart = true;
-});
-
-document.addEventListener('gestureend', function() {
-	gestureStart = false;
-});
 
 Flipsnap.prototype.init = function(element, opts) {
 	var self = this;
@@ -234,7 +237,7 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
 	var self = this;
 	
 	transitionDuration = transitionDuration === undefined
-		? self.transitionDuration : transitionDuration;
+		? self.transitionDuration : transitionDuration + 'ms';
 
 	var beforePoint = self.currentPoint;
 
@@ -458,7 +461,7 @@ Flipsnap.prototype._animate = function(x, transitionDuration) {
 	var begin = +new Date();
 	var from = parseInt(elem.style.left, 10);
 	var to = x;
-	var duration = transitionDuration;
+	var duration = parseInt(transitionDuration, 10);
 	var easing = function(time, duration) {
 		return -(time /= duration) * (time - 2);
 	};
