@@ -41,6 +41,7 @@ support.transition = hasProp([
 	'msTransitionProperty'
 ]);
 
+support.addEventListener = 'addEventListener' in window;
 support.touch = 'ontouchstart' in window;
 support.mspointer = window.navigator.msPointerEnabled;
 
@@ -65,19 +66,21 @@ var events = {
 	}
 };
 
+if (support.addEventListener) {
+	document.addEventListener('gesturestart', function() {
+		gestureStart = true;
+	});
+
+	document.addEventListener('gestureend', function() {
+		gestureStart = false;
+	});
+}
+
 function Flipsnap(element, opts) {
 	return (this instanceof Flipsnap)
 		? this.init(element, opts)
 		: new Flipsnap(element, opts);
 }
-
-document.addEventListener('gesturestart', function() {
-	gestureStart = true;
-});
-
-document.addEventListener('gestureend', function() {
-	gestureStart = false;
-});
 
 Flipsnap.prototype.init = function(element, opts) {
 	var self = this;
