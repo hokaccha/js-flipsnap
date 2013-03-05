@@ -1,3 +1,9 @@
+0.5.2  / 2013-03-06
+====================
+
+* Fix bug `transitionDuration`
+* Fix, error only load script on not support `addEventlistener` browser
+
 0.5.1  / 2013-03-05
 ====================
 
