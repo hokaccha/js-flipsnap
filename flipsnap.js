@@ -88,7 +88,12 @@ Flipsnap.prototype.init = function(element, opts) {
 	// set element
 	self.element = element;
 	if (typeof element === 'string') {
-		self.element = document.querySelector(element);
+		if (document.querySelector) {
+			self.element = document.querySelector(element);
+		}
+		else {
+			self.element = $(element).get(0);
+		}
 	}
 
 	if (!self.element) {
@@ -135,8 +140,8 @@ Flipsnap.prototype.init = function(element, opts) {
 	// initilize
 	self.refresh();
 
-	eventTypes.forEach(function(type) {
-		self.element.addEventListener(events.start[type], self, false);
+	each(eventTypes, function(type) {
+		addEvent(self.element, events.start[type], self, false);
 	});
 
 	return self;
@@ -303,8 +308,8 @@ Flipsnap.prototype._touchStart = function(event) {
 		}
 	});
 
-	self.element.addEventListener(events.move[self._eventType], self, false);
-	document.addEventListener(events.end[self._eventType], self, false);
+	addEvent(self.element, events.move[self._eventType], self, false);
+	addEvent(document, events.end[self._eventType], self, false);
 
 	if (!support.touch) {
 		event.preventDefault();
@@ -381,7 +386,7 @@ Flipsnap.prototype._touchMove = function(event) {
 			event.preventDefault();
 			event.stopPropagation();
 			self.moveReady = true;
-			self.element.addEventListener('click', self, true);
+			addEvent(self.element, 'click', self, true);
 		}
 		else if (deltaY > 5) {
 			self.scrolling = false;
@@ -394,8 +399,8 @@ Flipsnap.prototype._touchMove = function(event) {
 Flipsnap.prototype._touchEnd = function(event) {
 	var self = this;
 
-	self.element.removeEventListener(events.move[self._eventType], self, false);
-	document.removeEventListener(events.end[self._eventType], self, false);
+	removeEvent(self.element, events.move[self._eventType], self, false);
+	removeEvent(document, events.end[self._eventType], self, false);
 	self._eventType = null;
 
 	if (!self.scrolling) {
@@ -439,7 +444,7 @@ Flipsnap.prototype._touchAfter = function(params) {
 	self.moveReady = false;
 
 	setTimeout(function() {
-		self.element.removeEventListener('click', self, true);
+		removeEvent(self.element, 'click', self, true);
 	}, 200);
 
 	triggerEvent(self.element, 'fstouchend', true, false, params);
@@ -483,8 +488,8 @@ Flipsnap.prototype._animate = function(x, transitionDuration) {
 Flipsnap.prototype.destroy = function() {
 	var self = this;
 
-	eventTypes.forEach(function(type) {
-		self.element.removeEventListener(events.start[type], self, false);
+	each(eventTypes, function(type) {
+		removeEvent(self.element, events.start[type], self, false);
 	});
 };
 
@@ -548,6 +553,12 @@ function ucFirst(str) {
 	return str.charAt(0).toUpperCase() + str.substr(1);
 }
 
+function each(ary, callback) {
+	for (var i = 0, len = ary.length; i < len; i++) {
+		callback(ary[i], i);
+	}
+}
+
 function some(ary, callback) {
 	for (var i = 0, len = ary.length; i < len; i++) {
 		if (callback(ary[i], i)) {
@@ -558,14 +569,50 @@ function some(ary, callback) {
 }
 
 function triggerEvent(element, type, bubbles, cancelable, data) {
-	var ev = document.createEvent('Event');
-	ev.initEvent(type, bubbles, cancelable);
-	if (data) {
-		for (var d in data) {
-			ev[d] = data[d];
+	if (support.addEventListener) {
+		var ev = document.createEvent('Event');
+		ev.initEvent(type, bubbles, cancelable);
+		if (data) {
+			for (var d in data) {
+				ev[d] = data[d];
+			}
+		}
+		return element.dispatchEvent(ev);
+	}
+	else {
+		$(element).trigger(type);
+		return true;
+	}
+}
+
+function addEvent(element, eventName, handler, useCapture) {
+	if (support.addEventListener) {
+		element.addEventListener(eventName, handler, useCapture);
+	}
+	else {
+		if (typeof handler === 'function') {
+			$(element).bind(eventName, handler);
+		}
+		else if (typeof handler.handleEvent === 'function') {
+			$(element).bind(eventName, function(event) {
+				handler.handleEvent(event);
+			});
 		}
 	}
-	return element.dispatchEvent(ev);
+}
+
+function removeEvent(element, eventName, handler, useCapture) {
+	if (support.addEventListener) {
+		element.removeEventListener(eventName, handler, useCapture);
+	}
+	else {
+		if (typeof handler === 'function') {
+			$(element).unbind(eventName, handler);
+		}
+		else if (typeof handler.handleEvent === 'function') {
+			$(element).unbind(eventName);
+		}
+	}
 }
 
 window.Flipsnap = Flipsnap;
