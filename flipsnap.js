@@ -237,7 +237,7 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
 	var self = this;
 	
 	transitionDuration = transitionDuration === undefined
-		? self.transitionDuration : transitionDuration;
+		? self.transitionDuration : transitionDuration + 'ms';
 
 	var beforePoint = self.currentPoint;
 
@@ -461,7 +461,7 @@ Flipsnap.prototype._animate = function(x, transitionDuration) {
 	var begin = +new Date();
 	var from = parseInt(elem.style.left, 10);
 	var to = x;
-	var duration = transitionDuration;
+	var duration = parseInt(transitionDuration, 10);
 	var easing = function(time, duration) {
 		return -(time /= duration) * (time - 2);
 	};
