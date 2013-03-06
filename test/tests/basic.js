@@ -1,13 +1,17 @@
 describe('Flipsnap', function() {
-  var html;
+  var privates = Flipsnap._privates();
+  var support = privates.support;
+
+  var html =
+    '<div class="flipsnap">' +
+    '  <div style="width:100px">item1</div>' + 
+    '  <div style="width:100px">item2</div>' + 
+    '  <div style="width:100px">item3</div>' + 
+    '</div>';
+
   var $flipsnap;
   var f;
   beforeEach(function() {
-    html = '<div class="flipsnap">' +
-               '  <div style="width:100px">item1</div>' + 
-               '  <div style="width:100px">item2</div>' + 
-               '  <div style="width:100px">item3</div>' + 
-               '</div>';
     $flipsnap = $(html).appendTo('#sandbox');
     f = Flipsnap($flipsnap.get(0));
   });
@@ -157,6 +161,23 @@ describe('Flipsnap', function() {
         expect(f.currentPoint).to.be(1);
       });
     });
+
+    context('when pass transitionDuration', function() {
+      var orig = support.cssAnimation;
+      beforeEach(function() {
+        this.spy = sinon.spy(f, '_setStyle');
+        support.cssAnimation = true;
+      });
+      afterEach(function() {
+        support.cssAnimation = orig;
+      });
+
+      it('transitionDuration should be string with `ms`', function() {
+        f.moveToPoint(1, 100);
+        expect(this.spy.args[0][0])
+          .to.have.property('transitionDuration', '100ms');
+      });
+    });
   });
 
   describe('Flip Events', function() {
@@ -228,6 +249,161 @@ describe('Flipsnap', function() {
       it('move event should bind only first fired event type', function() {
         expect(this.spy.callCount).to.be(1);
         expect(this.spy.args[0][0]).to.be('touchmove');
+      });
+    });
+  });
+
+  describe('getPage', function() {
+    context('when event have changedTouches', function() {
+      it('should return event.changedTouches[0][page]', function() {
+        var event = {
+          changedTouches: [{ pageX: 10, pageY: 20 }],
+          pageX: 30,
+          pageY: 40
+        };
+
+        expect(privates.getPage(event, 'pageX')).to.be(10);
+        expect(privates.getPage(event, 'pageY')).to.be(20);
+      });
+    });
+
+    context('when event not have changedTouches', function() {
+      it('should return event[page]', function() {
+        var event = {
+          pageX: 30,
+          pageY: 40
+        };
+
+        expect(privates.getPage(event, 'pageX')).to.be(30);
+        expect(privates.getPage(event, 'pageY')).to.be(40);
+      });
+    });
+  });
+
+  describe('hasProp', function() {
+    context('when pass exist css property', function() {
+      it('should return true', function() {
+        expect(privates.hasProp(['foo', 'bar', 'color'])).to.ok();
+      });
+    });
+
+    context('when pass not exist css property', function() {
+      it('should return false', function() {
+        expect(privates.hasProp(['foo', 'bar', 'baz'])).to.not.ok();
+      });
+    });
+  });
+
+  describe('setStyle', function() {
+    it('should set css property', function() {
+      var div = document.createElement('div');
+      privates.setStyle(div.style, 'color', 'red');
+      expect(div.style.color).to.be('red');
+    });
+  });
+
+  describe('getCSSVal', function() {
+    it('should get css property', function() {
+      expect(privates.getCSSVal('color')).to.be('color');
+    });
+  });
+
+  describe('ucFirst', function() {
+    it('should return uppercase first letter', function() {
+      expect(privates.ucFirst('foo')).to.be('Foo');
+    });
+  });
+
+  describe('some', function() {
+    context('when all callback return false', function() {
+      it('should return true', function() {
+        var result = privates.some(['foo', 'bar', 'baz'], function(item) {
+          return false;
+        });
+
+        expect(result).to.not.ok();
+      });
+
+      it('should call all callback', function() {
+        var stub = sinon.stub();
+        stub.returns(false);
+        privates.some(['foo', 'bar', 'baz'], stub);
+
+        expect(stub.callCount).to.be(3);
+        expect(stub.args[0][0]).to.be('foo');
+        expect(stub.args[1][0]).to.be('bar');
+        expect(stub.args[2][0]).to.be('baz');
+      });
+    });
+
+    context('when callback return true', function() {
+      it('should return false', function() {
+        var result = privates.some(['foo', 'bar', 'baz'], function(item) {
+          return item === 'baz';
+        });
+
+        expect(result).to.ok();
+      });
+
+      it('should stop iteration', function() {
+        var stub = sinon.stub();
+        stub.returns(true);
+        privates.some(['foo', 'bar', 'baz'], stub);
+
+        expect(stub.callCount).to.be(1);
+        expect(stub.args[0][0]).to.be('foo');
+      });
+    });
+  });
+
+  describe('triggerEvent', function() {
+    beforeEach(function() {
+      this.div = document.createElement('div');
+    });
+
+    it('should fire event', function(done) {
+      this.div.addEventListener('foo', function(ev) {
+        expect(ev.bubbles).to.be(false);
+        expect(ev.cancelable).to.be(false);
+        expect(ev.type).to.be('foo');
+        done();
+      });
+      privates.triggerEvent(this.div, 'foo', false, false);
+    });
+
+    context('when set 3rd args to true', function() {
+      it('should set bubbles', function(done) {
+        this.div.addEventListener('foo', function(ev) {
+          expect(ev.bubbles).to.be(true);
+          expect(ev.cancelable).to.be(false);
+          expect(ev.type).to.be('foo');
+          done();
+        });
+        privates.triggerEvent(this.div, 'foo', true, false);
+      });
+    });
+
+    context('when set 4th args to true', function() {
+      it('should set cancelable', function(done) {
+        this.div.addEventListener('foo', function(ev) {
+          expect(ev.bubbles).to.be(false);
+          expect(ev.cancelable).to.be(true);
+          expect(ev.type).to.be('foo');
+          done();
+        });
+        privates.triggerEvent(this.div, 'foo', false, true);
+      });
+    });
+
+    context('when pass data', function() {
+      it('should set data', function(done) {
+        this.div.addEventListener('foo', function(ev) {
+          expect(ev.a).to.be('b');
+          done();
+        });
+        privates.triggerEvent(this.div, 'foo', false, false, {
+          a: 'b'
+        });
       });
     });
   });
