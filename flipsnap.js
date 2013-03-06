@@ -496,6 +496,20 @@ Flipsnap.prototype._getTranslate = function(x) {
 		: 'translate(' + x + 'px, 0)';
 };
 
+// return private object and method for test.
+Flipsnap._privates = function() {
+	return {
+		support: support,
+		getPage: getPage,
+		hasProp: hasProp,
+		setStyle: setStyle,
+		getCSSVal: getCSSVal,
+		ucFirst: ucFirst,
+		some: some,
+		triggerEvent: triggerEvent
+	};
+};
+
 function getPage(event, page) {
 	return event.changedTouches ? event.changedTouches[0][page] : event[page];
 }
