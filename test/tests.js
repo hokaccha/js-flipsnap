@@ -163,19 +163,38 @@ describe('Flipsnap', function() {
     });
 
     context('when pass transitionDuration', function() {
-      var orig = support.cssAnimation;
-      beforeEach(function() {
-        this.spy = sinon.spy(f, '_setStyle');
-        support.cssAnimation = true;
-      });
-      afterEach(function() {
-        support.cssAnimation = orig;
+      context('when no support cssAnimation', function() {
+        var orig = support.cssAnimation;
+        beforeEach(function() {
+          this.spy = sinon.spy(f, '_setStyle');
+          support.cssAnimation = true;
+        });
+        afterEach(function() {
+          support.cssAnimation = orig;
+        });
+
+        it('transitionDuration should be string with `ms`', function() {
+          f.moveToPoint(1, 100);
+          expect(this.spy.args[0][0])
+            .to.have.property('transitionDuration', '100ms');
+        });
       });
 
-      it('transitionDuration should be string with `ms`', function() {
-        f.moveToPoint(1, 100);
-        expect(this.spy.args[0][0])
-          .to.have.property('transitionDuration', '100ms');
+      context('when no support cssAnimation', function() {
+        var orig = support.cssAnimation;
+        beforeEach(function() {
+          this.spy = sinon.spy(f, '_animate');
+          support.cssAnimation = false;
+        });
+        afterEach(function() {
+          support.cssAnimation = orig;
+        });
+
+        it('transitionDuration should pass `_animate`', function() {
+          f.moveToPoint(1, 100);
+          expect(this.spy.args[0][1])
+            .to.be('100ms');
+        });
       });
     });
   });

@@ -262,7 +262,7 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
 	else {
 		self.animation = true;
 	}
-	self._setX(- self.currentPoint * self._distance);
+	self._setX(- self.currentPoint * self._distance, transitionDuration);
 
 	if (beforePoint !== self.currentPoint) { // is move?
 		// `fsmoveend` is deprecated
@@ -272,7 +272,7 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
 	}
 };
 
-Flipsnap.prototype._setX = function(x) {
+Flipsnap.prototype._setX = function(x, transitionDuration) {
 	var self = this;
 
 	self.currentX = x;
@@ -281,7 +281,7 @@ Flipsnap.prototype._setX = function(x) {
 	}
 	else {
 		if (self.animation) {
-			self._animate(x, self.transitionDuration);
+			self._animate(x, transitionDuration || self.transitionDuration);
 		}
 		else {
 			self.element.style.left = x + 'px';
