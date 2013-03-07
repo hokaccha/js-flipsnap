@@ -1,3 +1,9 @@
+0.5.3  / 2013-03-06
+====================
+
+* Fix bug `transitionDuration` when not support cssAnimation
+* Fix img draggable in Window8 Chrome and Firefox
+
 0.5.2  / 2013-03-06
 ====================
 
