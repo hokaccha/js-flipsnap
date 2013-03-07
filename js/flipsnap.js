@@ -42,7 +42,6 @@ support.transition = hasProp([
 ]);
 
 support.addEventListener = 'addEventListener' in window;
-support.touch = 'ontouchstart' in window;
 support.mspointer = window.navigator.msPointerEnabled;
 
 support.cssAnimation = (support.transform3d || support.transform) && support.transition;
@@ -306,7 +305,7 @@ Flipsnap.prototype._touchStart = function(event) {
 	self.element.addEventListener(events.move[self._eventType], self, false);
 	document.addEventListener(events.end[self._eventType], self, false);
 
-	if (!support.touch) {
+	if (self._eventType === 'mouse') {
 		event.preventDefault();
 	}
 
