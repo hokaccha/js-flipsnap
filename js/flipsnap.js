@@ -1,7 +1,7 @@
 /**
  * flipsnap.js
  *
- * @version  0.5.2
+ * @version  0.5.3
  * @url http://pxgrid.github.com/js-flipsnap/
  *
  * Copyright 2011 PixelGrid, Inc.
@@ -262,7 +262,7 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
 	else {
 		self.animation = true;
 	}
-	self._setX(- self.currentPoint * self._distance);
+	self._setX(- self.currentPoint * self._distance, transitionDuration);
 
 	if (beforePoint !== self.currentPoint) { // is move?
 		// `fsmoveend` is deprecated
@@ -272,7 +272,7 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
 	}
 };
 
-Flipsnap.prototype._setX = function(x) {
+Flipsnap.prototype._setX = function(x, transitionDuration) {
 	var self = this;
 
 	self.currentX = x;
@@ -281,7 +281,7 @@ Flipsnap.prototype._setX = function(x) {
 	}
 	else {
 		if (self.animation) {
-			self._animate(x, self.transitionDuration);
+			self._animate(x, transitionDuration || self.transitionDuration);
 		}
 		else {
 			self.element.style.left = x + 'px';
@@ -494,6 +494,20 @@ Flipsnap.prototype._getTranslate = function(x) {
 	return self.use3d
 		? 'translate3d(' + x + 'px, 0, 0)'
 		: 'translate(' + x + 'px, 0)';
+};
+
+// return private object and method for test.
+Flipsnap._privates = function() {
+	return {
+		support: support,
+		getPage: getPage,
+		hasProp: hasProp,
+		setStyle: setStyle,
+		getCSSVal: getCSSVal,
+		ucFirst: ucFirst,
+		some: some,
+		triggerEvent: triggerEvent
+	};
 };
 
 function getPage(event, page) {
