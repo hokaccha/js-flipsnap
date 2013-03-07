@@ -67,14 +67,14 @@ var flipsnap = Flipsnap('#foo', { distance: 240 });</code></pre>
 		<h3>Method</h3>
 
 		<section class="mod-section01">
-			<h4>refresh</h4>
+			<h4>refresh()</h4>
 			<p>Recalculate values. <a href="demo.html#demo-refresh">demo</a></p>
 			<pre><code>var flipsnap = Flipsnap('#foo');
 flipsnap.refresh();</code></pre>
 		</section>
 
 		<section class="mod-section01">
-			<h4>hasNext</h4>
+			<h4>hasNext()</h4>
 			<p>Return true or false. true is returned when there is next element.  <a href="demo.html#demo-nextprev">demo</a></p>
 			<pre><code>var flipsnap = Flipsnap('#foo');
 if (flipsnap.hasNext()) {
@@ -83,7 +83,7 @@ if (flipsnap.hasNext()) {
 		</section>
 
 		<section class="mod-section01">
-			<h4>hasPrev</h4>
+			<h4>hasPrev()</h4>
 			<p>Return true or false. true is returned when there is previous element. <a href="demo.html#demo-nextprev">demo</a></p>
 			<pre><code>var flipsnap = Flipsnap('#foo');
 if (flipsnap.hasPrev()) {
@@ -92,7 +92,7 @@ if (flipsnap.hasPrev()) {
 		</section>
 
 		<section class="mod-section01">
-			<h4>toNext</h4>
+			<h4>toNext([transitionDuration])</h4>
 			<p>Move to next item. <a href="demo.html#demo-nextprev">demo</a></p>
 			<pre><code>var flipsnap = Flipsnap('#foo');
 $('.nextBtn').click(function() {
@@ -101,7 +101,7 @@ $('.nextBtn').click(function() {
 		</section>
 
 		<section>
-			<h4>toPrev</h4>
+			<h4>toPrev([transitionDuration])</h4>
 			<p>Move to previous item. <a href="demo.html#demo-nextprev">demo</a></p>
 			<pre><code>var flipsnap = Flipsnap('#foo');
 $('.prevBtn').click(function() {
@@ -110,7 +110,7 @@ $('.prevBtn').click(function() {
 		</section>
 
 		<section>
-			<h4>moveToPoint</h4>
+			<h4>moveToPoint(point, [transitionDuration])</h4>
 			<p>Move to item of number. <a href="demo.html#demo-moveToPoint">demo</a></p>
 			<pre><code>var flipsnap = Flipsnap('#foo');
 $('.moveBtn').click(function() {
