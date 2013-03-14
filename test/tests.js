@@ -107,6 +107,14 @@ describe('Flipsnap', function() {
         f.toNext();
         expect(f.currentPoint).to.be(1);
       });
+
+      it('should fire fspointmove event', function(done) {
+        f.element.addEventListener('fspointmove', function() {
+          expect(f.currentPoint).to.be(1);
+          done();
+        });
+        f.toNext();
+      });
     });
 
     context('when currentPoint is maxPoint', function() {
@@ -115,6 +123,14 @@ describe('Flipsnap', function() {
         expect(f.currentPoint).to.be(2);
         f.toNext();
         expect(f.currentPoint).to.be(2);
+      });
+
+      it('should not fire fspointmove event', function() {
+        f.moveToPoint(2);
+        f.element.addEventListener('fspointmove', function() {
+          expect().fail('fire fspointmove event');
+        });
+        f.toNext();
       });
     });
   });
@@ -127,6 +143,15 @@ describe('Flipsnap', function() {
         f.toPrev();
         expect(f.currentPoint).to.be(0);
       });
+
+      it('should fire fspointmove event', function(done) {
+        f.moveToPoint(1);
+        f.element.addEventListener('fspointmove', function() {
+          expect(f.currentPoint).to.be(0);
+          done();
+        });
+        f.toPrev();
+      });
     });
 
     context('when currentPoint is 0', function() {
@@ -134,6 +159,14 @@ describe('Flipsnap', function() {
         expect(f.currentPoint).to.be(0);
         f.toPrev();
         expect(f.currentPoint).to.be(0);
+      });
+
+      it('should not fire fspointmove event', function() {
+        f.moveToPoint(0);
+        f.element.addEventListener('fspointmove', function() {
+          expect().fail('fire fspointmove event');
+        });
+        f.toPrev();
       });
     });
   });
@@ -143,6 +176,14 @@ describe('Flipsnap', function() {
       it('currentPoint should change to maxPoint', function() {
         f.moveToPoint(5);
         expect(f.currentPoint).to.be(2);
+      });
+
+      it('should fire fspointmove event', function(done) {
+        f.element.addEventListener('fspointmove', function() {
+          expect(f.currentPoint).to.be(2);
+          done();
+        });
+        f.moveToPoint(5);
       });
     });
 
