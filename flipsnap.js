@@ -14,7 +14,7 @@
 var div = document.createElement('div');
 var prefix = ['webkit', 'moz', 'o', 'ms'];
 var saveProp = {};
-var support = {};
+var support = Flipsnap.support = {};
 var gestureStart = false;
 
 support.transform3d = hasProp([
@@ -493,20 +493,6 @@ Flipsnap.prototype._getTranslate = function(x) {
 	return self.use3d
 		? 'translate3d(' + x + 'px, 0, 0)'
 		: 'translate(' + x + 'px, 0)';
-};
-
-// return private object and method for test.
-Flipsnap._privates = function() {
-	return {
-		support: support,
-		getPage: getPage,
-		hasProp: hasProp,
-		setStyle: setStyle,
-		getCSSVal: getCSSVal,
-		ucFirst: ucFirst,
-		some: some,
-		triggerEvent: triggerEvent
-	};
 };
 
 function getPage(event, page) {
