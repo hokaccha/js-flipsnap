@@ -266,8 +266,8 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
 	if (beforePoint !== self.currentPoint) { // is move?
 		// `fsmoveend` is deprecated
 		// `fspointmove` is recommend.
-		triggerEvent(self.element, 'fsmoveend', true, false);
-		triggerEvent(self.element, 'fspointmove', true, false);
+		self._triggerEvent('fsmoveend', true, false);
+		self._triggerEvent('fspointmove', true, false);
 	}
 };
 
@@ -322,7 +322,7 @@ Flipsnap.prototype._touchStart = function(event) {
 	self.basePageX = self.startPageX;
 	self.directionX = 0;
 	self.startTime = event.timeStamp;
-	triggerEvent(self.element, 'fstouchstart', true, false);
+	self._triggerEvent('fstouchstart', true, false);
 };
 
 Flipsnap.prototype._touchMove = function(event) {
@@ -357,7 +357,7 @@ Flipsnap.prototype._touchMove = function(event) {
 			distX > 0 ? -1 : 1;
 
 		// if they prevent us then stop it
-		var isPrevent = !triggerEvent(self.element, 'fstouchmove', true, true, {
+		var isPrevent = !self._triggerEvent('fstouchmove', true, true, {
 			delta: distX,
 			direction: self.directionX
 		});
@@ -441,7 +441,7 @@ Flipsnap.prototype._touchAfter = function(params) {
 		self.element.removeEventListener('click', self, true);
 	}, 200);
 
-	triggerEvent(self.element, 'fstouchend', true, false, params);
+	self._triggerEvent('fstouchend', true, false, params);
 };
 
 Flipsnap.prototype._setStyle = function(styles) {
@@ -493,6 +493,21 @@ Flipsnap.prototype._getTranslate = function(x) {
 	return self.use3d
 		? 'translate3d(' + x + 'px, 0, 0)'
 		: 'translate(' + x + 'px, 0)';
+};
+
+Flipsnap.prototype._triggerEvent = function(type, bubbles, cancelable, data) {
+	var self = this;
+
+	var ev = document.createEvent('Event');
+	ev.initEvent(type, bubbles, cancelable);
+
+	if (data) {
+		for (var d in data) {
+			ev[d] = data[d];
+		}
+	}
+
+	return self.element.dispatchEvent(ev);
 };
 
 function getPage(event, page) {
@@ -554,17 +569,6 @@ function some(ary, callback) {
 		}
 	}
 	return false;
-}
-
-function triggerEvent(element, type, bubbles, cancelable, data) {
-	var ev = document.createEvent('Event');
-	ev.initEvent(type, bubbles, cancelable);
-	if (data) {
-		for (var d in data) {
-			ev[d] = data[d];
-		}
-	}
-	return element.dispatchEvent(ev);
 }
 
 window.Flipsnap = Flipsnap;
