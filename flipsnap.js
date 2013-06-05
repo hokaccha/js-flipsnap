@@ -46,22 +46,19 @@ support.mspointer = window.navigator.msPointerEnabled;
 
 support.cssAnimation = (support.transform3d || support.transform) && support.transition;
 
-var eventTypes = ['touch', 'mouse', 'pointer'];
+var eventTypes = ['touch', 'mouse'];
 var events = {
   start: {
     touch: 'touchstart',
-    mouse: 'mousedown',
-    pointer: 'MSPointerDown'
+    mouse: 'mousedown'
   },
   move: {
     touch: 'touchmove',
-    mouse: 'mousemove',
-    pointer: 'MSPointerMove'
+    mouse: 'mousemove'
   },
   end: {
     touch: 'touchend',
-    mouse: 'mouseup',
-    pointer: 'MSPointerUp'
+    mouse: 'mouseup'
   }
 };
 
@@ -147,17 +144,14 @@ Flipsnap.prototype.handleEvent = function(event) {
   switch (event.type) {
     case events.start.touch:
     case events.start.mouse:
-    case events.start.pointer:
       self._touchStart(event);
       break;
     case events.move.touch:
     case events.move.mouse:
-    case events.move.pointer:
       self._touchMove(event);
       break;
     case events.end.touch:
     case events.end.mouse:
-    case events.end.pointer:
       self._touchEnd(event);
       break;
     case 'click':

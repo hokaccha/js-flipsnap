@@ -287,10 +287,6 @@ describe('Flipsnap', function() {
       moveEventTest('mousedown', 'mousemove', 'mouseup');
     });
 
-    context('when fired MSPointer event', function() {
-      moveEventTest('MSPointerDown', 'MSPointerMove', 'MSPointerUp');
-    });
-
     context('when fired touchstart and mousedown event', function() {
       beforeEach(function() {
         this.spy = sinon.spy(f.element, 'addEventListener');
