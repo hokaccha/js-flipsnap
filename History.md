@@ -1,3 +1,8 @@
+0.5.4  / 2013-06-05
+====================
+
+* Fix bug for Fix bug for Windows8 + IE10 #23 (don't use MSPointer Events)
+
 0.5.3  / 2013-03-06
 ====================
 
