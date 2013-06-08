@@ -497,7 +497,9 @@ Flipsnap.prototype._triggerEvent = function(type, bubbles, cancelable, data) {
 
   if (data) {
     for (var d in data) {
-      ev[d] = data[d];
+      if (data.hasOwnProperty(d)) {
+        ev[d] = data[d];
+      }
     }
   }
 
