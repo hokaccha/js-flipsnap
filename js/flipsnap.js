@@ -1,7 +1,7 @@
 /**
  * flipsnap.js
  *
- * @version  0.5.4
+ * @version  0.5.5
  * @url http://pxgrid.github.com/js-flipsnap/
  *
  * Copyright 2011 PixelGrid, Inc.
@@ -497,7 +497,9 @@ Flipsnap.prototype._triggerEvent = function(type, bubbles, cancelable, data) {
 
   if (data) {
     for (var d in data) {
-      ev[d] = data[d];
+      if (data.hasOwnProperty(d)) {
+        ev[d] = data[d];
+      }
     }
   }
 
