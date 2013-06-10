@@ -1,3 +1,8 @@
+0.5.5  / 2013-06-10
+====================
+
+* Fix, Only assign intentionally passed event data values #24 (mattbasta)
+
 0.5.4  / 2013-06-05
 ====================
 
