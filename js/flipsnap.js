@@ -1,7 +1,7 @@
 /**
  * flipsnap.js
  *
- * @version  0.5.5
+ * @version  0.5.6
  * @url http://pxgrid.github.com/js-flipsnap/
  *
  * Copyright 2011 PixelGrid, Inc.
@@ -166,7 +166,7 @@ Flipsnap.prototype.refresh = function() {
   // setting max point
   self._maxPoint = (self.maxPoint === undefined) ? (function() {
     var childNodes = self.element.childNodes,
-      itemLength = 0,
+      itemLength = -1,
       i = 0,
       len = childNodes.length,
       node;
@@ -176,17 +176,22 @@ Flipsnap.prototype.refresh = function() {
         itemLength++;
       }
     }
-    if (itemLength > 0) {
-      itemLength--;
-    }
 
     return itemLength;
   })() : self.maxPoint;
 
   // setting distance
-  self._distance = (self.distance === undefined)
-          ? self.element.scrollWidth / (self._maxPoint + 1)
-          : self.distance;
+  if (self.distance === undefined) {
+    if (self._maxPoint < 0) {
+      self._distance = 0;
+    }
+    else {
+      self._distance = self.element.scrollWidth / (self._maxPoint + 1);
+    }
+  }
+  else {
+    self._distance = self.distance;
+  }
 
   // setting maxX
   self._maxX = -self._distance * self._maxPoint;
