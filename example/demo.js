@@ -117,7 +117,7 @@ if (!$('.demo').length) return;
 	// remove last item
 	$(".remove").click(function() {
 		var $items = $flipsnap.find(".item");
-		if ($items.size() <= 1) return;
+		if ($items.size() <= 0) return;
 		width -= distance;
 		$items.last().remove().width(width);
 		flipsnap.refresh();

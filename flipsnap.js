@@ -166,7 +166,7 @@ Flipsnap.prototype.refresh = function() {
   // setting max point
   self._maxPoint = (self.maxPoint === undefined) ? (function() {
     var childNodes = self.element.childNodes,
-      itemLength = 0,
+      itemLength = -1,
       i = 0,
       len = childNodes.length,
       node;
@@ -176,17 +176,22 @@ Flipsnap.prototype.refresh = function() {
         itemLength++;
       }
     }
-    if (itemLength > 0) {
-      itemLength--;
-    }
 
     return itemLength;
   })() : self.maxPoint;
 
   // setting distance
-  self._distance = (self.distance === undefined)
-          ? self.element.scrollWidth / (self._maxPoint + 1)
-          : self.distance;
+  if (self.distance === undefined) {
+    if (self._maxPoint < 0) {
+      self._distance = 0;
+    }
+    else {
+      self._distance = self.element.scrollWidth / (self._maxPoint + 1);
+    }
+  }
+  else {
+    self._distance = self.distance;
+  }
 
   // setting maxX
   self._maxX = -self._distance * self._maxPoint;
@@ -239,10 +244,7 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
     point = self.currentPoint;
   }
 
-  if (self._maxPoint <= -1) {
-    self.currentPoint = -1;
-  }
-  else if (point < 0) {
+  if (point < 0) {
     self.currentPoint = 0;
   }
   else if (point > self._maxPoint) {

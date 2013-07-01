@@ -2,7 +2,7 @@ describe('Flipsnap', function() {
   var support = Flipsnap.support;
 
   var html =
-    '<div class="flipsnap">' +
+    '<div class="flipsnap" style="width:300px">' +
     '  <div style="width:100px">item1</div>' + 
     '  <div style="width:100px">item2</div>' + 
     '  <div style="width:100px">item3</div>' + 
@@ -43,6 +43,34 @@ describe('Flipsnap', function() {
             Flipsnap('#foo');
           }).to.throwError(/element not found/);
         });
+      });
+    });
+  });
+
+  describe('refresh', function() {
+    context('has content', function() {
+      beforeEach(function() {
+        f.refresh();
+      });
+
+      it('should reset values', function() {
+        expect(f.currentPoint).to.be(0);
+        expect(f._maxPoint).to.be(2);
+        expect(f._distance).to.be(100);
+        expect(f._maxX).to.be(-200);
+      });
+    });
+
+    context('has no content', function() {
+      beforeEach(function() {
+        $flipsnap.empty();
+        f.refresh();
+      });
+      it('should reset values', function() {
+        expect(f.currentPoint).to.be(-1);
+        expect(f._maxPoint).to.be(-1);
+        expect(f._distance).to.be(0);
+        expect(f._maxX).to.be(0);
       });
     });
   });
