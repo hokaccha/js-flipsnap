@@ -572,6 +572,16 @@ function some(ary, callback) {
   return false;
 }
 
-window.Flipsnap = Flipsnap;
+if (typeof exports == 'object') {
+  module.exports = Flipsnap;
+}
+else if (typeof define == 'function' && define.amd) {
+  define(function() {
+    return Flipsnap;
+  });
+}
+else {
+  window.Flipsnap = Flipsnap;
+}
 
 })(window, window.document);
