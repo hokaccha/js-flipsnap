@@ -1,3 +1,10 @@
+0.6.0  / 2013-11-18
+====================
+
+* Fix Panning broken on Internet Explorer #26
+* Fix can't prevent form elements' default behavior (@zhouqicf)
+* Add AMD support (@nulltask)
+
 0.5.6  / 2013-07-01
 ====================
 
