@@ -1,7 +1,7 @@
 /**
  * flipsnap.js
  *
- * @version  0.5.6
+ * @version  0.6.0
  * @url http://pxgrid.github.com/js-flipsnap/
  *
  * Copyright 2011 PixelGrid, Inc.
@@ -92,7 +92,7 @@ Flipsnap.prototype.init = function(element, opts) {
   }
 
   if (support.mspointer) {
-    self.element.style.msTouchAction = 'none';
+    self.element.style.msTouchAction = 'pan-y';
   }
 
   // set opts
@@ -304,7 +304,8 @@ Flipsnap.prototype._touchStart = function(event) {
   self.element.addEventListener(events.move[self._eventType], self, false);
   document.addEventListener(events.end[self._eventType], self, false);
 
-  if (self._eventType === 'mouse') {
+  var tagName = event.target.tagName;
+  if (self._eventType === 'mouse' && tagName !== 'SELECT' && tagName !== 'INPUT' && tagName !== 'TEXTAREA' && tagName !== 'BUTTON') {
     event.preventDefault();
   }
 
@@ -572,6 +573,16 @@ function some(ary, callback) {
   return false;
 }
 
-window.Flipsnap = Flipsnap;
+if (typeof exports == 'object') {
+  module.exports = Flipsnap;
+}
+else if (typeof define == 'function' && define.amd) {
+  define(function() {
+    return Flipsnap;
+  });
+}
+else {
+  window.Flipsnap = Flipsnap;
+}
 
 })(window, window.document);
