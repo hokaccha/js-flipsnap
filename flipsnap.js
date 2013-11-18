@@ -92,7 +92,7 @@ Flipsnap.prototype.init = function(element, opts) {
   }
 
   if (support.mspointer) {
-    self.element.style.msTouchAction = 'none';
+    self.element.style.msTouchAction = 'pan-y';
   }
 
   // set opts
