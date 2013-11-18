@@ -304,7 +304,8 @@ Flipsnap.prototype._touchStart = function(event) {
   self.element.addEventListener(events.move[self._eventType], self, false);
   document.addEventListener(events.end[self._eventType], self, false);
 
-  if (self._eventType === 'mouse') {
+  var tagName = event.target.tagName;
+  if (self._eventType === 'mouse' && tagName !== 'SELECT' && tagName !== 'INPUT' && tagName !== 'TEXTAREA' && tagName !== 'BUTTON') {
     event.preventDefault();
   }
 
