@@ -1,0 +1,26 @@
+{
+  "name": "flipsnap",
+  "version": "0.6.0",
+  "homepage": "https://github.com/pxgrid/js-flipsnap",
+  "authors": [
+    "Kazuhito Hokamura <k.hokamura@gmail.com>"
+  ],
+  "description": "Provides UI of snap and slide",
+  "main": "flipsnap.js",
+  "keywords": [
+    "mobile",
+    "ui"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "Rakefile",
+    "CONTRIBUTING.md",
+    "Gemfile",
+    "Gemfile.lock",
+    "example"
+  ]
+}
