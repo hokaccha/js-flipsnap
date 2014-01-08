@@ -46,20 +46,11 @@ support.mspointer = window.navigator.msPointerEnabled;
 
 support.cssAnimation = (support.transform3d || support.transform) && support.transition;
 
-var eventTypes = ['touch', 'mouse'];
+support.touch = 'ontouchstart' in window;
 var events = {
-  start: {
-    touch: 'touchstart',
-    mouse: 'mousedown'
-  },
-  move: {
-    touch: 'touchmove',
-    mouse: 'mousemove'
-  },
-  end: {
-    touch: 'touchend',
-    mouse: 'mouseup'
-  }
+    start: support.touch ? 'touchstart' : 'mousedown',
+    move: support.touch ? 'touchmove' : 'mousemove',
+    end: support.touch ? 'touchend' : 'mouseup'
 };
 
 if (support.addEventListener) {
@@ -131,9 +122,7 @@ Flipsnap.prototype.init = function(element, opts) {
   // initilize
   self.refresh();
 
-  eventTypes.forEach(function(type) {
-    self.element.addEventListener(events.start[type], self, false);
-  });
+  self.element.addEventListener(events.start, self, false);
 
   return self;
 };
@@ -142,16 +131,13 @@ Flipsnap.prototype.handleEvent = function(event) {
   var self = this;
 
   switch (event.type) {
-    case events.start.touch:
-    case events.start.mouse:
+    case events.start:
       self._touchStart(event);
       break;
-    case events.move.touch:
-    case events.move.mouse:
+    case events.move:
       self._touchMove(event);
       break;
-    case events.end.touch:
-    case events.end.mouse:
+    case events.end:
       self._touchEnd(event);
       break;
     case 'click':
@@ -290,22 +276,15 @@ Flipsnap.prototype._setX = function(x, transitionDuration) {
 Flipsnap.prototype._touchStart = function(event) {
   var self = this;
 
-  if (self.disableTouch || self._eventType || gestureStart) {
+  if (self.disableTouch || gestureStart) {
     return;
   }
 
-  some(eventTypes, function(type) {
-    if (event.type === events.start[type]) {
-      self._eventType = type;
-      return true;
-    }
-  });
-
-  self.element.addEventListener(events.move[self._eventType], self, false);
-  document.addEventListener(events.end[self._eventType], self, false);
+  self.element.addEventListener(events.move, self, false);
+  document.addEventListener(events.end, self, false);
 
   var tagName = event.target.tagName;
-  if (self._eventType === 'mouse' && tagName !== 'SELECT' && tagName !== 'INPUT' && tagName !== 'TEXTAREA' && tagName !== 'BUTTON') {
+  if (!support.touch && tagName !== 'SELECT' && tagName !== 'INPUT' && tagName !== 'TEXTAREA' && tagName !== 'BUTTON') {
     event.preventDefault();
   }
 
@@ -391,9 +370,8 @@ Flipsnap.prototype._touchMove = function(event) {
 Flipsnap.prototype._touchEnd = function(event) {
   var self = this;
 
-  self.element.removeEventListener(events.move[self._eventType], self, false);
-  document.removeEventListener(events.end[self._eventType], self, false);
-  self._eventType = null;
+  self.element.removeEventListener(events.move, self, false);
+  document.removeEventListener(events.end, self, false);
 
   if (!self.scrolling) {
     return;
@@ -478,11 +456,7 @@ Flipsnap.prototype._animate = function(x, transitionDuration) {
 };
 
 Flipsnap.prototype.destroy = function() {
-  var self = this;
-
-  eventTypes.forEach(function(type) {
-    self.element.removeEventListener(events.start[type], self, false);
-  });
+  this.element.removeEventListener(events.start, this, false);
 };
 
 Flipsnap.prototype._getTranslate = function(x) {
