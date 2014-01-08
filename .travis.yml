@@ -1,4 +1,4 @@
-before_script: npm install poncho coveralls
-script:
-  - phantomjs test/lib/mocha-phantomjs.coffee test/index.html
+script: phantomjs test/lib/mocha-phantomjs.coffee test/index.html
+after_success:
+  - npm install poncho coveralls
   - ./node_modules/.bin/poncho -R lcov test/index.html | ./node_modules/.bin/coveralls
