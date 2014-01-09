@@ -1,3 +1,9 @@
+0.6.1  / 2014-01-09
+====================
+
+* Fix bug, touchend event has not fired on Android Chrome #30 #22
+* event.stopPropagation cause the events of the upper node can't trigger (@zhouqicf)
+
 0.6.0  / 2013-11-18
 ====================
 
