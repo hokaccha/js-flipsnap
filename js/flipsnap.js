@@ -1,7 +1,7 @@
 /**
  * flipsnap.js
  *
- * @version  0.6.0
+ * @version  0.6.1
  * @url http://pxgrid.github.com/js-flipsnap/
  *
  * Copyright 2011 PixelGrid, Inc.
@@ -341,7 +341,6 @@ Flipsnap.prototype._touchMove = function(event) {
 
   if (self.moveReady) {
     event.preventDefault();
-    event.stopPropagation();
 
     distX = pageX - self.basePageX;
     newX = self.currentX + distX;
@@ -378,12 +377,12 @@ Flipsnap.prototype._touchMove = function(event) {
     deltaY = Math.abs(pageY - self.startPageY);
     if (deltaX > 5) {
       event.preventDefault();
-      event.stopPropagation();
       self.moveReady = true;
       self.element.addEventListener('click', self, true);
     }
     else if (deltaY > 5) {
       self.scrolling = false;
+      self._touchEnd();
     }
   }
 
