@@ -382,6 +382,7 @@ Flipsnap.prototype._touchMove = function(event) {
     }
     else if (deltaY > 5) {
       self.scrolling = false;
+      self._touchEnd();
     }
   }
 
