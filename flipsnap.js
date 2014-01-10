@@ -336,8 +336,25 @@ Flipsnap.prototype._touchMove = function(event) {
     pageY = getPage(event, 'pageY'),
     distX,
     newX,
-    deltaX,
-    deltaY;
+    distanceThreshold = 5,
+    angleThrehold = 55;
+
+  var getTriangleSide = function (x1, y1, x2, y2) {
+    var x = Math.abs(x1 - x2),
+      y = Math.abs(y1 - y2),
+      z = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+
+    return {
+      x: x,
+      y: y,
+      z: z
+    };
+  };
+  var getAngle = function (triangle) {
+    var cos = triangle.y / triangle.z,
+      radina = Math.acos(cos);
+    return 180 / (Math.PI / radina);
+  };
 
   if (self.moveReady) {
     event.preventDefault();
@@ -373,16 +390,17 @@ Flipsnap.prototype._touchMove = function(event) {
     }
   }
   else {
-    deltaX = Math.abs(pageX - self.startPageX);
-    deltaY = Math.abs(pageY - self.startPageY);
-    if (deltaX > 5) {
-      event.preventDefault();
-      self.moveReady = true;
-      self.element.addEventListener('click', self, true);
-    }
-    else if (deltaY > 5) {
-      self.scrolling = false;
-      self._touchEnd();
+    var triangle = getTriangleSide(self.startPageX, self.startPageY, pageX, pageY);
+    if (triangle.z > distanceThreshold) {
+      if (getAngle(triangle) > angleThrehold) {
+        event.preventDefault();
+        self.moveReady = true;
+        self.element.addEventListener('click', self, true);
+      }
+      else {
+        self.scrolling = false;
+        self._touchEnd();
+      }
     }
   }
 
