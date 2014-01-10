@@ -395,7 +395,6 @@ Flipsnap.prototype._touchMove = function(event) {
     if (triangle.z > distanceThreshold) {
       if (getAngle(triangle) > angleThrehold) {
         event.preventDefault();
-        event.stopPropagation();
         self.moveReady = true;
         self.element.addEventListener('click', self, true);
       }
