@@ -297,12 +297,10 @@ Flipsnap.prototype._touchStart = function(event) {
     return;
   }
 
-  some(eventTypes, function(type) {
-    if (event.type === events.start[type]) {
-      self._eventType = type;
-      return true;
-    }
-  });
+  // detect event type (mouse or touch)
+  self._eventType = eventTypes.filter(function(type) {
+    return event.type === events.start[type];
+  })[0];
 
   self.element.addEventListener(events.move[self._eventType], self, false);
   document.addEventListener(events.end[self._eventType], self, false);
