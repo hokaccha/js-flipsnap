@@ -325,10 +325,6 @@ describe('Flipsnap', function() {
         this.spy.restore();
       });
 
-      it('_eventType should be first fired event type', function() {
-        expect(f._eventType).to.be('touch');
-      });
-
       it('move event should bind only first fired event type', function() {
         expect(this.spy.callCount).to.be(1);
         expect(this.spy.args[0][0]).to.be('touchmove');
