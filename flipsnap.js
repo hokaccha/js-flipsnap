@@ -145,21 +145,20 @@ Flipsnap.prototype.handleEvent = function(event) {
   var self = this;
 
   switch (event.type) {
-    case events.start.touch:
-    case events.start.mouse:
-      self._touchStart(event);
-      break;
-    case events.move.touch:
-    case events.move.mouse:
-      self._touchMove(event);
-      break;
-    case events.end.touch:
-    case events.end.mouse:
-      self._touchEnd(event);
-      break;
-    case 'click':
-      self._click(event);
-      break;
+    // start
+    case events.start.touch: self._touchStart(event, 'touch'); break;
+    case events.start.mouse: self._touchStart(event, 'mouse'); break;
+
+    // move
+    case events.move.touch: self._touchMove(event, 'touch'); break;
+    case events.move.mouse: self._touchMove(event, 'mouse'); break;
+
+    // end
+    case events.end.touch: self._touchEnd(event, 'touch'); break;
+    case events.end.mouse: self._touchEnd(event, 'mouse'); break;
+
+    // click
+    case 'click': self._click(event); break;
   }
 };
 
@@ -290,23 +289,18 @@ Flipsnap.prototype._setX = function(x, transitionDuration) {
   }
 };
 
-Flipsnap.prototype._touchStart = function(event) {
+Flipsnap.prototype._touchStart = function(event, type) {
   var self = this;
 
-  if (self.disableTouch || self._eventType || gestureStart) {
+  if (self.disableTouch || self.scrolling || gestureStart) {
     return;
   }
 
-  // detect event type (mouse or touch)
-  self._eventType = eventTypes.filter(function(type) {
-    return event.type === events.start[type];
-  })[0];
-
-  self.element.addEventListener(events.move[self._eventType], self, false);
-  document.addEventListener(events.end[self._eventType], self, false);
+  self.element.addEventListener(events.move[type], self, false);
+  document.addEventListener(events.end[type], self, false);
 
   var tagName = event.target.tagName;
-  if (self._eventType === 'mouse' && tagName !== 'SELECT' && tagName !== 'INPUT' && tagName !== 'TEXTAREA' && tagName !== 'BUTTON') {
+  if (type === 'mouse' && tagName !== 'SELECT' && tagName !== 'INPUT' && tagName !== 'TEXTAREA' && tagName !== 'BUTTON') {
     event.preventDefault();
   }
 
@@ -326,7 +320,7 @@ Flipsnap.prototype._touchStart = function(event) {
   self._triggerEvent('fstouchstart', true, false);
 };
 
-Flipsnap.prototype._touchMove = function(event) {
+Flipsnap.prototype._touchMove = function(event, type) {
   var self = this;
 
   if (!self.scrolling || gestureStart) {
@@ -382,7 +376,6 @@ Flipsnap.prototype._touchMove = function(event) {
       }
       else {
         self.scrolling = false;
-        self._touchEnd();
       }
     }
   }
@@ -390,12 +383,11 @@ Flipsnap.prototype._touchMove = function(event) {
   self.basePageX = pageX;
 };
 
-Flipsnap.prototype._touchEnd = function(event) {
+Flipsnap.prototype._touchEnd = function(event, type) {
   var self = this;
 
-  self.element.removeEventListener(events.move[self._eventType], self, false);
-  document.removeEventListener(events.end[self._eventType], self, false);
-  self._eventType = null;
+  self.element.removeEventListener(events.move[type], self, false);
+  document.removeEventListener(events.end[type], self, false);
 
   if (!self.scrolling) {
     return;
