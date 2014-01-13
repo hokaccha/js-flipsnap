@@ -17,6 +17,9 @@ var saveProp = {};
 var support = Flipsnap.support = {};
 var gestureStart = false;
 
+var DISTANCE_THRESHOLD = 5;
+var ANGLE_THREHOLD = 55;
+
 support.transform3d = hasProp([
   'perspectiveProperty',
   'WebkitPerspective',
@@ -332,29 +335,10 @@ Flipsnap.prototype._touchMove = function(event) {
     return;
   }
 
-  var pageX = getPage(event, 'pageX'),
-    pageY = getPage(event, 'pageY'),
-    distX,
-    newX,
-    distanceThreshold = 5,
-    angleThrehold = 55;
-
-  var getTriangleSide = function (x1, y1, x2, y2) {
-    var x = Math.abs(x1 - x2),
-      y = Math.abs(y1 - y2),
-      z = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-
-    return {
-      x: x,
-      y: y,
-      z: z
-    };
-  };
-  var getAngle = function (triangle) {
-    var cos = triangle.y / triangle.z,
-      radina = Math.acos(cos);
-    return 180 / (Math.PI / radina);
-  };
+  var pageX = getPage(event, 'pageX');
+  var pageY = getPage(event, 'pageY');
+  var distX;
+  var newX;
 
   if (self.moveReady) {
     event.preventDefault();
@@ -390,9 +374,10 @@ Flipsnap.prototype._touchMove = function(event) {
     }
   }
   else {
+    // https://github.com/pxgrid/js-flipsnap/pull/36
     var triangle = getTriangleSide(self.startPageX, self.startPageY, pageX, pageY);
-    if (triangle.z > distanceThreshold) {
-      if (getAngle(triangle) > angleThrehold) {
+    if (triangle.z > DISTANCE_THRESHOLD) {
+      if (getAngle(triangle) > ANGLE_THREHOLD) {
         event.preventDefault();
         self.moveReady = true;
         self.element.addEventListener('click', self, true);
@@ -588,6 +573,25 @@ function some(ary, callback) {
     }
   }
   return false;
+}
+
+function getTriangleSide(x1, y1, x2, y2) {
+  var x = Math.abs(x1 - x2);
+  var y = Math.abs(y1 - y2);
+  var z = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+
+  return {
+    x: x,
+    y: y,
+    z: z
+  };
+}
+
+function getAngle(triangle) {
+  var cos = triangle.y / triangle.z;
+  var radina = Math.acos(cos);
+
+  return 180 / (Math.PI / radina);
 }
 
 if (typeof exports == 'object') {
