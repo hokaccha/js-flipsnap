@@ -1,3 +1,9 @@
+0.6.2  / 2014-01-14
+====================
+
+* Fix event handling
+* Use touch locus' angle to decide whether to stop the browser default scrolling behavior (@zhouqicf)
+
 0.6.1  / 2014-01-09
 ====================
 
