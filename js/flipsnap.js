@@ -1,7 +1,7 @@
 /**
  * flipsnap.js
  *
- * @version  0.6.1
+ * @version  0.6.2
  * @url http://pxgrid.github.com/js-flipsnap/
  *
  * Copyright 2011 PixelGrid, Inc.
@@ -16,6 +16,9 @@ var prefix = ['webkit', 'moz', 'o', 'ms'];
 var saveProp = {};
 var support = Flipsnap.support = {};
 var gestureStart = false;
+
+var DISTANCE_THRESHOLD = 5;
+var ANGLE_THREHOLD = 55;
 
 support.transform3d = hasProp([
   'perspectiveProperty',
@@ -142,21 +145,20 @@ Flipsnap.prototype.handleEvent = function(event) {
   var self = this;
 
   switch (event.type) {
-    case events.start.touch:
-    case events.start.mouse:
-      self._touchStart(event);
-      break;
-    case events.move.touch:
-    case events.move.mouse:
-      self._touchMove(event);
-      break;
-    case events.end.touch:
-    case events.end.mouse:
-      self._touchEnd(event);
-      break;
-    case 'click':
-      self._click(event);
-      break;
+    // start
+    case events.start.touch: self._touchStart(event, 'touch'); break;
+    case events.start.mouse: self._touchStart(event, 'mouse'); break;
+
+    // move
+    case events.move.touch: self._touchMove(event, 'touch'); break;
+    case events.move.mouse: self._touchMove(event, 'mouse'); break;
+
+    // end
+    case events.end.touch: self._touchEnd(event, 'touch'); break;
+    case events.end.mouse: self._touchEnd(event, 'mouse'); break;
+
+    // click
+    case 'click': self._click(event); break;
   }
 };
 
@@ -287,25 +289,18 @@ Flipsnap.prototype._setX = function(x, transitionDuration) {
   }
 };
 
-Flipsnap.prototype._touchStart = function(event) {
+Flipsnap.prototype._touchStart = function(event, type) {
   var self = this;
 
-  if (self.disableTouch || self._eventType || gestureStart) {
+  if (self.disableTouch || self.scrolling || gestureStart) {
     return;
   }
 
-  some(eventTypes, function(type) {
-    if (event.type === events.start[type]) {
-      self._eventType = type;
-      return true;
-    }
-  });
-
-  self.element.addEventListener(events.move[self._eventType], self, false);
-  document.addEventListener(events.end[self._eventType], self, false);
+  self.element.addEventListener(events.move[type], self, false);
+  document.addEventListener(events.end[type], self, false);
 
   var tagName = event.target.tagName;
-  if (self._eventType === 'mouse' && tagName !== 'SELECT' && tagName !== 'INPUT' && tagName !== 'TEXTAREA' && tagName !== 'BUTTON') {
+  if (type === 'mouse' && tagName !== 'SELECT' && tagName !== 'INPUT' && tagName !== 'TEXTAREA' && tagName !== 'BUTTON') {
     event.preventDefault();
   }
 
@@ -325,19 +320,17 @@ Flipsnap.prototype._touchStart = function(event) {
   self._triggerEvent('fstouchstart', true, false);
 };
 
-Flipsnap.prototype._touchMove = function(event) {
+Flipsnap.prototype._touchMove = function(event, type) {
   var self = this;
 
   if (!self.scrolling || gestureStart) {
     return;
   }
 
-  var pageX = getPage(event, 'pageX'),
-    pageY = getPage(event, 'pageY'),
-    distX,
-    newX,
-    deltaX,
-    deltaY;
+  var pageX = getPage(event, 'pageX');
+  var pageY = getPage(event, 'pageY');
+  var distX;
+  var newX;
 
   if (self.moveReady) {
     event.preventDefault();
@@ -373,28 +366,28 @@ Flipsnap.prototype._touchMove = function(event) {
     }
   }
   else {
-    deltaX = Math.abs(pageX - self.startPageX);
-    deltaY = Math.abs(pageY - self.startPageY);
-    if (deltaX > 5) {
-      event.preventDefault();
-      self.moveReady = true;
-      self.element.addEventListener('click', self, true);
-    }
-    else if (deltaY > 5) {
-      self.scrolling = false;
-      self._touchEnd();
+    // https://github.com/pxgrid/js-flipsnap/pull/36
+    var triangle = getTriangleSide(self.startPageX, self.startPageY, pageX, pageY);
+    if (triangle.z > DISTANCE_THRESHOLD) {
+      if (getAngle(triangle) > ANGLE_THREHOLD) {
+        event.preventDefault();
+        self.moveReady = true;
+        self.element.addEventListener('click', self, true);
+      }
+      else {
+        self.scrolling = false;
+      }
     }
   }
 
   self.basePageX = pageX;
 };
 
-Flipsnap.prototype._touchEnd = function(event) {
+Flipsnap.prototype._touchEnd = function(event, type) {
   var self = this;
 
-  self.element.removeEventListener(events.move[self._eventType], self, false);
-  document.removeEventListener(events.end[self._eventType], self, false);
-  self._eventType = null;
+  self.element.removeEventListener(events.move[type], self, false);
+  document.removeEventListener(events.end[type], self, false);
 
   if (!self.scrolling) {
     return;
@@ -570,6 +563,25 @@ function some(ary, callback) {
     }
   }
   return false;
+}
+
+function getTriangleSide(x1, y1, x2, y2) {
+  var x = Math.abs(x1 - x2);
+  var y = Math.abs(y1 - y2);
+  var z = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+
+  return {
+    x: x,
+    y: y,
+    z: z
+  };
+}
+
+function getAngle(triangle) {
+  var cos = triangle.y / triangle.z;
+  var radina = Math.acos(cos);
+
+  return 180 / (Math.PI / radina);
 }
 
 if (typeof exports == 'object') {
