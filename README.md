@@ -6,3 +6,8 @@
 flipsnap.js is snap scroll for touch device.
 
 http://pxgrid.github.com/js-flipsnap/
+
+Tweaks for enabling responsive flipsnaps:
+
+• Adds percent-based transforms
+• Adds resize() helper function that updates FS values on page resize.

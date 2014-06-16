@@ -100,6 +100,7 @@ Flipsnap.prototype.init = function(element, opts) {
 
   // set opts
   opts = opts || {};
+  self.absolute = false; // ADDED - Default now is to use %, 'true' switches it all transformation back to px
   self.distance = opts.distance;
   self.maxPoint = opts.maxPoint;
   self.disableTouch = (opts.disableTouch === undefined) ? false : opts.disableTouch;
@@ -481,10 +482,15 @@ Flipsnap.prototype.destroy = function() {
 
 Flipsnap.prototype._getTranslate = function(x) {
   var self = this;
-
-  return self.use3d
-    ? 'translate3d(' + x + 'px, 0, 0)'
-    : 'translate(' + x + 'px, 0)';
+  var p = (((self._maxPoint+1) * self._distance) / self.element.offsetWidth) * 100; // p acts as multiplier based on # of items vs. how many items are shown (points) 
+  var ttlW = (x/(self._distance*(self._maxPoint+1)))*p; // If we are showing 4 items with 2 offscreen, and have set distance to slide 1 item at a time, that gives us 2 additional positions instead of 5, so % will not be based on 100%, but on 66.667%
+		
+  if(self.absolute == true) {
+    return self.use3d ? 'translate3d(' + x + 'px, 0, 0)' : 'translate(' + x + 'px, 0)'; // Original
+  }
+  else {
+    return self.use3d ? 'translate3d(' + ttlW + '%, 0, 0)' : 'translate(' + ttlW + '%, 0)'; // Percent-based
+  }
 };
 
 Flipsnap.prototype._triggerEvent = function(type, bubbles, cancelable, data) {
