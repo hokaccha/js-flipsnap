@@ -1,0 +1,16 @@
+{
+  "name": "js-flipsnap",
+  "scripts": {
+    "test": "phantomjs test/lib/mocha-phantomjs.coffee test/index.html",
+    "min": "./node_modules/.bin/uglifyjs flipsnap.js > flipsnap.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/pxgrid/js-flipsnap.git"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/pxgrid/js-flipsnap",
+  "devDependencies": {
+    "uglify-js": "^2.4.15"
+  }
+}
