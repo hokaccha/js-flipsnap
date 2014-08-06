@@ -1,5 +1,7 @@
 {
   "name": "js-flipsnap",
+  "version": "0.6.2",
+  "main": "./flipsnap.js",
   "scripts": {
     "test": "phantomjs test/lib/mocha-phantomjs.coffee test/index.html",
     "min": "./node_modules/.bin/uglifyjs flipsnap.js > flipsnap.min.js"
