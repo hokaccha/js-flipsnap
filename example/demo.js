@@ -6,6 +6,12 @@ if (!$('.demo').length) return;
 	Flipsnap('#demo-simple .flipsnap');
 })();
 
+(function simple() {
+	Flipsnap('#demo-threshold .flipsnap', {
+		threshold: 40
+	});
+})();
+
 (function img() {
 	Flipsnap('#demo-img .flipsnap');
 })();
