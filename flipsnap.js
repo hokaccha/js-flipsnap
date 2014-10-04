@@ -105,6 +105,7 @@ Flipsnap.prototype.init = function(element, opts) {
   self.disableTouch = (opts.disableTouch === undefined) ? false : opts.disableTouch;
   self.disable3d = (opts.disable3d === undefined) ? false : opts.disable3d;
   self.transitionDuration = (opts.transitionDuration === undefined) ? '350ms' : opts.transitionDuration + 'ms';
+  self.threshold = opts.threshold || 0;
 
   // set property
   self.currentPoint = 0;
@@ -404,6 +405,10 @@ Flipsnap.prototype._touchEnd = function(event, type) {
   }
   else if (newPoint > self._maxPoint) {
     newPoint = self._maxPoint;
+  }
+
+  if (Math.abs(self.startPageX - self.basePageX) < self.threshold) {
+    newPoint = self.currentPoint;
   }
 
   self._touchAfter({
