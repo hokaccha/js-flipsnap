@@ -2,7 +2,7 @@
  * flipsnap.js
  *
  * @version  0.6.2
- * @url http://pxgrid.github.com/js-flipsnap/
+ * @url http://hokaccha.github.com/js-flipsnap/
  *
  * Copyright 2011 PixelGrid, Inc.
  * Licensed under the MIT License:
@@ -366,7 +366,7 @@ Flipsnap.prototype._touchMove = function(event, type) {
     }
   }
   else {
-    // https://github.com/pxgrid/js-flipsnap/pull/36
+    // https://github.com/hokaccha/js-flipsnap/pull/36
     var triangle = getTriangleSide(self.startPageX, self.startPageY, pageX, pageY);
     if (triangle.z > DISTANCE_THRESHOLD) {
       if (getAngle(triangle) > ANGLE_THREHOLD) {
