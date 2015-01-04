@@ -14,10 +14,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com/pxgrid/js-flipsnap.git"
+    "url": "git@github.com/hokaccha/js-flipsnap.git"
   },
   "license": "MIT",
-  "homepage": "https://github.com/pxgrid/js-flipsnap",
+  "homepage": "https://github.com/hokaccha/js-flipsnap",
   "devDependencies": {
     "uglify-js": "^2.4.15"
   }

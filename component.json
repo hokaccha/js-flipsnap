@@ -1,7 +1,7 @@
 {
   "name": "flipsnap",
   "main": "flipsnap.js",
-  "repository": "pxgrid/js-flipsnap",
+  "repository": "hokaccha/js-flipsnap",
   "description": "Prov  ides UI of snap and slide",
   "version": "0.6.2",
   "keywords": [ "mobile", "ui" ],
