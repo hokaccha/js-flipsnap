@@ -9,7 +9,15 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-(function(window, document, undefined) {
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define([], factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory();
+  } else {
+    root.Flipsnap = factory();
+  }
+})(this, function() {
 
 var div = document.createElement('div');
 var prefix = ['webkit', 'moz', 'o', 'ms'];
@@ -589,16 +597,6 @@ function getAngle(triangle) {
   return 180 / (Math.PI / radina);
 }
 
-if (typeof exports == 'object') {
-  module.exports = Flipsnap;
-}
-else if (typeof define == 'function' && define.amd) {
-  define(function() {
-    return Flipsnap;
-  });
-}
-else {
-  window.Flipsnap = Flipsnap;
-}
+return Flipsnap;
 
-})(window, window.document);
+});
