@@ -592,9 +592,9 @@ function getTriangleSide(x1, y1, x2, y2) {
 
 function getAngle(triangle) {
   var cos = triangle.y / triangle.z;
-  var radina = Math.acos(cos);
+  var radian = Math.acos(cos);
 
-  return 180 / (Math.PI / radina);
+  return 180 / (Math.PI / radian);
 }
 
 return Flipsnap;
