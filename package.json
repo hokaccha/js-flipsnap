@@ -19,6 +19,11 @@
   "license": "MIT",
   "homepage": "https://github.com/hokaccha/js-flipsnap",
   "devDependencies": {
-    "uglify-js": "^2.4.15"
+    "uglify-js": "^2.4.15",
+    "gulp": "~3.8.11",
+    "gulp-connect": "~2.2.0",
+    "gulp-open": "~0.3.2",
+    "gulp-code": "1.x.x",
+    "gulp-rename": "1.x.x"
   }
 }

@@ -114,18 +114,19 @@ Flipsnap.prototype.init = function(element, opts) {
   self.disable3d = (opts.disable3d === undefined) ? false : opts.disable3d;
   self.transitionDuration = (opts.transitionDuration === undefined) ? '350ms' : opts.transitionDuration + 'ms';
   self.threshold = opts.threshold || 0;
+  self.cssAnimation = (opts.cssAnimation !== undefined) ? opts.cssAnimation : support.cssAnimation;
 
   // set property
   self.currentPoint = 0;
   self.currentX = 0;
-  self.animation = false;
+  self.animateTimer = null;
   self.use3d = support.transform3d;
   if (self.disable3d === true) {
     self.use3d = false;
   }
 
   // set default style
-  if (support.cssAnimation) {
+  if (self.cssAnimation) {
     self._setStyle({
       transitionProperty: getCSSVal('transform'),
       transitionTimingFunction: 'cubic-bezier(0,0,0.25,1)',
@@ -207,7 +208,7 @@ Flipsnap.prototype.refresh = function() {
   // setting maxX
   self._maxX = -self._distance * self._maxPoint;
 
-  self.moveToPoint();
+  // self.moveToPoint();
 };
 
 Flipsnap.prototype.hasNext = function() {
@@ -244,40 +245,37 @@ Flipsnap.prototype.toPrev = function(transitionDuration) {
 
 Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
   var self = this;
-  
+
   transitionDuration = transitionDuration === undefined
     ? self.transitionDuration : transitionDuration + 'ms';
+  point = point === undefined
+    ? self.currentPoint : parseInt(point, 10);
 
   var beforePoint = self.currentPoint;
 
-  // not called from `refresh()`
-  if (point === undefined) {
-    point = self.currentPoint;
-  }
-
   if (point < 0) {
-    self.currentPoint = 0;
+    point = 0;
   }
-  else if (point > self._maxPoint) {
-    self.currentPoint = self._maxPoint;
+  else if (point > self.maxPoint) {
+    point = self._maxPoint;
   }
-  else {
-    self.currentPoint = parseInt(point, 10);
-  }
+  self.currentPoint = point;
 
-  if (support.cssAnimation) {
+  if (self.cssAnimation) {
     self._setStyle({ transitionDuration: transitionDuration });
+    self._setX(-self._distance * point, transitionDuration);
   }
   else {
-    self.animation = true;
+    self._animateX = self.currentX;
+    self._animate(-self._distance * point, transitionDuration);
   }
-  self._setX(- self.currentPoint * self._distance, transitionDuration);
 
-  if (beforePoint !== self.currentPoint) { // is move?
-    // `fsmoveend` is deprecated
-    // `fspointmove` is recommend.
+  if (beforePoint !== point) {
     self._triggerEvent('fsmoveend', true, false);
-    self._triggerEvent('fspointmove', true, false);
+    self._triggerEvent('fspointmove', true, false, {
+      currentPoint: point,
+      beforePoint: beforePoint
+    });
   }
 };
 
@@ -285,16 +283,11 @@ Flipsnap.prototype._setX = function(x, transitionDuration) {
   var self = this;
 
   self.currentX = x;
-  if (support.cssAnimation) {
+  if (self.cssAnimation) {
     self.element.style[ saveProp.transform ] = self._getTranslate(x);
   }
   else {
-    if (self.animation) {
-      self._animate(x, transitionDuration || self.transitionDuration);
-    }
-    else {
-      self.element.style.left = x + 'px';
-    }
+    self.element.style.left = x + 'px';
   }
 };
 
@@ -313,11 +306,11 @@ Flipsnap.prototype._touchStart = function(event, type) {
     event.preventDefault();
   }
 
-  if (support.cssAnimation) {
+  if (self.cssAnimation) {
     self._setStyle({ transitionDuration: '0ms' });
   }
   else {
-    self.animation = false;
+    clearInterval(self.animateTimer);
   }
   self.scrolling = true;
   self.moveReady = false;
@@ -352,7 +345,7 @@ Flipsnap.prototype._touchMove = function(event, type) {
 
     // When distX is 0, use one previous value.
     // For android firefox. When touchend fired, touchmove also
-    // fired and distX is certainly set to 0. 
+    // fired and distX is certainly set to 0.
     self.directionX =
       distX === 0 ? self.directionX :
       distX > 0 ? -1 : 1;
@@ -462,25 +455,27 @@ Flipsnap.prototype._animate = function(x, transitionDuration) {
   var self = this;
 
   var elem = self.element;
+  var style = elem.style;
   var begin = +new Date();
-  var from = parseInt(elem.style.left, 10);
+  var from = self._animateX;
   var to = x;
   var duration = parseInt(transitionDuration, 10);
   var easing = function(time, duration) {
     return -(time /= duration) * (time - 2);
   };
-  var timer = setInterval(function() {
+  self.animateTimer = setInterval(function() {
     var time = new Date() - begin;
     var pos, now;
     if (time > duration) {
-      clearInterval(timer);
+      clearInterval(self.animateTimer);
       now = to;
     }
     else {
       pos = easing(time, duration);
       now = pos * (to - from) + from;
     }
-    elem.style.left = now + "px";
+    style.left = now + "px";
+    self.currentX = now;
   }, 10);
 };
 

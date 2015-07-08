@@ -208,6 +208,13 @@ if (!$('.demo').length) return;
 	}, false);
 })();
 
+(function jsAnimation () {
+	Flipsnap('#demo-jsAnimation .flipsnap', {
+		distance: 230,
+		cssAnimation: false
+	});
+})();
+
 $('.sample a').click(function(e) {
   e.preventDefault();
   var $a = $(this);
