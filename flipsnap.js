@@ -119,6 +119,7 @@ Flipsnap.prototype.init = function(element, opts) {
   self.currentPoint = 0;
   self.currentX = 0;
   self.animation = false;
+  self.timerId = null;
   self.use3d = support.transform3d;
   if (self.disable3d === true) {
     self.use3d = false;
@@ -469,11 +470,16 @@ Flipsnap.prototype._animate = function(x, transitionDuration) {
   var easing = function(time, duration) {
     return -(time /= duration) * (time - 2);
   };
-  var timer = setInterval(function() {
+
+  if (self.timerId) {
+    clearInterval(self.timerId);
+  }
+  self.timerId = setInterval(function() {
     var time = new Date() - begin;
     var pos, now;
     if (time > duration) {
-      clearInterval(timer);
+      clearInterval(self.timerId);
+      self.timerId = null;
       now = to;
     }
     else {
