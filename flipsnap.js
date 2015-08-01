@@ -115,10 +115,11 @@ Flipsnap.prototype.init = function(element, opts) {
   self.transitionDuration = (opts.transitionDuration === undefined) ? '350ms' : opts.transitionDuration + 'ms';
   self.threshold = opts.threshold || 0;
   self.cssAnimation = (opts.cssAnimation !== undefined) ? opts.cssAnimation : support.cssAnimation;
+  self.vertical = (opts.vertical === undefined) ? false : opts.vertical;
 
   // set property
   self.currentPoint = 0;
-  self.currentX = 0;
+  self.currentDist = 0;
   self.animateTimer = null;
   self.use3d = support.transform3d;
   if (self.disable3d === true) {
@@ -131,14 +132,22 @@ Flipsnap.prototype.init = function(element, opts) {
       transitionProperty: getCSSVal('transform'),
       transitionTimingFunction: 'cubic-bezier(0,0,0.25,1)',
       transitionDuration: '0ms',
-      transform: self._getTranslate(0)
+      transform: self._getTranslate(0, 0)
     });
   }
   else {
-    self._setStyle({
-      position: 'relative',
-      left: '0px'
-    });
+    if (self.vertical) {
+      self._setStyle({
+        position: 'relative',
+        top: '0px'
+      });
+    }
+    else {
+      self._setStyle({
+        position: 'relative',
+        left: '0px'
+      });
+    }
   }
 
   // initilize
@@ -206,9 +215,7 @@ Flipsnap.prototype.refresh = function() {
   }
 
   // setting maxX
-  self._maxX = -self._distance * self._maxPoint;
-
-  // self.moveToPoint();
+  self._maxDist = -self._distance * self._maxPoint;
 };
 
 Flipsnap.prototype.hasNext = function() {
@@ -262,11 +269,12 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
   self.currentPoint = point;
 
   if (self.cssAnimation) {
+    var args = self.vertical ? [0, -self._distance * point] : [-self._distance * point, 0];
     self._setStyle({ transitionDuration: transitionDuration });
-    self._setX(-self._distance * point, transitionDuration);
+    self._setDist.apply(self, args);
   }
   else {
-    self._animateX = self.currentX;
+    self._animateX = self.currentDist;
     self._animate(-self._distance * point, transitionDuration);
   }
 
@@ -279,15 +287,20 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
   }
 };
 
-Flipsnap.prototype._setX = function(x, transitionDuration) {
+Flipsnap.prototype._setDist = function(x, y) {
   var self = this;
 
-  self.currentX = x;
+  self.currentDist = x;
   if (self.cssAnimation) {
-    self.element.style[ saveProp.transform ] = self._getTranslate(x);
+    self.element.style[ saveProp.transform ] = self._getTranslate(x, y);
   }
   else {
-    self.element.style.left = x + 'px';
+    if (self.vertical) {
+      self.element.style.top = x + 'px';
+    }
+    else {
+      self.element.style.left = x + 'px';
+    }
   }
 };
 
@@ -317,7 +330,8 @@ Flipsnap.prototype._touchStart = function(event, type) {
   self.startPageX = getPage(event, 'pageX');
   self.startPageY = getPage(event, 'pageY');
   self.basePageX = self.startPageX;
-  self.directionX = 0;
+  self.basePageY = self.startPageY;
+  self.direction = 0;
   self.startTime = event.timeStamp;
   self._triggerEvent('fstouchstart', true, false);
 };
@@ -331,29 +345,29 @@ Flipsnap.prototype._touchMove = function(event, type) {
 
   var pageX = getPage(event, 'pageX');
   var pageY = getPage(event, 'pageY');
-  var distX;
-  var newX;
+  var dist;
+  var newDist;
 
   if (self.moveReady) {
     event.preventDefault();
 
-    distX = pageX - self.basePageX;
-    newX = self.currentX + distX;
-    if (newX >= 0 || newX < self._maxX) {
-      newX = Math.round(self.currentX + distX / 3);
+    dist = self.vertical ? pageY - self.basePageY : pageX - self.basePageX;
+    newDist = self.currentDist + dist;
+    if (newDist >= 0 || newDist < self._maxDist) {
+      newDist = Math.round(self.currentDist + dist / 3);
     }
 
     // When distX is 0, use one previous value.
     // For android firefox. When touchend fired, touchmove also
     // fired and distX is certainly set to 0.
-    self.directionX =
-      distX === 0 ? self.directionX :
-      distX > 0 ? -1 : 1;
+    self.direction =
+      dist === 0 ? self.direction :
+      dist > 0 ? -1 : 1;
 
     // if they prevent us then stop it
     var isPrevent = !self._triggerEvent('fstouchmove', true, true, {
-      delta: distX,
-      direction: self.directionX
+      delta: dist,
+      direction: self.direction
     });
 
     if (isPrevent) {
@@ -364,12 +378,19 @@ Flipsnap.prototype._touchMove = function(event, type) {
         cancelled: true
       });
     } else {
-      self._setX(newX);
+      if (self.vertical) {
+        self._setDist(0, newDist);
+      }
+      else {
+        self._setDist(newDist, 0);
+      }
     }
   }
   else {
     // https://github.com/hokaccha/js-flipsnap/pull/36
-    var triangle = getTriangleSide(self.startPageX, self.startPageY, pageX, pageY);
+    var triangle = (self.vertical)
+      ? getTriangleSide(self.startPageY, self.startPageX, pageY, pageX)
+      : getTriangleSide(self.startPageX, self.startPageY, pageX, pageY);
     if (triangle.z > DISTANCE_THRESHOLD) {
       if (getAngle(triangle) > ANGLE_THREHOLD) {
         event.preventDefault();
@@ -383,6 +404,7 @@ Flipsnap.prototype._touchMove = function(event, type) {
   }
 
   self.basePageX = pageX;
+  self.basePageY = pageY;
 };
 
 Flipsnap.prototype._touchEnd = function(event, type) {
@@ -395,10 +417,11 @@ Flipsnap.prototype._touchEnd = function(event, type) {
     return;
   }
 
-  var newPoint = -self.currentX / self._distance;
+  var newPoint = -self.currentDist / self._distance,
+    d = (self.vertical) ? Math.abs(self.startPageY - self.basePageY) : Math.abs(self.startPageX - self.basePageX);
   newPoint =
-    (self.directionX > 0) ? Math.ceil(newPoint) :
-    (self.directionX < 0) ? Math.floor(newPoint) :
+    (self.direction > 0) ? Math.ceil(newPoint) :
+    (self.direction < 0) ? Math.floor(newPoint) :
     Math.round(newPoint);
 
   if (newPoint < 0) {
@@ -408,7 +431,7 @@ Flipsnap.prototype._touchEnd = function(event, type) {
     newPoint = self._maxPoint;
   }
 
-  if (Math.abs(self.startPageX - self.basePageX) < self.threshold) {
+  if (d < self.threshold) {
     newPoint = self.currentPoint;
   }
 
@@ -475,7 +498,7 @@ Flipsnap.prototype._animate = function(x, transitionDuration) {
       now = pos * (to - from) + from;
     }
     style.left = now + "px";
-    self.currentX = now;
+    self.currentDist = now;
   }, 10);
 };
 
@@ -487,12 +510,12 @@ Flipsnap.prototype.destroy = function() {
   });
 };
 
-Flipsnap.prototype._getTranslate = function(x) {
+Flipsnap.prototype._getTranslate = function(x, y) {
   var self = this;
 
   return self.use3d
-    ? 'translate3d(' + x + 'px, 0, 0)'
-    : 'translate(' + x + 'px, 0)';
+    ? 'translate3d(' + x + 'px, ' + y + 'px, 0)'
+    : 'translate(' + x + 'px, ' + y + 'px)';
 };
 
 Flipsnap.prototype._triggerEvent = function(type, bubbles, cancelable, data) {

@@ -215,6 +215,14 @@ if (!$('.demo').length) return;
 	});
 })();
 
+(function vertical () {
+	var snap = Flipsnap('#demo-vertical .flipsnap', {
+		distance: 185,
+		vertical: true
+	});
+	console.log(snap);
+})();
+
 $('.sample a').click(function(e) {
   e.preventDefault();
   var $a = $(this);

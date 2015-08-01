@@ -121,3 +121,16 @@ h1, h2, h3 {
 
 .sample pre {
   display: none; }
+
+#demo-vertical .viewport {
+  /*height: 300px;*/
+}
+#demo-vertical .flipsnap {
+  width: 210px;
+  height: 925px;
+  padding-top: 45px;
+}
+#demo-vertical .item {
+  height: 100px;
+  margin: 10px auto;
+}
