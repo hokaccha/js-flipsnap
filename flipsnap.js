@@ -207,7 +207,9 @@ Flipsnap.prototype.refresh = function() {
       self._distance = 0;
     }
     else {
-      self._distance = self.element.scrollWidth / (self._maxPoint + 1);
+      self._distance = (self.vertical)
+        ? self.element.scrollHeight / (self._maxPoint + 1)
+        : self.element.scrollWidth / (self._maxPoint + 1);
     }
   }
   else {
@@ -263,7 +265,7 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
   if (point < 0) {
     point = 0;
   }
-  else if (point > self.maxPoint) {
+  else if (point > self._maxPoint) {
     point = self._maxPoint;
   }
   self.currentPoint = point;

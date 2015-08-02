@@ -123,16 +123,18 @@ h1, h2, h3 {
   display: none; }
 
 #demo-vertical .viewport {
-  /*height: 300px;*/
+  height: 220px;
+  padding: 0;
 }
 #demo-vertical .flipsnap {
   width: 220px;
   height: 925px;
-  padding-top: 50px;
+  padding-top: 0;
   padding-left: 50px;
 }
 #demo-vertical .item {
   width: 210px;
   height: 100px;
-  margin: 10px auto;
+  margin: 0;
+  padding: 55px 0;
 }
