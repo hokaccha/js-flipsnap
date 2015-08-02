@@ -271,7 +271,7 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
   self.currentPoint = point;
 
   if (self.cssAnimation) {
-    var args = self.vertical ? [0, -self._distance * point] : [-self._distance * point, 0];
+    var args = (self.vertical) ? [0, -self._distance * point] : [-self._distance * point, 0];
     self._setStyle({ transitionDuration: transitionDuration });
     self._setDist.apply(self, args);
   }
@@ -298,7 +298,7 @@ Flipsnap.prototype._setDist = function(x, y) {
   }
   else {
     if (self.vertical) {
-      self.element.style.top = x + 'px';
+      self.element.style.top = y + 'px';
     }
     else {
       self.element.style.left = x + 'px';
