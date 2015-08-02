@@ -126,11 +126,13 @@ h1, h2, h3 {
   /*height: 300px;*/
 }
 #demo-vertical .flipsnap {
-  width: 210px;
+  width: 220px;
   height: 925px;
-  padding-top: 45px;
+  padding-top: 50px;
+  padding-left: 50px;
 }
 #demo-vertical .item {
+  width: 210px;
   height: 100px;
   margin: 10px auto;
 }
