@@ -201,6 +201,7 @@ Flipsnap.prototype.refresh = function() {
     return itemLength;
   })() : self.maxPoint;
 
+
   // setting distance
   if (self.distance === undefined) {
     if (self._maxPoint < 0) {
