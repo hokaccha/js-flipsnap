@@ -122,12 +122,12 @@ h1, h2, h3 {
 .sample pre {
   display: none; }
 
-#demo-vertical .vertical {
+.vertical {
   width: 100%;
   height: 200px;
   overflow: hidden;
 }
-#demo-vertical .vertical-item {
+.vertical-item {
   width: 310px;
   height: 190px;
   margin: 0 auto;

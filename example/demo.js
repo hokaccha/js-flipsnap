@@ -219,7 +219,13 @@ if (!$('.demo').length) return;
 	var snap = Flipsnap('#demo-vertical .flipsnap-vertical', {
 		vertical: true
 	});
-	console.log(snap);
+})();
+
+(function verticalJs () {
+	var snap = Flipsnap('#demo-vertical-js .flipsnap-vertical', {
+		vertical: true,
+		cssAnimation: false
+	});
 })();
 
 $('.sample a').click(function(e) {

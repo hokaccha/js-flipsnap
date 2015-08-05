@@ -277,7 +277,7 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
     self._setDist.apply(self, args);
   }
   else {
-    self._animateX = self.currentDist;
+    self._animateDist = self.currentDist;
     self._animate(-self._distance * point, transitionDuration);
   }
 
@@ -476,18 +476,18 @@ Flipsnap.prototype._setStyle = function(styles) {
   }
 };
 
-Flipsnap.prototype._animate = function(x, transitionDuration) {
-  var self = this;
-
-  var elem = self.element;
-  var style = elem.style;
-  var begin = +new Date();
-  var from = self._animateX;
-  var to = x;
-  var duration = parseInt(transitionDuration, 10);
-  var easing = function(time, duration) {
-    return -(time /= duration) * (time - 2);
-  };
+Flipsnap.prototype._animate = function(dist, transitionDuration) {
+  var self = this,
+    vertical = self.vertical,
+    elem = self.element,
+    style = elem.style,
+    begin = +new Date(),
+    from = self._animateDist,
+    to = dist,
+    duration = parseInt(transitionDuration, 10),
+    easing = function(time, duration) {
+      return -(time /= duration) * (time - 2);
+    };
   self.animateTimer = setInterval(function() {
     var time = new Date() - begin;
     var pos, now;
@@ -499,7 +499,12 @@ Flipsnap.prototype._animate = function(x, transitionDuration) {
       pos = easing(time, duration);
       now = pos * (to - from) + from;
     }
-    style.left = now + "px";
+    if (vertical) {
+      style.top = now + 'px';
+    }
+    else {
+      style.left = now + 'px';
+    }
     self.currentDist = now;
   }, 10);
 };
