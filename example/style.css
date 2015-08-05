@@ -122,19 +122,18 @@ h1, h2, h3 {
 .sample pre {
   display: none; }
 
-#demo-vertical .viewport {
-  height: 220px;
-  padding: 0;
+#demo-vertical .vertical {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
 }
-#demo-vertical .flipsnap {
-  width: 220px;
-  height: 1100px;
-  padding-top: 0;
-  padding-left: 50px;
-}
-#demo-vertical .item {
-  width: 210px;
-  height: 100px;
-  margin: 0;
-  padding: 55px 0;
+#demo-vertical .vertical-item {
+  width: 310px;
+  height: 190px;
+  margin: 0 auto;
+  border: 5px solid #999;
+  background-color: #EFEFEF;
+  line-height: 200px;
+  font-size: 50px;
+  text-align: center;
 }

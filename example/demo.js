@@ -216,7 +216,7 @@ if (!$('.demo').length) return;
 })();
 
 (function vertical () {
-	var snap = Flipsnap('#demo-vertical .flipsnap', {
+	var snap = Flipsnap('#demo-vertical .flipsnap-vertical', {
 		vertical: true
 	});
 	console.log(snap);
