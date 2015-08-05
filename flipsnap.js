@@ -293,7 +293,7 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
 Flipsnap.prototype._setDist = function(x, y) {
   var self = this;
 
-  self.currentDist = x;
+  self.currentDist = (self.vertical) ? y : x;
   if (self.cssAnimation) {
     self.element.style[ saveProp.transform ] = self._getTranslate(x, y);
   }
@@ -335,7 +335,6 @@ Flipsnap.prototype._touchStart = function(event, type) {
   self.basePageX = self.startPageX;
   self.basePageY = self.startPageY;
   self.direction = 0;
-  self.startTime = event.timeStamp;
   self._triggerEvent('fstouchstart', true, false);
 };
 
@@ -354,7 +353,7 @@ Flipsnap.prototype._touchMove = function(event, type) {
   if (self.moveReady) {
     event.preventDefault();
 
-    dist = self.vertical ? pageY - self.basePageY : pageX - self.basePageX;
+    dist = (self.vertical) ? pageY - self.basePageY : pageX - self.basePageX;
     newDist = self.currentDist + dist;
     if (newDist >= 0 || newDist < self._maxDist) {
       newDist = Math.round(self.currentDist + dist / 3);
