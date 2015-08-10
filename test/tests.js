@@ -246,6 +246,14 @@ describe('Flipsnap', function() {
           expect(this.spy.args[0][0])
             .to.have.property('transitionDuration', '100ms');
         });
+        it('call moveToPoint while the previous animation is running', function(done) {
+          f.moveToPoint(1, 200);
+          f.moveToPoint(2, 0);
+          setTimeout(function() {
+            expect(f.currentPoint).to.be(2);
+            done();
+          }, 300);
+        });
       });
 
       context('when no support cssAnimation', function() {
@@ -263,8 +271,18 @@ describe('Flipsnap', function() {
           expect(this.spy.args[0][1])
             .to.be('100ms');
         });
+        it('call moveToPoint while the previous animation is running', function(done) {
+          f.moveToPoint(1, 200);
+          f.moveToPoint(2, 0);
+          setTimeout(function() {
+            expect(f.currentPoint).to.be(2);
+            expect(f.element.style.left).to.be('-200px');
+            done();
+          }, 300);
+        });
       });
     });
+
   });
 
   describe('Flip Events', function() {
