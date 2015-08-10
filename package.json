@@ -1,7 +1,7 @@
 {
   "name": "flipsnap",
   "description": "Provides UI of snap and slide",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "main": "./flipsnap.js",
   "scripts": {
     "test": "phantomjs test/lib/mocha-phantomjs.coffee test/index.html",
