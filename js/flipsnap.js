@@ -1,7 +1,7 @@
 /**
  * flipsnap.js
  *
- * @version  0.6.2
+ * @version  0.6.3
  * @url http://hokaccha.github.com/js-flipsnap/
  *
  * Copyright 2011 PixelGrid, Inc.
@@ -9,7 +9,15 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-(function(window, document, undefined) {
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define([], factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory();
+  } else {
+    root.Flipsnap = factory();
+  }
+})(this, function() {
 
 var div = document.createElement('div');
 var prefix = ['webkit', 'moz', 'o', 'ms'];
@@ -105,11 +113,13 @@ Flipsnap.prototype.init = function(element, opts) {
   self.disableTouch = (opts.disableTouch === undefined) ? false : opts.disableTouch;
   self.disable3d = (opts.disable3d === undefined) ? false : opts.disable3d;
   self.transitionDuration = (opts.transitionDuration === undefined) ? '350ms' : opts.transitionDuration + 'ms';
+  self.threshold = opts.threshold || 0;
 
   // set property
   self.currentPoint = 0;
   self.currentX = 0;
   self.animation = false;
+  self.timerId = null;
   self.use3d = support.transform3d;
   if (self.disable3d === true) {
     self.use3d = false;
@@ -406,6 +416,10 @@ Flipsnap.prototype._touchEnd = function(event, type) {
     newPoint = self._maxPoint;
   }
 
+  if (Math.abs(self.startPageX - self.basePageX) < self.threshold) {
+    newPoint = self.currentPoint;
+  }
+
   self._touchAfter({
     moved: newPoint !== self.currentPoint,
     originalPoint: self.currentPoint,
@@ -456,11 +470,16 @@ Flipsnap.prototype._animate = function(x, transitionDuration) {
   var easing = function(time, duration) {
     return -(time /= duration) * (time - 2);
   };
-  var timer = setInterval(function() {
+
+  if (self.timerId) {
+    clearInterval(self.timerId);
+  }
+  self.timerId = setInterval(function() {
     var time = new Date() - begin;
     var pos, now;
     if (time > duration) {
-      clearInterval(timer);
+      clearInterval(self.timerId);
+      self.timerId = null;
       now = to;
     }
     else {
@@ -579,21 +598,11 @@ function getTriangleSide(x1, y1, x2, y2) {
 
 function getAngle(triangle) {
   var cos = triangle.y / triangle.z;
-  var radina = Math.acos(cos);
+  var radian = Math.acos(cos);
 
-  return 180 / (Math.PI / radina);
-}
-
-if (typeof exports == 'object') {
-  module.exports = Flipsnap;
-}
-else if (typeof define == 'function' && define.amd) {
-  define(function() {
-    return Flipsnap;
-  });
-}
-else {
-  window.Flipsnap = Flipsnap;
+  return 180 / (Math.PI / radian);
 }
 
-})(window, window.document);
+return Flipsnap;
+
+});
