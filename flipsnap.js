@@ -110,13 +110,14 @@ Flipsnap.prototype.init = function(element, opts) {
   opts = opts || {};
   self.distance = opts.distance;
   self.maxPoint = opts.maxPoint;
+  self.defaultPoint = opts.defaultPoint || 0;
   self.disableTouch = (opts.disableTouch === undefined) ? false : opts.disableTouch;
   self.disable3d = (opts.disable3d === undefined) ? false : opts.disable3d;
   self.transitionDuration = (opts.transitionDuration === undefined) ? '350ms' : opts.transitionDuration + 'ms';
   self.threshold = opts.threshold || 0;
 
   // set property
-  self.currentPoint = 0;
+  self.currentPoint = self.defaultPoint;
   self.currentX = 0;
   self.animation = false;
   self.timerId = null;
@@ -142,7 +143,7 @@ Flipsnap.prototype.init = function(element, opts) {
   }
 
   // initilize
-  self.refresh();
+  self.refresh(0);
 
   eventTypes.forEach(function(type) {
     self.element.addEventListener(events.start[type], self, false);
@@ -172,7 +173,7 @@ Flipsnap.prototype.handleEvent = function(event) {
   }
 };
 
-Flipsnap.prototype.refresh = function() {
+Flipsnap.prototype.refresh = function(transitionDuration) {
   var self = this;
 
   // setting max point
@@ -208,7 +209,7 @@ Flipsnap.prototype.refresh = function() {
   // setting maxX
   self._maxX = -self._distance * self._maxPoint;
 
-  self.moveToPoint();
+  self.moveToPoint(undefined, transitionDuration);
 };
 
 Flipsnap.prototype.hasNext = function() {

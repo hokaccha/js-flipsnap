@@ -97,6 +97,29 @@ describe('Flipsnap', function() {
       });
     });
   });
+  
+  describe('defaultPoint', function() {
+    context('when set defaultPoint to 0', function() {
+      it('should set currentPoint to 0', function() {
+        var f = Flipsnap($(html).get(0), { defaultPoint: 0 });
+        expect(f.currentPoint).to.be(0);
+      });
+    });
+
+    context('when set defaultPoint to 1', function() {
+      it('should set currentPoint to 1', function() {
+        var f = Flipsnap($(html).get(0), { defaultPoint: 1 });
+        expect(f.currentPoint).to.be(1);
+      });
+    });
+
+    context('when dont set defaultPoint', function() {
+      it('should set currentPoint to 0', function() {
+        var f = Flipsnap($(html).get(0));
+        expect(f.currentPoint).to.be(0);
+      });
+    });
+  });
 
   describe('#hasNext', function() {
     context('when has next element', function() {
