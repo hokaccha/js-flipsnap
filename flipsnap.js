@@ -106,6 +106,8 @@ Flipsnap.prototype.init = function(element, opts) {
     self.element.style.msTouchAction = 'pan-y';
   }
 
+  var validAlignmentValues = ['left', 'center', 'right'];
+
   // set opts
   opts = opts || {};
   self.distance = opts.distance;
@@ -114,6 +116,10 @@ Flipsnap.prototype.init = function(element, opts) {
   self.disable3d = (opts.disable3d === undefined) ? false : opts.disable3d;
   self.transitionDuration = (opts.transitionDuration === undefined) ? '350ms' : opts.transitionDuration + 'ms';
   self.threshold = opts.threshold || 0;
+  self.alignment = (opts.alignment === undefined || validAlignmentValues.indexOf(opts.alignment) === -1) ? 
+    'left' : opts.alignment;
+  self.alignmentContainerElement = (opts.alignmentContainerElement === undefined) ?
+    self.element.parentElement : opts.alignmentContainerElement;
 
   // set property
   self.currentPoint = 0;
@@ -205,6 +211,21 @@ Flipsnap.prototype.refresh = function() {
     self._distance = self.distance;
   }
 
+  switch (self.alignment) {
+    case('right'):
+      self._alignmentOffset = self.alignmentContainerElement.clientWidth;
+      break;
+
+    case('center'):
+      self._alignmentOffset = self.alignmentContainerElement.clientWidth / 2;
+      break;
+
+    default:
+    case('left'): // Left Aligned is default
+      self._alignmentOffset = 0;
+      break;
+  }
+
   // setting maxX
   self._maxX = -self._distance * self._maxPoint;
 
@@ -243,6 +264,23 @@ Flipsnap.prototype.toPrev = function(transitionDuration) {
   self.moveToPoint(self.currentPoint - 1, transitionDuration);
 };
 
+Flipsnap.prototype._getAlignmentOffset = function() {
+  var self = this;
+
+  switch (self.alignment) {
+
+    case('right'):
+      return self._alignmentOffset - self._distance;
+
+    case('center'):
+      return self._alignmentOffset - (self._distance / 2);
+
+    case('left'):
+      return self._alignmentOffset;
+
+  }
+}
+
 Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
   var self = this;
   
@@ -272,7 +310,10 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
   else {
     self.animation = true;
   }
-  self._setX(- self.currentPoint * self._distance, transitionDuration);
+
+  self._setX(
+    (- self.currentPoint * self._distance) + self._getAlignmentOffset(),
+    transitionDuration);
 
   if (beforePoint !== self.currentPoint) { // is move?
     // `fsmoveend` is deprecated
@@ -403,7 +444,7 @@ Flipsnap.prototype._touchEnd = function(event, type) {
     return;
   }
 
-  var newPoint = -self.currentX / self._distance;
+  var newPoint = -(self.currentX - self._getAlignmentOffset()) / self._distance;
   newPoint =
     (self.directionX > 0) ? Math.ceil(newPoint) :
     (self.directionX < 0) ? Math.floor(newPoint) :
