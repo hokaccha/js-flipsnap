@@ -279,6 +279,8 @@ Flipsnap.prototype.moveToPoint = function(point, transitionDuration) {
     // `fspointmove` is recommend.
     self._triggerEvent('fsmoveend', true, false);
     self._triggerEvent('fspointmove', true, false);
+  }else{
+    self._triggerEvent('fsmovecancel', true, false);
   }
 };
 
