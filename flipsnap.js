@@ -110,6 +110,7 @@ Flipsnap.prototype.init = function(element, opts) {
   opts = opts || {};
   self.distance = opts.distance;
   self.maxPoint = opts.maxPoint;
+  self.isRTL = opts.isRTL || document.documentElement.getAttribute('dir') === 'rtl';
   self.disableTouch = (opts.disableTouch === undefined) ? false : opts.disableTouch;
   self.disable3d = (opts.disable3d === undefined) ? false : opts.disable3d;
   self.transitionDuration = (opts.transitionDuration === undefined) ? '350ms' : opts.transitionDuration + 'ms';
@@ -204,7 +205,9 @@ Flipsnap.prototype.refresh = function() {
   else {
     self._distance = self.distance;
   }
-
+  if (self.isRTL) {
+      self._distance = -self._distance;
+  }
   // setting maxX
   self._maxX = -self._distance * self._maxPoint;
 
@@ -404,6 +407,10 @@ Flipsnap.prototype._touchEnd = function(event, type) {
   }
 
   var newPoint = -self.currentX / self._distance;
+            
+  if (self.isRTL) {
+      self.directionX = -self.directionX;
+  }
   newPoint =
     (self.directionX > 0) ? Math.ceil(newPoint) :
     (self.directionX < 0) ? Math.floor(newPoint) :

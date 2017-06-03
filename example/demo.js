@@ -22,6 +22,13 @@ if (!$('.demo').length) return;
 	});
 })();
 
+(function distance() {
+	Flipsnap('#demo-rtl .flipsnap', {
+		distance: 230,
+		isRTL: true
+	});
+})();
+
 (function maxPoint() {
 	Flipsnap('#demo-maxPoint .flipsnap', {
 		distance: 160, // 80px * 2
